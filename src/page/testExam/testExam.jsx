@@ -4,43 +4,43 @@ import TestQuestion from '../../components/testQuestion';
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
-import '../../App.scss';
+import classes from'../../App.module.scss';
 
 function TestExam() {
     return (
-        <div className="app-container">
-            <div className='container'>
-                <header className='sidebar-container'>
-                    <div className='header-box'>
-                        <div className='button-container'>
+        <div className={classes.appContainer}>
+            <div className={classes.container}>
+                <header className={classes.sidebarContainer}>
+                    <div className={classes.headerBox}>
+                        <div className={classes.buttonContainer}>
                             <p>اتمام آزمون</p>
                             <p  >ترک آزمون</p>
                         </div>
-                        <svg class="circle-container" viewBox="2 -2 28 36" xmlns="http://www.w3.org/2000/svg">
-                            <linearGradient id="gradient">
-                                <stop class="stop1" offset="0%" />
-                                <stop class="stop2" offset="100%" />
+                        <svg id={classes.circle_container} viewBox="2 -2 28 36" xmlns="http://www.w3.org/2000/svg">
+                            <linearGradient id={"gradient"}>
+                                <stop id={classes.stop1} offset="0%" />
+                                <stop id={classes.stop2} offset="100%" />
                             </linearGradient>
-                            <circle class="circle-container__background" r="16" cx="16" cy="16" shape-rendering="geometricPrecision"></circle>
-                            <circle class="circle-container__progress" r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
+                            <circle id={classes.circle_container__background} r="16" cx="16" cy="16" shape-rendering="geometricPrecision"></circle>
+                            <circle id={classes.circle_container__progress} r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
                             </circle>
                         </svg>
                         {/* <div className='time-remained'>4:20:00</div> */}
                     </div>
-                    <div className='information-bar'>
-                        <div className='exam-details'>
-                            <div className='exam-details-title'>
+                    <div className={classes.informationBar}>
+                        <div className={classes.examDetails}>
+                            <div className={classes.examDetailsTitle}>
                                 <h1>{`آزمون ادبیات فارسی`}</h1>
                                 <p>{`(آموزشگاه فراگویان)`}</p>
                             </div>
-                            <div id='return-btn'>
+                            <div id={classes.returnBtn}>
                                 <p>بازگشت به سایت</p>
-                                <div className='exit-icon'>
+                                <div className={classes.exitIcon}>
                                     <Exit fill='#fff' width="15px" height='15px' />
                                 </div>
                             </div>
                         </div>
-                        <div className='personal-details'>
+                        <div className={classes.personalDetails}>
                             <ul>
                                 <li>{`نام کاربر : ${"فردوسی"}`}</li>
                                 <li>{`مدت آزمون : ${60} دقیقه`}</li>
@@ -52,17 +52,16 @@ function TestExam() {
                     </div>
                 </header>
 
-                <main className='main-container'>
-                    <div className='answer-sheet-container'>
-                        <div className='answer-sheet-header'>
+                <main className={classes.mainContainer}>
+                    <div className={classes.answerSheetContainer}>
+                        <div className={classes.answerSheetHeader}>
                             <h3>پاسخنامه</h3>
-                            <div className='answer-datasheet'>
-                                <p className='answer-datasheet-answer'>{`پاسخ داده شده : ${85}`}</p>
-                                <p className='answer-datasheet-notAnswer'>{`پاسخ داده نشده : ${0}`}</p>
-                                <div></div>
+                            <div className={classes.answerDatasheet}>
+                                <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${85}`}</p>
+                                <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${0}`}</p>
                             </div>
                         </div>
-                        <div className='answer-sheet'>
+                        <div className={classes.answerSheet}>
                             <ul>
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
@@ -78,17 +77,17 @@ function TestExam() {
                         </div>
                     </div>
                     {/* DISPLAY QUESTION / QUESTION SECTION  */}
-                    <section className='question-section'>
-                        <div className='question-section-header'>
+                    <section className={classes.questionSection}>
+                        <div className={classes.questionSection_header}>
                             <h2>سوالات آزمون</h2>
-                            <div id='reload-btn'>
+                            <div id={classes.reloadBtn}>
                                 <p>بارگذاری مجدد</p>
-                                <div className='refresh-btn'>
+                                <div className={classes.refreshBtn}>
                                     <Refresh />
                                 </div>
                             </div>
                         </div>
-                        <div className='question-container'>
+                        <div className={classes.questionContainer}>
                             <TestQuestion />
                             <TestQuestion />
                             <TestQuestion />

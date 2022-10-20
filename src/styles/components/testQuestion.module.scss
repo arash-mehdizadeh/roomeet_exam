@@ -1,0 +1,58 @@
+@import '../variables';
+
+@mixin border($border:$primaryBorderColor) {
+    border:1px solid $border;
+    
+}
+@mixin border-bottom {
+    border-bottom:1px solid $secondaryBorderColor;
+    
+}
+
+.questionBox{
+    display: flex;
+    margin: 25px 0 5px;
+}
+.questionDetail{
+    width: 10%;
+}
+.scrollableQuestionsContainer{
+    width: 100%;
+    @include border(#9C9C9C);
+    background-color: #F5F5F5;
+    border-radius: 5px;
+    color: $textPrimaryColor;
+    padding: 15px 21px;
+    // margin-right: 20px;
+    .muChImageContainer{
+        padding: 16px 0 4px;
+    }
+    .muChAudioContainer{
+        padding: $defaultPadding 40px;
+        @include border-bottom();
+    }
+    .homeworkAudioContainer{
+        padding: $defaultPadding 40px;
+    }
+    .homeworkPdfContainer{
+        
+    }
+    .muChQuestionContainer{
+        padding: 16px 0;
+        ul{
+            list-style: none;
+            li {
+                display: flex;
+                text-align: center;
+                padding: 5px 0;
+                .muChOptions{
+                    font-weight: 500;
+                    color: #464646;
+                }
+                .muChAnswer{
+                    padding-right: 11px;
+                }
+            }
+        }
+    }
+}

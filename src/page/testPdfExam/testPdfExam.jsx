@@ -1,11 +1,16 @@
+
+
 import TestAnswerOptions from '../../components/testAnswerOptions';
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
-import '../../App.scss';
+
+
+import '../../App.module.scss';
 
 function TestPdfExam() {
+
     return (
         <div className="app-container">
             <div className='container'>

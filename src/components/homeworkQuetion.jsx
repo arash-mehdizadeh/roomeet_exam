@@ -1,10 +1,8 @@
-import TestOptions from "./testOptions";
 import classes from '../styles/components/testQuestion.module.scss';
 
 
-const TestQuestion = () => {
+const HomeworkQuestion = () => {
 
-    const optionsData = [{ id: 1, data: "باور کن نمیدونم`" }, { id: 2, data: "از من بپرس" }, { id: 3, data: "از این مبحث سوال نمیاد`" }, { id: 4, data: "یک یک موارد بالا" }]
 
     return (
         <div className={classes.questionBox}>
@@ -18,21 +16,15 @@ const TestQuestion = () => {
                     {/* <img src/> */}
                     <p>image</p>
                 </div>
-                <div className={classes.muChAudioContainer}>
+                <div className={classes.homeworkAudioContainer}>
                     voice
                 </div>
-                <div className={classes.muChQuestionContainer}>
-                    <ul>
-                        {
-                            optionsData.map(data => (
-                                <TestOptions data={data.data} option={data.id} />
-                            ))
-                        }
-                    </ul>
+                <div className={classes.homeworkPdfContainer}>
+                    pdf
                 </div>
             </div>
         </div>
     )
 }
 
-export default TestQuestion;
+export default HomeworkQuestion;

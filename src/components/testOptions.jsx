@@ -1,9 +1,10 @@
+import classes from '../styles/components/testOptions.module.scss';
 
 const TestOptions = ({option,data}) => {
     return (
         <li>
-            <p className='muCh-options'>{`گزینه ${option} :`}</p>
-            <p className='muCh-answer'>{data}</p>
+            <p className={classes.muChOptions}>{`گزینه ${option} :`}</p>
+            <p className={classes.muChAnswer}>{data}</p>
         </li>
     )
 }

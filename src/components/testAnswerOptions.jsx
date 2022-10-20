@@ -1,15 +1,17 @@
 
-const testAnswerOptions = () => {
+import classes from '../styles/components/TestAnswerOptions.module.scss'
+
+const TestAnswerOptions = () => {
     return (
         <li >
-            <div className='test-row'>
-                <div className='test-options-container'>
-                    <div className='test-option-button'>۱</div>
-                    <div className='test-option-button'>۲</div>
-                    <div className='test-option-button'>۳</div>
-                    <div className='test-option-button'>٤</div>
+            <div className={classes.testRow}>
+                <div className={classes.testOptionsContainer}>
+                    <div className={classes.testOptionButton}>۱</div>
+                    <div className={classes.testOptionButton}>۲</div>
+                    <div className={classes.testOptionButton}>۳</div>
+                    <div className={classes.testOptionButton}>٤</div>
                 </div>
-                <div className='grade'>
+                <div className={classes.grade}>
                     <div>۰/۲۵</div>
                     <div>بارم</div>
                 </div>
@@ -18,4 +20,4 @@ const testAnswerOptions = () => {
     )
 }
 
-export default testAnswerOptions;
+export default TestAnswerOptions;

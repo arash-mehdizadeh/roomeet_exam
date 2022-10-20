@@ -1,0 +1,38 @@
+@import '../variables';
+
+
+@mixin border($border:$primaryBorderColor) {
+    border:1px solid $border;
+    
+}
+
+@mixin test-button-option {
+    align-items: center;
+    text-align: center;
+    padding: 10px 10px;
+    width: 40px;
+    height: 40px;
+    @include border();
+    border-radius: $full;
+    margin: 5px;
+}
+
+
+    .testRow{
+        display: flex;
+        // padding-right: $defaultPadding;
+        justify-content: space-between;
+        .testOptionsContainer{
+            display: flex;
+        }
+        .testOptionButton {
+            @include test-button-option();
+        }
+        .grade{
+            font-size: 12px;
+            font-weight: 600;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+        }
+    }

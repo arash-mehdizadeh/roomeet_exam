@@ -2,7 +2,7 @@
 // @import '/src/styles/mixins';
 
 
-.circle-container {
+#circle_container {
     width: 100px;
     height: 100px;
     transform: rotate(-225deg);
@@ -12,7 +12,7 @@
     stroke-linecap: round;
 }
 
-.circle-container__background {
+#circle_container__background {
     fill: none;
     stroke: #D8D8D8;
     stroke-width: 3px;
@@ -20,24 +20,25 @@
     stroke-linecap: round;
 }
 
-.circle-container__progress {
+#circle_container__progress {
     fill: none;
     stroke-linecap: round;
     stroke: url(#gradient);
     // edit this to change progress bar Hint: max => 75
-    stroke-dasharray: 15 100;
+    stroke-dasharray: 25 100;
     stroke-linecap: round;
     stroke-width: 3px;
     transition: stroke-dashoffset 1s ease-in-out;
 }
 
-.stop1 {
+#stop1 {
     stop-color: $primaryColor;
 }
 
-.stop2 {
+#stop2 {
     stop-color: $primaryColor;
 }
+
 
 
 @mixin border($border:$primaryBorderColor) {
@@ -88,7 +89,7 @@
 }
 
 
-.app-container{
+.appContainer{
     background-image: linear-gradient($thirdColor, $fourthColor);
     height: 100vh;
     padding: 50px  64px ;
@@ -97,19 +98,19 @@
     display: flex;
     width: 100%;
     flex-direction:column;
-    .sidebar-container{
+    .sidebarContainer{
         margin: 0 0 10px  ;
-        .information-bar{
+        .informationBar{
             display: flex;
             flex-direction: column;
             justify-content: center;
             color: $white;
             width: $full;
-            .exam-details{
+            .examDetails{
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                .exam-details-title{
+                .examDetailsTitle{
                     display: flex;
                     align-items: center;
                     h1{
@@ -120,7 +121,7 @@
                         text-shadow: 0px 0px 20px #48EEFC;
                     }
                 }
-                #return-btn{
+                #returnBtn{
                     align-items: center;
                     font-size: $font-size-df;
                     font-weight: 500;
@@ -131,7 +132,7 @@
                     border-radius: 10px;
                     color:#5E5E5E;
                     justify-content: space-between;
-                    .exit-icon{
+                    .exitIcon{
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -143,7 +144,7 @@
                 }
             }
         }
-        .personal-details{
+        .personalDetails{
             padding: 10px 0;
             ul {
                 display: flex;
@@ -168,11 +169,11 @@
     // }
 }
 
-.header-box{
+.headerBox{
     @include  box(14px);
     justify-content: space-between;
     width: 28%;
-    .button-container{
+    .button_container{
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -185,18 +186,19 @@
             padding-top: 8px;
         }
     }
-    .time-remained{
+    .timeRemained{
         display: flex;
         color: $primaryColor;
         align-items: center;
     }
 }
 
-.answer-sheet-container{
+.answerSheetContainer{
     @include box();
+    width: 27%;
     flex-direction: column;
     margin-left: 10px;
-    .answer-sheet-header{
+    .answerSheetHeader{
         padding: 10px ;
         display: flex;
         justify-content: space-between;
@@ -205,41 +207,72 @@
             display: flex;
             @include heading();
         }
-        .answer-datasheet{
+        .answerDatasheet{
             display: flex;
             flex-direction: column;
             justify-content: center;
-            &-answer{
+            &_answer{
                 @include dataSheet();
                 color:$neon;
             }
-            &-notAnswer{
+            &_notAnswer{
                 @include dataSheet();
                 color:red;
             }
         }
     }
     // answer sheet section
-    .answer-sheet{
+    .textareaContainer{
+        display: flex;
+        flex-direction: column;
+        margin-top: 12px;
+        height: 100%;
+        .textarea{
+            border-radius: 5px;
+            height: 100%;
+            resize: none;
+            outline: none;
+            padding: 9px 11px;
+            width: $full;
+            @include border(#9c9c9c);
+        }
+        .uploadSection{
+            #uploadbtn{
+                margin: 21px 0;
+                font-size: 14px;
+                color: $primaryColor;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 14px;
+                border: 2px solid $primaryColor;
+                border-radius: 15px;
+            }
+        }
+    }
+    .answerSheet{
         direction:ltr;
         padding: 10px 10px 0 10px;
         height: 430px;
         overflow-y: auto;
+
         
+
         ul{
             display: flex;
             flex-direction: column;
             padding-right: 15px;
             // overflow-y:auto ; 
         }
-        .test-row{
+        .testRow{
             display: flex;
             // padding-right: $defaultPadding;
             justify-content: space-between;
-            .test-options-container{
+            .testOptionsContainer{
                 display: flex;
             }
-            .test-option-button {
+            .testOptionButton {
                 @include test-button-option();
             }
             .grade{
@@ -254,7 +287,7 @@
 
 }
 
-.active-option-test{
+.activeOptionTest{
     font-weight: 600;
     background-color: $neon;
     color: #270556;
@@ -262,12 +295,12 @@
 
 // main section 
     // header
-.main-container{
+.mainContainer{
     display: flex;
     // flex-direction: column;
     // padding-right: $defaultMargin;
     
-    .personal-details{
+    .personalCetails{
         padding: 10px 0;
         ul {
             display: flex;
@@ -282,13 +315,13 @@
     }
 }
 
-.question-section{
+.questionSection{
     @include box();
     display: flex;
     flex-direction: column;
     width: $full;
     // margin-top: 40px;
-    &-header{
+    &_header{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -297,7 +330,7 @@
         h2{
             color: $primaryColor;
         }
-        #reload-btn{
+        #reloadBtn{
             color: $primaryColor;
             display: flex;
             align-items: center;
@@ -306,13 +339,13 @@
                 font-size: 14px;
                 padding: 0 10px;
             }
-            .refresh-icon{
+            .refreshIcon{
                 display: flex;
                 align-items: center;
             }
         }
     }
-    .question-container{
+    .questionContainer{
         padding-top: $defaultPadding;
         display: flex;
         flex-direction: column;
@@ -321,14 +354,14 @@
         height: 450px;
         padding: 0 10px;
         // height: ;
-        .question-box{
+        .questionBox{
             display: flex;
             margin: 25px 0 5px;
         }
-        .question-detail{
+        .questionDetail{
             width: 10%;
         }
-        .scrollable-questions-container{
+        .scrollableQuestionsContainer{
             width: 100%;
             @include border(#9C9C9C);
             background-color: #F5F5F5;
@@ -336,14 +369,14 @@
             color: $textPrimaryColor;
             padding: 15px 21px;
             // margin-right: 20px;
-            .muCh-image-container{
+            .muChImageContainer{
                 padding: 16px 0 4px;
             }
-            .muCh-audio-container{
+            .muChAudioContainer{
                 padding: $defaultPadding 40px;
                 @include border-bottom();
             }
-            .muCh-question-container{
+            .muChQuestionContainer{
                 padding: 16px 0;
                 ul{
                     list-style: none;
@@ -351,11 +384,11 @@
                         display: flex;
                         text-align: center;
                         padding: 5px 0;
-                        .muCh-options{
+                        .muChOptions{
                             font-weight: 500;
                             color: #464646;
                         }
-                        .muCh-answer{
+                        .muChAnswer{
                             padding-right: 11px;
                         }
                     }
