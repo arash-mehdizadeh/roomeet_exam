@@ -1,0 +1,14 @@
+@import  '../src/styles/variables';
+
+@mixin box($padding:$defaultBorder) {
+    padding: 8px 12px;
+    background-color:$white ;
+    border-radius:$borderRadius ;
+    padding: $padding;
+}
+
+@mixin heading {
+    font-size: 18px;
+    color: $primaryColor;
+}
+

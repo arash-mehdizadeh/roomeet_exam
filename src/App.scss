@@ -1,0 +1,367 @@
+@import  '../src/styles/variables';
+// @import '/src/styles/mixins';
+
+
+.circle-container {
+    width: 100px;
+    height: 100px;
+    transform: rotate(-225deg);
+    fill: none;
+    stroke: white;
+    stroke-dasharray: 75 100;
+    stroke-linecap: round;
+}
+
+.circle-container__background {
+    fill: none;
+    stroke: #D8D8D8;
+    stroke-width: 3px;
+    stroke-dasharray: 75 100;
+    stroke-linecap: round;
+}
+
+.circle-container__progress {
+    fill: none;
+    stroke-linecap: round;
+    stroke: url(#gradient);
+    // edit this to change progress bar Hint: max => 75
+    stroke-dasharray: 15 100;
+    stroke-linecap: round;
+    stroke-width: 3px;
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.stop1 {
+    stop-color: $primaryColor;
+}
+
+.stop2 {
+    stop-color: $primaryColor;
+}
+
+
+@mixin border($border:$primaryBorderColor) {
+    border:1px solid $border;
+    
+}
+@mixin border-bottom {
+    border-bottom:1px solid $secondaryBorderColor;
+    
+}
+
+@mixin box($padding:$defaultPadding) {
+    padding: $padding;
+    background-color:$white ;
+    border-radius:$borderRadius ;
+    display: flex;
+}
+
+@mixin buttons($background:$neon,$textColor:$primaryColor) {
+    text-align: center;
+    font-weight: 600;
+    padding: 5px 18px;
+    background-color: $background;
+    border-radius: 100px;
+    color: $textColor;
+}
+
+@mixin heading {
+    font-size: 18px;
+    color: $primaryColor;
+}
+
+@mixin dataSheet {
+    font-size: 12px;
+    padding: $pad5;
+    font-weight: 600;
+}
+
+@mixin test-button-option {
+    align-items: center;
+    text-align: center;
+    padding: 10px 10px;
+    width: 40px;
+    height: 40px;
+    @include border();
+    border-radius: $full;
+    margin: 5px;
+}
+
+
+.app-container{
+    background-image: linear-gradient($thirdColor, $fourthColor);
+    height: 100vh;
+    padding: 50px  64px ;
+}
+.container{
+    display: flex;
+    width: 100%;
+    flex-direction:column;
+    .sidebar-container{
+        margin: 0 0 10px  ;
+        .information-bar{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: $white;
+            width: $full;
+            .exam-details{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .exam-details-title{
+                    display: flex;
+                    align-items: center;
+                    h1{
+                        padding: 0 10px;
+                        text-shadow: 0px 0px 20px $neon ;
+                    }
+                    p{
+                        text-shadow: 0px 0px 20px #48EEFC;
+                    }
+                }
+                #return-btn{
+                    align-items: center;
+                    font-size: $font-size-df;
+                    font-weight: 500;
+                    width: 180px;
+                    display: flex;
+                    padding:10px 12px;
+                    background-color: $white;
+                    border-radius: 10px;
+                    color:#5E5E5E;
+                    justify-content: space-between;
+                    .exit-icon{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 30px;
+                        height: 28px;
+                        border-radius: 100px;
+                        background-color: $primaryColor;
+                    }
+                }
+            }
+        }
+        .personal-details{
+            padding: 10px 0;
+            ul {
+                display: flex;
+                list-style: none;
+                li{
+                    padding: 0 15px;
+                }
+                li:first-child{
+                    padding-right: 10px;
+                }
+            }
+        }
+        // width: 22%;
+        display: flex;
+        // flex-direction: column;
+        // justify-content: space-between; ////////////////////////////////////////////////////////////
+    }
+    // .main-container{
+    //     // width:78%;
+    //     display: flex;
+    //     // flex-direction: column;
+    // }
+}
+
+.header-box{
+    @include  box(14px);
+    justify-content: space-between;
+    width: 28%;
+    .button-container{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        :first-child{
+            
+            @include buttons($textColor:$thirdColor);
+        }
+        :last-child{
+            @include buttons($white);
+            padding-top: 8px;
+        }
+    }
+    .time-remained{
+        display: flex;
+        color: $primaryColor;
+        align-items: center;
+    }
+}
+
+.answer-sheet-container{
+    @include box();
+    flex-direction: column;
+    margin-left: 10px;
+    .answer-sheet-header{
+        padding: 10px ;
+        display: flex;
+        justify-content: space-between;
+        @include border-bottom();
+        h3 {
+            display: flex;
+            @include heading();
+        }
+        .answer-datasheet{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            &-answer{
+                @include dataSheet();
+                color:$neon;
+            }
+            &-notAnswer{
+                @include dataSheet();
+                color:red;
+            }
+        }
+    }
+    // answer sheet section
+    .answer-sheet{
+        direction:ltr;
+        padding: 10px 10px 0 10px;
+        height: 430px;
+        overflow-y: auto;
+        
+        ul{
+            display: flex;
+            flex-direction: column;
+            padding-right: 15px;
+            // overflow-y:auto ; 
+        }
+        .test-row{
+            display: flex;
+            // padding-right: $defaultPadding;
+            justify-content: space-between;
+            .test-options-container{
+                display: flex;
+            }
+            .test-option-button {
+                @include test-button-option();
+            }
+            .grade{
+                font-size: 12px;
+                font-weight: 600;
+                flex-direction: column;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+}
+
+.active-option-test{
+    font-weight: 600;
+    background-color: $neon;
+    color: #270556;
+}
+
+// main section 
+    // header
+.main-container{
+    display: flex;
+    // flex-direction: column;
+    // padding-right: $defaultMargin;
+    
+    .personal-details{
+        padding: 10px 0;
+        ul {
+            display: flex;
+            list-style: none;
+            li{
+                padding: 0 15px;
+            }
+            li:first-child{
+                padding-right: 10px;
+            }
+        }
+    }
+}
+
+.question-section{
+    @include box();
+    display: flex;
+    flex-direction: column;
+    width: $full;
+    // margin-top: 40px;
+    &-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        @include border-bottom();
+        h2{
+            color: $primaryColor;
+        }
+        #reload-btn{
+            color: $primaryColor;
+            display: flex;
+            align-items: center;
+            p{
+                font-weight: 600;
+                font-size: 14px;
+                padding: 0 10px;
+            }
+            .refresh-icon{
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+    .question-container{
+        padding-top: $defaultPadding;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        font-size: $font-size-df ;
+        height: 450px;
+        padding: 0 10px;
+        // height: ;
+        .question-box{
+            display: flex;
+            margin: 25px 0 5px;
+        }
+        .question-detail{
+            width: 10%;
+        }
+        .scrollable-questions-container{
+            width: 100%;
+            @include border(#9C9C9C);
+            background-color: #F5F5F5;
+            border-radius: 5px;
+            color: $textPrimaryColor;
+            padding: 15px 21px;
+            // margin-right: 20px;
+            .muCh-image-container{
+                padding: 16px 0 4px;
+            }
+            .muCh-audio-container{
+                padding: $defaultPadding 40px;
+                @include border-bottom();
+            }
+            .muCh-question-container{
+                padding: 16px 0;
+                ul{
+                    list-style: none;
+                    li {
+                        display: flex;
+                        text-align: center;
+                        padding: 5px 0;
+                        .muCh-options{
+                            font-weight: 500;
+                            color: #464646;
+                        }
+                        .muCh-answer{
+                            padding-right: 11px;
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}

@@ -1,0 +1,65 @@
+// color variables
+$white: #fff;
+$neon: #48eefc;
+
+$primaryBorderColor:  #707070;;
+$secondaryBorderColor: #cccccc;
+
+
+$textPrimaryColor: #888888;
+
+
+$primaryColor: #c30a7f;
+$secondaryColor:#f5f5f5;
+$thirdColor: #280071;
+$fourthColor: #5a006d;
+
+//scrollbar
+$scrollBar-color:#DCDCDC ;
+$scrollBarTrack-color:#f5f5f5;
+
+//font-size
+
+$font-size-xl :32px;
+$font-size-md :18px;
+$font-size-df :14px;
+
+//global variables
+$full:100%;
+
+// border radius size
+$borderRadius: 20px;
+
+// paddings
+$defaultPadding:22px;
+$pad5:5px;
+
+// margins
+$defaultMargin:10px;
+
+:export {
+    scrollbar-color:$scrollBar-color;
+    scrollbarTrack-color:$scrollBarTrack-color;
+
+  white: $white;
+  neon: $neon; 
+  primaryColor: $primaryColor;
+  thirdColor: $thirdColor;
+  fourthColor: $fourthColor;
+
+  primaryBorderColor: $primaryBorderColor;
+  secondaryBorderColor: $secondaryBorderColor;
+  
+  textPrimaryColor: $textPrimaryColor;
+
+  borderRadius: $borderRadius;
+
+  defaultPadding: $defaultPadding;
+  pad5 : $pad5;
+
+  full:$full;
+
+  font-size-df:$font-size-df ;
+  font-size-md:$font-size-md ;
+  font-size-xl:$font-size-xl ;
+}

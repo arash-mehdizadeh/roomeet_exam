@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+  <g id="Arrow_-_Right_Square" data-name="Arrow - Right Square" transform="translate(34) rotate(90)">
+    <path id="Stroke_4" data-name="Stroke 4" d="M0,17C0,29.749,4.251,34,17,34s17-4.251,17-17S29.749,0,17,0,0,4.251,0,17Z" transform="translate(0 0)" fill="#c30a7f"/>
+    <g id="Refresh_1" data-name="Refresh 1" transform="translate(8.437 25.206) rotate(-90)">
+      <path id="Path_305" data-name="Path 305" d="M.73,9.276a.707.707,0,0,0,.7-.714c0-2.649.636-4.371,1.655-5.435s2.625-1.7,5.124-1.7,4.116.649,5.124,1.7a5.327,5.327,0,0,1,1.182,2.038.775.775,0,0,0,.724.543.679.679,0,0,0,.67-.871Q14.374,0,8.206,0,0,0,0,8.563c0,.01,0,.021,0,.031a.689.689,0,0,0,.7.682ZM1.9,11.96a.775.775,0,0,0-.724-.543.679.679,0,0,0-.67.871q1.532,4.838,7.7,4.838,8.206,0,8.206-8.563V8.531a.69.69,0,0,0-.7-.682h-.032a.707.707,0,0,0-.7.714c0,2.649-.636,4.371-1.655,5.435s-2.625,1.7-5.124,1.7S4.09,15.05,3.082,14A5.327,5.327,0,0,1,1.9,11.96Z" fill="#fff" fill-rule="evenodd"/>
+      <path id="Path_306" data-name="Path 306" d="M20.281,1V5.281H16" transform="translate(-4.583 -0.286)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_307" data-name="Path 307" d="M1,21.281V17H5.281" transform="translate(-0.286 -4.869)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

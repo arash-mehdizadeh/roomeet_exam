@@ -1,0 +1,41 @@
+@import '../src/styles/variables';
+
+
+@import url('//db.onlinewebfonts.com/c/5c53f1a72f61b5b51e2ea79a22ebc38b?family=IRANSansWeb(FaNum)');
+* {
+    box-sizing: border-box;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'IRANSansWeb(FaNum)', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+ul {
+    list-style-type: arabic-indic
+}
+
+::-webkit-scrollbar{
+    width: 6px;
+    
+    &-track{
+        background-color: $scrollBarTrack-color;
+    }
+    &-thumb{
+        border-radius: 10px;
+        background-color: $scrollBar-color;
+    }
+    &-thumb:hover{
+        background-color: #C9C9C9;
+    }
+}
