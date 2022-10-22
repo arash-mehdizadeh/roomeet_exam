@@ -1,41 +1,59 @@
-@import '../src/styles/variables';
+@import "../src/styles/variables";
 
+// @import url("//db.onlinewebfonts.com/c/5c53f1a72f61b5b51e2ea79a22ebc38b?family=IRANSansWeb(FaNum)");
+// @import url("//db.onlinewebfonts.com/c/002254488ce1877d55ad3693e527ad1e?family=IRANSansWeb");
 
-@import url('//db.onlinewebfonts.com/c/5c53f1a72f61b5b51e2ea79a22ebc38b?family=IRANSansWeb(FaNum)');
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.eot");
+  src: url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.eot?#iefix")
+      format("embedded-opentype"),
+    url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.woff2")
+      format("woff2"),
+    url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.woff")
+      format("woff"),
+    url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.ttf")
+      format("truetype"),
+    url("//db.onlinewebfonts.com/t/002254488ce1877d55ad3693e527ad1e.svg#IRANSansWeb")
+      format("svg");
+}
+
 * {
-    box-sizing: border-box;
-    direction: rtl;
-    margin: 0;
-    padding: 0;
-    font-family: 'IRANSansWeb(FaNum)', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
+  box-sizing: border-box;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  resize: none;
+  font-family: "IRANSansWeb", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
 }
 
 body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-        monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 ul {
-    list-style-type: arabic-indic
+  list-style-type: arabic-indic;
 }
 
-::-webkit-scrollbar{
-    width: 6px;
-    
-    &-track{
-        background-color: $scrollBarTrack-color;
-    }
-    &-thumb{
-        border-radius: 10px;
-        background-color: $scrollBar-color;
-    }
-    &-thumb:hover{
-        background-color: #C9C9C9;
-    }
+::-webkit-scrollbar {
+  width: 6px;
+
+  &-track {
+    background-color: $scrollBarTrack-color;
+  }
+  &-thumb {
+    border-radius: 10px;
+    background-color: $scrollBar-color;
+  }
+  &-thumb:hover {
+    background-color: #c9c9c9;
+  }
 }

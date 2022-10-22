@@ -10,7 +10,7 @@ function TestExam() {
     return (
         <div className={classes.appContainer}>
             <div className={classes.container}>
-                <header className={classes.sidebarContainer}>
+                <header className={classes.examTimeRemainedContainer}>
                     <div className={classes.headerBox}>
                         <div className={classes.buttonContainer}>
                             <p>اتمام آزمون</p>
@@ -80,9 +80,9 @@ function TestExam() {
                     <section className={classes.questionSection}>
                         <div className={classes.questionSection_header}>
                             <h2>سوالات آزمون</h2>
-                            <div id={classes.reloadBtn}>
+                            <div className={classes.reloadBtn}>
                                 <p>بارگذاری مجدد</p>
-                                <div className={classes.refreshBtn}>
+                                <div id={classes.refreshIcon}>
                                     <Refresh />
                                 </div>
                             </div>

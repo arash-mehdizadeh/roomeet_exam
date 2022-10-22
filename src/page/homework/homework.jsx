@@ -1,9 +1,8 @@
-
-import TestAnswerOptions from '../../components/testAnswerOptions';
 import HomeworkQuestion from '../../components/homeworkQuetion';
 
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
+import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from'../../App.module.scss';
@@ -12,7 +11,7 @@ function TestExam() {
     return (
         <div className={classes.appContainer}>
             <div className={classes.container}>
-                <header className={classes.sidebarContainer}>
+                <header className={classes.examTimeRemainedContainer}>
                     <div className={classes.headerBox}>
                         <div className={classes.buttonContainer}>
                             <p>اتمام آزمون</p>
@@ -67,7 +66,14 @@ function TestExam() {
                             <textarea className={classes.textarea} placeholder='اینجا بنویسید' />
                             <div className={classes.uploadSection}>
                                 <div id={classes.uploadbtn}>آپلود عکس جواب</div>
-                                <div></div>
+                                <div id={classes.upload_details}>
+                                    <p>
+                                        {"image.jpg"}
+                                    </p>
+                                    <div className='trashIcon'>
+                                        <Delete />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -75,14 +81,17 @@ function TestExam() {
                     <section className={classes.questionSection}>
                         <div className={classes.questionSection_header}>
                             <h2>سوالات آزمون</h2>
-                            <div id={classes.reloadBtn}>
+                            <div className={classes.reloadBtn}>
                                 <p>بارگذاری مجدد</p>
-                                <div className={classes.refreshBtn}>
+                                <div id={classes.refreshIcon}>
                                     <Refresh />
                                 </div>
                             </div>
                         </div>
                         <div className={classes.questionContainer}>
+                            <HomeworkQuestion />
+                            <HomeworkQuestion />
+                            <HomeworkQuestion />
                             <HomeworkQuestion />
                         </div>
                     </section>

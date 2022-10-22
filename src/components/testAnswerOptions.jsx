@@ -12,7 +12,7 @@ const TestAnswerOptions = () => {
                     <div className={classes.testOptionButton}>٤</div>
                 </div>
                 <div className={classes.grade}>
-                    <div>۰/۲۵</div>
+                    <div>{`۰/۲۵`}</div>
                     <div>بارم</div>
                 </div>
             </div>

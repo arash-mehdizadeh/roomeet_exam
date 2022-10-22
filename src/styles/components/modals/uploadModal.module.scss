@@ -1,0 +1,84 @@
+@import '../../variables';
+
+@mixin box() {
+    background-color:$white ;
+    border-radius:$borderRadius ;
+    display: flex;
+}
+
+@mixin border($borderColor:$primaryBorderColor) {
+    border:1px solid $borderColor;
+    
+}
+
+.modalBackDrop {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+//   background: rgba(0, 0, 0, 0.75);
+}
+
+.answerModal {
+    @include border($neon);
+    @include box();
+    box-shadow: 0px 0px 10px #00000070;
+    position: fixed;
+    top: 30%;
+    left: 29%;
+    width: 50%;
+    z-index: 10;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    padding: 15px 25px;
+    &_header{
+        color: #464646;
+        font-size: 13px;
+    }
+    &_textarea{
+        @include border(#9C9C9C);
+        padding: 10px;
+        margin: 12px 0;
+        border-radius: 15px;
+        height: 350px;
+        size-adjust: none;
+    }
+    &_footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center ;
+        font-size: 13px;
+        &__uploadBtn{
+            display: flex;
+            #uploadBtn{
+                color: $primaryColor;
+                background-color: #fff;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 10px;
+                border: 2px solid $primaryColor;
+                border-radius: 25px;
+            }
+            .uploadDetails{
+                display: flex;
+                align-items: center;
+                color: #888888;
+                :first-child{
+                    margin: 0 12px;
+                }
+            }
+        }
+        #confirmBtn{
+            color: $white;
+            padding: 4px 18px;
+            background-color: $primaryColor;
+            border-radius: 25px;
+        }
+    }
+}
