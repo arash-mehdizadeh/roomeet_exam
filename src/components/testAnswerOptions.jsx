@@ -13,7 +13,7 @@ const TestAnswerOptions = () => {
                 </div>
                 <div className={classes.grade}>
                     <div>{`۰/۲۵`}</div>
-                    <div>بارم</div>
+                    <div >بارم</div>
                 </div>
             </div>
         </li>

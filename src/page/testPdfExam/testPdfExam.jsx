@@ -80,7 +80,7 @@ function TestExam() {
                     <section className={classes.questionSection}>
                         <div className={classes.questionSection_header}>
                             <h2>سوالات آزمون</h2>
-                            <div id={classes.reloadBtn}>
+                            <div className={classes.reloadBtn}>
                                 <p>بارگذاری مجدد</p>
                                 <div id={classes.refreshIcon}>
                                     <Refresh />

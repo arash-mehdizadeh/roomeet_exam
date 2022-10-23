@@ -1,3 +1,6 @@
+import Audio from './audioPlayer/Audio';
+
+
 import classes from '../styles/components/testQuestion.module.scss';
 
 
@@ -13,11 +16,10 @@ const HomeworkQuestion = () => {
             <div className={classes.scrollableQuestionsContainer}>
                 <p>با توجه به عکس کدام گزینه درست است؟</p>
                 <div className={classes.muChImageContainer}>
-                    {/* <img src/> */}
-                    <p>image</p>
+                    <img src="https://picsum.photos/id/1070/5472/3648" alt='nigga'/>
                 </div>
                 <div className={classes.homeworkAudioContainer}>
-                    voice
+                    <Audio />
                 </div>
                 <div className={classes.homeworkPdfContainer}>
                     pdf

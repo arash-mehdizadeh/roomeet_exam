@@ -15,6 +15,10 @@
 }
 .questionDetail{
     width: 10%;
+    color: #464646;
+    :last-child{
+        font-size: 10px;
+    }
 }
 .scrollableQuestionsContainer{
     width: 100%;
@@ -25,7 +29,13 @@
     padding: 15px 21px;
     // margin-right: 20px;
     .muChImageContainer{
-        padding: 16px 0 4px;
+        padding: 16px 0 0;
+        
+        img{
+            @include border();
+            max-width: 100%;
+            max-height: 100%;
+        }
     }
     .muChAudioContainer{
         padding: $defaultPadding 40px;

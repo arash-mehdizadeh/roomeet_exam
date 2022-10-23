@@ -1,7 +1,14 @@
-.muChOptions{
-    font-weight: 500;
-    color: #464646;
-}
-.muChAnswer{
-    padding-right: 11px;
+.muChList{
+    display: flex;
+    align-items: center;
+    .muChOptions{
+        font-weight: 500;
+        color: #464646;
+    }
+    .muChAnswer{
+        color: #888888;
+        font-size: 13px;
+        padding-right: 11px;
+    }
+
 }

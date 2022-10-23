@@ -7,6 +7,7 @@
 }
 
 @mixin test-button-option {
+    color: #9c9c9c;
     align-items: center;
     text-align: center;
     padding: 10px 10px;
@@ -15,6 +16,10 @@
     @include border();
     border-radius: $full;
     margin: 5px;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -24,13 +29,15 @@
         justify-content: space-between;
         .testOptionsContainer{
             display: flex;
+            margin-left: 18px
         }
         .testOptionButton {
             @include test-button-option();
         }
         .grade{
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
+            color: #464646;
             flex-direction: column;
             display: flex;
             justify-content: center;
