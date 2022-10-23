@@ -9,7 +9,6 @@ const [clickedTime, setClickedTime] = useState();
 
 const setPlayingHandler = (status) =>{
     setPlaying(status);
-    console.log(playing);
 }
 
 useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // import Song from "../../assets/audio/Safe_sound.mp3";
-import Song from "../../assets/audio/audio.ogg";
+import Voice from "../../assets/audio/audio.ogg";
 import Play from "./Play";
 import Pause from "./Pause";
 import Bar from "./Bar";
@@ -22,7 +22,7 @@ function Audio() {
     return (
     <div className="player">
         <audio id="audio">
-            <source src={Song} />
+            <source src={Voice} />
                 Your browser does not support the <code>audio</code> element.
         </audio>
         <div className="controls">

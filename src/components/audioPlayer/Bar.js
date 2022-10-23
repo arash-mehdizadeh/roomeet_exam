@@ -1,6 +1,8 @@
 import React from "react";
 import moment from "moment";
 import '../../styles/components/audio/audio.scss';
+import momentDurationFormatSetup from "moment-duration-format";
+
 
 export default function Bar(props) {
   const { duration, curTime, onTimeUpdate } = props;
@@ -9,11 +11,11 @@ export default function Bar(props) {
     // console.log(curPercentage,duration,curPercentage);
     // console.log(curPercentage/duration);
 
-  function formatDuration(duration) {
-    return moment
-      .duration(duration, "seconds")
-      .format("mm:ss", { trim: false });
-  }
+    function formatDuration(duration) {
+        return moment
+          .duration(duration, "seconds")
+          .format("mm:ss", { trim: false });
+      }
 
   function calcClickedTime(e) {
     const clickPositionInPage = e.pageX;
