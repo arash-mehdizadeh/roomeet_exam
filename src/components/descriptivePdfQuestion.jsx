@@ -1,12 +1,10 @@
 
-import TestOptions from "./testOptions";
 import classes from '../styles/components/testQuestion.module.scss';
 import Audio from './audioPlayer/Audio';
 import SampleImage from '../assets/images/examPic.png';
 
-const TestQuestion = () => {
+const DescriptivePdfQuestion = () => {
     
-    const optionsData = [{ id: 1, data: "باور کن نمیدونم" }, { id: 2, data: "از من بپرس" }, { id: 3, data: "از این مبحث سوال نمیاد" }, { id: 4, data: "یک یک موارد بالا" }]
 
     return (
         <div className={classes.questionBox}>
@@ -20,22 +18,13 @@ const TestQuestion = () => {
                     <img src={SampleImage} alt='nigga'/>
                     {/* <p>image</p> */}
                 </div>
-                <div className={classes.muChAudioContainer}>
+                <div className={classes.muChAudioContainer} style={{border:"unset"}}>
                     {/* <ReactAudioPlayer src="http://streaming.tdiradio.com:8000/house.mp3" controls/> */}
                     <Audio />
-                </div>
-                <div className={classes.muChQuestionContainer}>
-                    <ul>
-                        {
-                            optionsData.map(data => (
-                                <TestOptions data={data.data} option={data.id} />
-                            ))
-                        }
-                    </ul>
                 </div>
             </div>
         </div>
     )
 }
 
-export default TestQuestion;
+export default DescriptivePdfQuestion;

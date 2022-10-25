@@ -1,5 +1,6 @@
 import Audio from './audioPlayer/Audio';
 
+import SampleImage from '../assets/images/examPic.png';
 
 import classes from '../styles/components/testQuestion.module.scss';
 
@@ -14,15 +15,15 @@ const HomeworkQuestion = () => {
                 <p>{`( نمره${"۰/۲۵"})`}</p>
             </div>
             <div className={classes.scrollableQuestionsContainer}>
-                <p>با توجه به عکس کدام گزینه درست است؟</p>
+                <p>معادله زیر را بدست آورید؟</p>
                 <div className={classes.muChImageContainer}>
-                    <img src="https://picsum.photos/id/1070/5472/3648" alt='nigga'/>
+                    <img src={SampleImage} alt='nigga'/>
                 </div>
                 <div className={classes.homeworkAudioContainer}>
                     <Audio />
                 </div>
                 <div className={classes.homeworkPdfContainer}>
-                    pdf
+                    pdf viewer going show here
                 </div>
             </div>
         </div>

@@ -11,21 +11,27 @@ function TestExam() {
     return (
         <div className={classes.appContainer}>
             <div className={classes.container}>
-                <header className={classes.examTimeRemainedContainer}>
+                <header className={classes.timeRemainedContainer} style={{display:'grid'}}>
                     <div className={classes.headerBox}>
                         <div className={classes.buttonContainer}>
                             <p>اتمام آزمون</p>
                             <p  >ترک آزمون</p>
                         </div>
-                        <svg id={classes.circle_container} viewBox="2 -2 28 36" xmlns="http://www.w3.org/2000/svg">
-                            <linearGradient id={"gradient"}>
-                                <stop id={classes.stop1} offset="0%" />
-                                <stop id={classes.stop2} offset="100%" />
-                            </linearGradient>
-                            <circle id={classes.circle_container__background} r="16" cx="16" cy="16" shape-rendering="geometricPrecision"></circle>
-                            <circle id={classes.circle_container__progress} r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
-                            </circle>
-                        </svg>
+                        <div className={classes.countdownContainer}>
+                            <svg id={classes.circle_container} viewBox="2 -2 28 36" xmlns="http://www.w3.org/2000/svg">
+                                <linearGradient id={"gradient"}>
+                                    <stop id={classes.stop1} offset="0%" />
+                                    <stop id={classes.stop2} offset="100%" />
+                                </linearGradient>
+                                <circle id={classes.circle_container__background} r="16" cx="16" cy="16" shape-rendering="geometricPrecision"></circle>
+                                <circle id={classes.circle_container__progress} r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
+                                </circle>
+                            </svg>
+                            <div className={classes.timeRemained}>
+                                <div id={classes.time}>4:20:00</div>
+                                <div>مانده</div>
+                            </div>
+                        </div>
                         {/* <div className='time-remained'>4:20:00</div> */}
                     </div>
                     <div className={classes.informationBar}>
@@ -44,10 +50,11 @@ function TestExam() {
                         <div className={classes.personalDetails}>
                             <ul>
                                 <li>{`نام کاربر : ${"فردوسی"}`}</li>
-                                <li>{`مدت آزمون : ${60} دقیقه`}</li>
-                                <li>{`نوع آزمون : ${"تستی"}`}</li>
-                                <li>{`ضریب منفی : ${"3 به 1"}`}</li>
-                                <li>{`تعداد سوالات : ${100}`}</li>
+                                <li style={{display:"flex"}}> 
+                                    <p>پایان زمان تحویل تکلیف :</p>
+                                    <p>{"1401/02/05"}</p>
+                                </li>
+                                <li>{`18:00`}</li>
                             </ul>
                         </div>
                     </div>

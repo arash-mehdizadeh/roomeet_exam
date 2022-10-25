@@ -10,6 +10,9 @@ import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 import classes from'../../App.module.scss';
 import UploadButtons from '../../components/uploadButtons';
 
+import TestQuestion from '../../components/testQuestion';
+import DescriptivePdfQuestion from '../../components/descriptivePdfQuestion';
+
 function DescriptiveExam() {
     
     const [activeBtn, setActiveBtn] = useState(null);
@@ -118,7 +121,12 @@ function DescriptiveExam() {
                             </div>
                         </div>
                         <div className={classes.questionContainer}>
-                            pdf
+                            <DescriptivePdfQuestion />
+                            <DescriptivePdfQuestion />
+                            <DescriptivePdfQuestion />
+                            <DescriptivePdfQuestion />
+                            <DescriptivePdfQuestion />
+                            <DescriptivePdfQuestion />
                         </div>
                     </section>
                 </main>

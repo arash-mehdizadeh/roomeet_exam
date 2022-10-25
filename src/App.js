@@ -3,9 +3,11 @@ import TestExam from "./page/testExam/testExam"
 import TestPdfExam from "./page/testPdfExam/testPdfExam"
 import Homework from "./page/homework/homework"
 import DescriptiveExam from "./page/descriptiveExam/descriptiveExam"
+import DescriptivePdfExam from "./page/descriptive_pdf_exam/descriptrivePdf"
 
 
 const App = () => {
+    
     return (
         <BrowserRouter>
             <Routes>
@@ -13,6 +15,7 @@ const App = () => {
                 <Route path="test-exam" element={<TestPdfExam/>} />
                 <Route path="homework" element={<Homework/>} />
                 <Route path="descriptive-exam" element={<DescriptiveExam/>} />
+                <Route path="descriptive-pdf-exam" element={<DescriptivePdfExam/>} />
             </Routes>
         </BrowserRouter>
         

@@ -32,16 +32,13 @@
         font-weight: normal;
         font-size: 1em;
 
-        &:hover {
-        color: greenyellow;
-            cursor: pointer;
-        }
+        
     }
 }
 
 .controls {
     flex-grow: 1;
-    padding: 0 20px;
+    padding : 0 0 0 20px;
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -53,6 +50,7 @@
     width: fit-content;
     background-color: transparent;
     border: none;
+    cursor: pointer;
 
     &:focus {
         outline: none;
