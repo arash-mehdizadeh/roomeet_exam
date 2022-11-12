@@ -1,12 +1,14 @@
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
-
+import CountdownTimer from "react-component-countdown-timer";
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from'../../App.module.scss';
 
 function TestExam() {
+
+
     return (
         <div className={classes.appContainer}>
             <div className={classes.container}>
@@ -27,7 +29,9 @@ function TestExam() {
                                 </circle>
                             </svg>
                             <div className={classes.timeRemained}>
-                                <div id={classes.time}>4:20:00</div>
+                                <div id={classes.time}>
+                                    <CountdownTimer count={10} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => {console.log("TIME UP");}} />
+                                </div>
                                 <div>مانده</div>
                             </div>
                         </div>
@@ -68,7 +72,7 @@ function TestExam() {
                             </div>
                         </div>
                         <div className={classes.answerSheet}>
-                            <ul>
+                            <ol>
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
@@ -79,7 +83,7 @@ function TestExam() {
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
-                            </ul>
+                            </ol>
                         </div>
                     </div>
                     {/* DISPLAY QUESTION / QUESTION SECTION  */}

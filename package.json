@@ -12,6 +12,7 @@
     "moment-duration-format": "^2.3.2",
     "pdfjs-dist": "^2.15.349",
     "react": "^18.2.0",
+    "react-component-countdown-timer": "^0.1.8",
     "react-dom": "^18.2.0",
     "react-pdf": "^5.7.2",
     "react-router-dom": "^6.4.2",

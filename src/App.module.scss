@@ -1,4 +1,6 @@
+
 @import  '../src/styles/variables';
+@import "~react-component-countdown-timer/lib/styles.css";
 // @import '/src/styles/mixins';
 
 
@@ -332,7 +334,7 @@
         padding: 10px 10px 0 10px;
         height: 430px;
         overflow-y: auto;
-        ul{
+        ol{
             display: flex;
             flex-direction: column;
             padding-right: 15px;
@@ -342,16 +344,16 @@
 
     .answerSheet{
         direction:ltr;
-        padding: 10px 10px 0 10px;
+        padding: 10px 9px 0 10px;
         height: 430px;
         overflow-y: auto;
 
         
 
-        ul{
+        ol{
             display: flex;
             flex-direction: column;
-            padding-right: 15px;
+            padding-right: 25px;
             // overflow-y:auto ; 
         }
         .testRow{
@@ -488,6 +490,116 @@
                 }
             }
             
+        }
+    }
+}
+
+#returnBtn{
+    align-items: center;
+    font-size: $font-size-df;
+    font-weight: 500;
+    width: 180px;
+    display: flex;
+    padding:10px 12px;
+    background-color: $white;
+    border-radius: 10px;
+    color:#5E5E5E;
+    justify-content: space-between;
+    user-select: none;
+    cursor: pointer;
+    .exitIcon{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 28px;
+        border-radius: 100px;
+        background-color: $primaryColor;
+    }
+}
+
+.examInfo{
+
+    &__container{
+        display: flex;
+        flex-direction: row !important;
+        padding: 20px 10px !important;
+        height: auto !important;
+    }
+    &__info_container{
+        display: flex;
+        padding: 10px 0;
+    }
+    &__title{
+        color: $textPrimaryColor;
+        width: 130px;
+    }
+    &__detail{
+        margin-right: 10px;
+    }
+    &__btn_container{
+        display: flex;
+        padding: 10px 0;
+        justify-content: center;
+    }
+    &__btn{
+        all: unset;
+        padding: 10px 20px;
+        border-radius: 1000px;
+        background-color: $neon;
+        color: $thirdColor;
+        cursor: pointer;
+    }
+    &__login_section{
+        display: flex;
+        width: 100%;
+        border-right: 1px solid $primaryBorderColor;
+    }
+    &__login{
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        #forgetPassword{
+            color: #007bff;
+            cursor: pointer;
+            margin-bottom: 16px;
+            font-size: 13px;
+            text-decoration: underline;
+            &:hover{
+                color: $neon;
+            }
+        }
+        &_title{
+            display: flex;
+            justify-content: center;
+            color: #9c9c9c;
+            margin-bottom: 16px;
+        }
+        &_info{
+            font-size: 13px;
+            font-weight: 400;
+            color: #000;
+        }
+        &_input{
+            border: 1px solid $secondaryBorderColor;
+            color: #9C9C9C;
+            margin-bottom: 16px;
+            border-radius: 100px;
+            padding: 5px 10px;
+            width: 200px;
+            &:focus{
+                border:1px solid #000;
+            }
+        }
+        &_btn{
+            all: unset;
+            padding: 10px 0;
+            background-color: $primaryColor;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            border-radius: 100px;
+            cursor: pointer;
         }
     }
 }

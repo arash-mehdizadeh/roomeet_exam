@@ -39,21 +39,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-ul {
-  list-style-type: arabic-indic;
-}
+// ul {
+//   list-style-type: arabic-indic;
+// }
 
 ::-webkit-scrollbar {
-  width: 6px;
 
-  &-track {
-    background-color: $scrollBarTrack-color;
-  }
-  &-thumb {
-    border-radius: 10px;
-    background-color: $scrollBar-color;
-  }
-  &-thumb:hover {
-    background-color: #c9c9c9;
-  }
+    width: 6px;
+
+    &-track {
+        background-color: transparent;
+    }
+    &-thumb {
+        background-color: #3F4254;
+    }
+    &-thumb:hover {
+        background-color: #c9c9c9;
+    }
 }

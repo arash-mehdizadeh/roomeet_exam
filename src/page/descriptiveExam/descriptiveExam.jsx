@@ -84,7 +84,7 @@ function DescriptiveExam() {
                             </div>
                         </div>
                         <div className={classes.uploadAnswersSheet}>
-                            <ul>
+                            <ol>
                                 {
                                     arr.map((data)=>(
                                         <UploadButtons 
@@ -103,7 +103,7 @@ function DescriptiveExam() {
                                 <UploadButtons />
                                 <UploadButtons />
                                 <UploadButtons />
-                            </ul>
+                            </ol>
                         </div>
                     </div>
                     {/* DISPLAY QUESTION / QUESTION SECTION  */}

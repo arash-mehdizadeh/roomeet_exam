@@ -69,7 +69,7 @@ function TestExam() {
                             </div>
                         </div>
                         <div className={classes.answerSheet}>
-                            <ul>
+                            <ol>
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
@@ -80,7 +80,7 @@ function TestExam() {
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
                                 <TestAnswerOptions />
-                            </ul>
+                            </ol>
                         </div>
                     </div>
                     {/* DISPLAY QUESTION / QUESTION SECTION  */}
