@@ -6,13 +6,13 @@ const userAction = axios.create({
     baseURL:`https://quiz-api.roomeet.ir/api/${appVersion}`
 })
 
-const LS_Token = localStorage.getItem("userToken");
+const LS_Token = JSON.parse(localStorage.getItem("userToken"));
 
 let axiosConfig = {
     headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization':`Bearer ${LS_Token.token}` ,
-        'Accept': 'application/json',
+        // 'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization':"Bearer " + LS_Token?.token ,
+        'Accept': '*/*',
         //     'Access-Control-Allow-Credentials': 'true',
         //     'mode': 'cors',
     }
@@ -38,11 +38,11 @@ const examDatails = async (examID) => {
 
 const attemptToJoinExam = async (examID) => {
     try {
-        let response =  await userAction.post(`/site/quiz/attempt/join/${examID}`,)
-        return(response.data.quiz)
+        let response =  await userAction.get(`/site/quiz/attempt/join/${examID}`,axiosConfig)
+        return(response.data)
     } catch (error) {
         console.log(error.message);
     }
 }
 
-export { userLogin ,examDatails };
+export { userLogin ,examDatails ,attemptToJoinExam };

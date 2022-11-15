@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Howl } from "howler"
+
 
 // import Song from "../../assets/audio/Safe_sound.mp3";
 import Voice from "../../assets/audio/audio.ogg";
@@ -9,7 +11,7 @@ import '../../styles/components/audio/audio.scss';
 
 import useAudioPlayer from './useAudioPlayer';
 
-function Audio() {
+function Audio({ audioURL ,audioID }) {
     
     const { curTime, duration, setClickedTime } = useAudioPlayer();
     // console.log(curTime,duration,playing);
@@ -19,10 +21,19 @@ function Audio() {
         playing ? audio.play() : audio.pause();
     }, [playing])
     
+
+    const soundPlay = (src) => {
+        const second = new Howl({
+            src,
+            html5: true
+        })
+        second.play()
+    }
+
     return (
-    <div className="player">
+    <div className="player" key={audioID} >
         <audio id="audio">
-            <source src={Voice} />
+            <source src={audioID} type="audio/mpeg"/>
                 Your browser does not support the <code>audio</code> element.
         </audio>
         <div className="controls">

@@ -9,16 +9,27 @@ import { useNavigate, useParams } from 'react-router-dom';
 function ExamInfo() {
 
     const params = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const [examData, setExamData] = useState()
+    const [examData, setExamData] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [inputField, setInputField] = useState({
         phone: "",
         password: ""
     });
 
+    function isInThePast(date) {
+        const today = new Date();
+        return date < today;
+    }
 
+    const today = new Date()
+    // console.log("today => ", today)
+    let tomorrow = new Date()
+    tomorrow.setDate(today.getDate() + 1)
+    //returns the tomorrow date
+    // console.log("tomorrow => ", tomorrow)
+    console.log(isInThePast(tomorrow));
     const fetchData = async () => {
         const data = await examDatails(params.quiz_id)
         console.table(data);
@@ -46,20 +57,26 @@ function ExamInfo() {
     }
 
     const examPageHandler = () => {
+        let data = JSON.parse(localStorage.getItem('userToken'));
+        if (data) {
+            if (examData?.type == "test" && examData?.question_type == "custom") {
+                navigate(`/quiz/test/${params.quiz_id}`);
+            }
+            if (examData?.type == "test" && examData?.question_type == "pdf") {
+                navigate(`/quiz/test-pdf/${params.quiz_id}`);
+            }
+            if (examData?.type == "descriptive" && examData?.question_type == "custom") {
+                navigate(`/quiz/descriptive/${params.quiz_id}`);
+            }
+            if (examData?.type == "descriptive" && examData?.question_type == "pdf") {
+                navigate(`/quiz/descriptive-pdf/${params.quiz_id}`);
+            }
+        }
+        else {
+            alert("برای ورود به آزمون وارد حساب کاربری بشوید")
+        }
         // question_type
         //type
-        if ( examData?.type == "test" && examData?.question_type == "custom" ){
-            navigate(`/quiz/test/${params.quiz_id}`);
-        }
-        if ( examData?.type == "test" && examData?.question_type == "pdf" ){
-            navigate(`/quiz/test-pdf/${params.quiz_id}`);
-        }
-        if ( examData?.type == "descriptive" && examData?.question_type == "custom" ){
-            navigate(`/quiz/descriptive/${params.quiz_id}`);
-        }
-        if ( examData?.type == "descriptive" && examData?.question_type == "pdf" ){
-            navigate(`/quiz/descriptive-pdf/${params.quiz_id}`);
-        }
     }
 
     return (
@@ -138,7 +155,7 @@ function ExamInfo() {
                         </div>
                     </div>
                     <div className={classes.examInfo__btn_container}>
-                        <button onClick={()=> examPageHandler() } className={classes.examInfo__btn}>شروع  آزمون و مشاهده سوالات</button>
+                        <button onClick={() => examPageHandler()} className={classes.examInfo__btn}>شروع  آزمون و مشاهده سوالات</button>
                     </div>
                 </section>
 

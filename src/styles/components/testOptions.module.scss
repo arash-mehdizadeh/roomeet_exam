@@ -1,14 +1,18 @@
 .muChList{
     display: flex;
     align-items: center;
+    // max-width: 789px;
     .muChOptions{
+        min-width: 60px;
         font-weight: 500;
         color: #464646;
     }
     .muChAnswer{
+        max-width: 100%;
         color: #888888;
         font-size: 13px;
         padding-right: 11px;
+        overflow-wrap: anywhere;
     }
 
 }

@@ -1,6 +1,9 @@
+import CountdownTimer from "react-component-countdown-timer";
+
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
-import CountdownTimer from "react-component-countdown-timer";
+
+
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
@@ -25,7 +28,7 @@ function TestExam() {
                                     <stop id={classes.stop2} offset="100%" />
                                 </linearGradient>
                                 <circle id={classes.circle_container__background} r="16" cx="16" cy="16" shape-rendering="geometricPrecision"></circle>
-                                <circle id={classes.circle_container__progress} r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
+                                <circle id={classes.circle_container__progress}  r="16" cx="16" cy="16" shape-rendering="geometricPrecision">
                                 </circle>
                             </svg>
                             <div className={classes.timeRemained}>
