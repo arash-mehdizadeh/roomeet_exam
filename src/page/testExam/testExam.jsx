@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { attemptToJoinExam } from "../../assets/api/userActions";
-import CountdownTimer from "react-component-countdown-timer";
+import CountDown from "../../components/countDown/countDown";
 
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
@@ -10,7 +10,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
-import CountDown from "../../components/countDown/countDown";
+
 function TestExam() {
     const navigate = useNavigate();
     const params = useParams();

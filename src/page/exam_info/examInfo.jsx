@@ -26,7 +26,7 @@ function ExamInfo() {
     const today = new Date()
     // console.log("today => ", today)
     let tomorrow = new Date()
-    tomorrow.setDate(today.getDate() + 1)
+    const setExpireDate = tomorrow.setDate(today.getDate() + 1);
     //returns the tomorrow date
     // console.log("tomorrow => ", tomorrow)
     console.log(isInThePast(tomorrow));
@@ -39,8 +39,15 @@ function ExamInfo() {
 
     useEffect(() => {
         let data = JSON.parse(localStorage.getItem('userToken'));
+        if (!data) {
+            navigate(`/quiz/join/${params.quiz_id}`)
+        }
         if (data) {
             setIsUserLogged(true);
+        }
+        if ( data && isInThePast(data.expireDate)) {
+            localStorage.removeItem('userToken');
+            window.location.reload();
         }
         console.log(fetchData());
     }, [])
@@ -52,23 +59,26 @@ function ExamInfo() {
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         const userData = await userLogin(inputField);
-        localStorage.setItem("userToken", JSON.stringify(userData))
+
+        localStorage.setItem("userToken", JSON.stringify({
+            ...userData, "expireDate": setExpireDate
+        }))
         window.location.reload();
     }
 
     const examPageHandler = () => {
         let data = JSON.parse(localStorage.getItem('userToken'));
         if (data) {
-            if (examData?.type == "test" && examData?.question_type == "custom") {
+            if (examData?.type === "test" && examData?.question_type == "custom") {
                 navigate(`/quiz/test/${params.quiz_id}`);
             }
-            if (examData?.type == "test" && examData?.question_type == "pdf") {
+            if (examData?.type === "test" && examData?.question_type === "pdf") {
                 navigate(`/quiz/test-pdf/${params.quiz_id}`);
             }
-            if (examData?.type == "descriptive" && examData?.question_type == "custom") {
+            if (examData?.type === "descriptive" && examData?.question_type === "custom") {
                 navigate(`/quiz/descriptive/${params.quiz_id}`);
             }
-            if (examData?.type == "descriptive" && examData?.question_type == "pdf") {
+            if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
                 navigate(`/quiz/descriptive-pdf/${params.quiz_id}`);
             }
         }
@@ -122,7 +132,7 @@ function ExamInfo() {
                                 </div>
                                 <div className={classes.examInfo__info_container}>
                                     <p className={classes.examInfo__title}>پایان آزمون :</p>
-                                    <p className={classes.examInfo__detail}>{`${examData?.duration} دقیقه بعد از شروع آزمون`}</p>
+                                    <p className={classes.examInfo__detail}>{`${examData?.duration/60} دقیقه بعد از شروع آزمون`}</p>
                                 </div>
                                 <div className={classes.examInfo__info_container}>
                                     <p className={classes.examInfo__title}>نمایش کارنامه تستی :</p>

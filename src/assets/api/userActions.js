@@ -44,5 +44,13 @@ const attemptToJoinExam = async (examID) => {
         console.log(error.message);
     }
 }
+const finishExam = async (examID) => {
+    try {
+        let response =  await userAction.get(`/site/quiz/finish/${examID}`,axiosConfig)
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
-export { userLogin ,examDatails ,attemptToJoinExam };
+export { userLogin ,examDatails ,attemptToJoinExam ,finishExam };
