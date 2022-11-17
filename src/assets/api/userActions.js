@@ -8,7 +8,17 @@ const userAction = axios.create({
 
 const LS_Token = JSON.parse(localStorage.getItem("userToken"));
 
-let axiosConfig = {
+var axiosUploadConfig = {
+    headers: {
+        'Authorization':"Bearer " + LS_Token?.token ,
+        'Contetnt-Type':"multipart/form-data",
+        'Accept': 'application/json',
+        'type':"formData",
+        //     'Access-Control-Allow-Credentials': 'true',
+        //     'mode': 'cors',
+    }
+};
+var axiosConfig = {
     headers: {
         // 'Content-Type': 'application/json;charset=UTF-8',
         'Authorization':"Bearer " + LS_Token?.token ,
@@ -52,5 +62,13 @@ const finishExam = async (examID) => {
         console.log(error.message);
     }
 }
+const postFormData = async ( formData ) => {
+    try {
+        let response =  await userAction.post(`site/quiz/file/upload`,formData,axiosUploadConfig)
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
-export { userLogin ,examDatails ,attemptToJoinExam ,finishExam };
+export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,postFormData };

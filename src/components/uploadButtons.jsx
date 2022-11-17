@@ -17,6 +17,9 @@ const UploadButtons = ({index , activeBtn ,activeBtnHandler ,nullingActiveBtnHan
         nullingActiveBtnHandler()
         setIsModalOpen(prev => !prev)
     }
+
+    // const 
+
     return (
 
         // <li className={classes.uploadRow}>
