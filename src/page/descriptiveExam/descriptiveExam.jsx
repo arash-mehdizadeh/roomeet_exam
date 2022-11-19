@@ -19,15 +19,17 @@ function DescriptiveExam() {
     const navigate = useNavigate();
     const params = useParams();
 
+    const [activeBtn, setActiveBtn] = useState(null);
     const [examData, setExamData] = useState();
+    const [examDataAttemptID, setExamDataAttemptID] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
-        // console.log(data.quiz);
         setExamData(data)
+        setExamDataAttemptID(data.attempt.id);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
 
@@ -41,12 +43,9 @@ function DescriptiveExam() {
     }, [])
 
 
-    const [activeBtn, setActiveBtn] = useState(null);
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 10];
 
     const activeBtnHandler = (index) => {
         setActiveBtn(index);
-        console.log(index);
     }
     const nullingActiveBtnHandler = () => {
         setActiveBtn(null);
@@ -104,10 +103,10 @@ function DescriptiveExam() {
                                 <div className={classes.uploadAnswersSheet}>
                                     <ol>
                                         {
-                                            arr.map((data) => (
+                                            examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
-                                                    index={data}
-                                                    activeBtn={activeBtn} activeBtnHandler={activeBtnHandler}
+                                                    index={data.id} options={data.options} score={data.score} 
+                                                    activeBtn={activeBtn} attemptID={examDataAttemptID} activeBtnHandler={activeBtnHandler}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />
                                             ))

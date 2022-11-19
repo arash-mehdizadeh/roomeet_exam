@@ -16,14 +16,17 @@ function TestExam() {
     const params = useParams();
 
     const [examData, setExamData] = useState();
+    const [examDataAttemptID, setExamDataAttemptID] = useState();
+    
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
-
+    
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
         // console.log(data.quiz);
         setExamData(data)
+        setExamDataAttemptID(data.attempt.id);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
 
@@ -89,7 +92,7 @@ function TestExam() {
                                     <ol>
                                         {
                                             examData.quiz?.questions?.map((data) => (
-                                                <TestAnswerOptions id={data.id} options={data.options} score={data.score} />
+                                                <TestAnswerOptions id={data.id} attemptID={examDataAttemptID} options={data.options} score={data.score} />
                                             ))
                                         }
                                         {/* <TestAnswerOptions  />
