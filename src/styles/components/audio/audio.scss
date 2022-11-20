@@ -50,7 +50,7 @@
     width: fit-content;
     background-color: transparent;
     border: none;
-    cursor: pointer;
+    cursor: pointer !important;
 
     &:focus {
         outline: none;
@@ -61,7 +61,7 @@
     }
 }
 
-  .bar {
+.bar {
     display: flex;
     flex-direction: column;
     user-select: none;

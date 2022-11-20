@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam } from "../../assets/api/userActions";
 
 
 import CountDown from "../../components/countDown/countDown";
 import dummy from "./dummy.pdf";
 import { Viewer, Worker, ProgressBar } from '@react-pdf-viewer/core';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 import TestAnswerOptions from '../../components/testAnswerOptions';
@@ -24,7 +23,15 @@ function TestExam() {
         isCompressed: true,
         // The url has to end with "/"
         url: 'https://unpkg.com/pdfjs-dist@2.6.347/cmaps/',
-    };
+    };    
+    const navigate = useNavigate();
+    const params = useParams();
+
+    const [examDataAttempt, setExamDataAttempt] = useState();
+    const [examData, setExamData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [totalTime, setTotalTime] = useState(0);
 
     const [pages, setPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
@@ -35,19 +42,19 @@ function TestExam() {
         setPageNumber(1);
     }
 
-    const navigate = useNavigate();
-    const params = useParams();
-
-    const [examData, setExamData] = useState();
-    const [isLoading, setIsLoading] = useState(true);
-    const [timeLeft, setTimeLeft] = useState(0);
-    const [totalTime, setTotalTime] = useState(0);
+    const onFinishHandler = async(e) => {
+        let res = await finishExam(e);
+        console.log(res);
+        if(res.status === "success-finish"){
+            navigate("/quiz/join/"+params.quiz)
+        }
+    }
 
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
         // console.log(data.quiz);
         setExamData(data)
-        console.log(data);
+        setExamDataAttempt(data.attempt)
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
 
@@ -71,12 +78,10 @@ function TestExam() {
         if (data && isInThePast(data.expireDate)) {
             toLoginPage()
         }
-        console.log(fetchData());
-    }, [])
-
-    useEffect(() => {
-        fetchData();
-        return () => {
+        else {
+            fetchData();
+        }
+            return () => {
             setIsLoading(false)
         }
     }, [])
@@ -92,7 +97,7 @@ function TestExam() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p>اتمام آزمون</p>
+                                    <p onClick={()=>onFinishHandler() }>اتمام آزمون</p>
                                     <p  >ترک آزمون</p>
                                 </div>
                                 <CountDown totalTime={totalTime} timeRemained={timeLeft} />
@@ -135,9 +140,10 @@ function TestExam() {
                                 </div>
                                 <div className={classes.answerSheet}>
                                     <ol>
-                                        {
+                                    {
                                             examData.quiz?.questions?.map((data) => (
-                                                <TestAnswerOptions id={data.id} options={data.options} score={data.score} />
+                                                <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id}
+                                                    options={data.options} score={data.score} />
                                             ))
                                         }
                                     </ol>
@@ -161,8 +167,12 @@ function TestExam() {
                                     <Worker  workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                                             <div style={{ height: '750px' }}>
                                                 <Viewer
-                                                    fileUrl={dummy}
-                                                    characterMap={characterMap}
+                                                    fileUrl={"https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1668959499_dummy.pdf"}
+                                                    characterMap={characterMap}  httpHeaders={{
+                                                        // "Access-Control-Allow-Origin" : ""
+                                                        "mode":"no-cors"
+                                                    }}
+                                                    
                                                 />
                                             </div>
                                         </Worker>

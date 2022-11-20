@@ -35,7 +35,24 @@ function DescriptivePdfExam() {
 
     }
 
-    useEffect(() => {
+    function isInThePast(date) {
+        const today = new Date();
+        return date < today;
+    }
+
+    function toLoginPage() {
+        localStorage.removeItem('userToken');
+        navigate(`/quiz/join/${params.quiz}`)
+    }
+
+    useEffect(() => { 
+        let data = JSON.parse(localStorage.getItem('userToken'));
+        if (!data) {
+            navigate(`/quiz/join/${params.quiz}`)
+        }
+        if (data && isInThePast(data.expireDate)) {
+            toLoginPage()
+        }
         fetchData();
         return () => {
             setIsLoading(false)

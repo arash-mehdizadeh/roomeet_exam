@@ -26,6 +26,7 @@ function DescriptiveExam() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
+    
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
         setExamData(data)
@@ -35,7 +36,25 @@ function DescriptiveExam() {
 
     }
 
+    function isInThePast(date) {
+        const today = new Date();
+        return date < today;
+    }
+
+    function toLoginPage() {
+        localStorage.removeItem('userToken');
+        navigate(`/quiz/join/${params.quiz}`)
+    }
+
+
     useEffect(() => {
+        let data = JSON.parse(localStorage.getItem('userToken'));
+        if (!data) {
+            navigate(`/quiz/join/${params.quiz}`)
+        }
+        if (data && isInThePast(data.expireDate)) {
+            toLoginPage()
+        }
         fetchData();
         return () => {
             setIsLoading(false)

@@ -1,4 +1,4 @@
-import Audio from './audioPlayer/Audio';
+// import Audio from './audioPlayer/Audio';
 
 import SampleImage from '../assets/images/examPic.png';
 
@@ -7,7 +7,7 @@ import classes from '../styles/components/testQuestion.module.scss';
 
 const HomeworkQuestion = () => {
 
-
+    
     return (
         <div className={classes.questionBox}>
             <div className={classes.questionDetail}>
@@ -20,7 +20,7 @@ const HomeworkQuestion = () => {
                     <img src={SampleImage} alt='nigga'/>
                 </div>
                 <div className={classes.homeworkAudioContainer}>
-                    <Audio />
+                    {/* <Audio /> */}
                 </div>
                 <div className={classes.homeworkPdfContainer}>
                     pdf viewer going show here

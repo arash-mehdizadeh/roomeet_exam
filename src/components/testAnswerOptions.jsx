@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import { postUserTestAnswer } from '../assets/api/userActions';
 
 import classes from '../styles/components/TestAnswerOptions.module.scss'
@@ -6,21 +6,27 @@ import classes from '../styles/components/TestAnswerOptions.module.scss'
 const TestAnswerOptions = ({ id,attemptID , options, score }) => {
     // console.log(options);
     
-    const [ActiveBtn, setActiveBtn] = useState(0)
+    const [activeBtn, setActiveBtn] = useState(0)
 
-
-    const onClickOptionHandler = (option) =>{
-        setActiveBtn(option);
-        postUserTestAnswer(id,attemptID,ActiveBtn)
+    const postAnswerDataHandler = ( optionNum ) =>{
+        // e.preventDefault();
+        // console.log("id =>" +id,"attempID =>" +attemptID , "ActiveBtn => " + optionNum );
+        postUserTestAnswer(id,attemptID,optionNum).then(res => console.log(res))
     }
-
+    
+    const onOptionClickHandler = (num) => {
+        setActiveBtn(num);
+        postAnswerDataHandler(num)
+    }
+    
     return (
         <li key={id} >
             <div className={classes.testRow}>
                 <div className={classes.testOptionsContainer}>
                     {
                         options?.map((el) => (
-                            <div key={el.id} onClick={ () => onClickOptionHandler(el.option_number) } className={classes.testOptionButton}>{el.option_number}</div>
+                            <div key={el.id} onClick={ () => onOptionClickHandler(el.option_number) }
+                            className={`${classes.testOptionButton} ${activeBtn === el.option_number ? classes.active_btn : ""} `}>{el.option_number}</div>
                         ))
                     }
                     {/* <div className={classes.testOptionButton}>۲</div>

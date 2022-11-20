@@ -19,15 +19,8 @@ var axiosUploadConfig = {
         //     'mode': 'cors',
     }
 };
-var xxxaxiosUploadConfig = {
-    headers: {
-        'Authorization':"Bearer " + LS_Token?.token ,
-        'Contetnt-Type':"multipart/form-data",
-        'Accept': 'application/json',            
-        //     'Access-Control-Allow-Credentials': 'true',
-        //     'mode': 'cors',
-    }
-};
+
+
 var axiosConfig = {
     headers: {
         // 'Content-Type': 'application/json;charset=UTF-8',
@@ -64,9 +57,9 @@ const attemptToJoinExam = async (examID) => {
         console.log(error.message);
     }
 }
-const finishExam = async (examID) => {
+const finishExam = async (attemptID) => {
     try {
-        let response =  await userAction.get(`/site/quiz/finish/${examID}`,axiosConfig)
+        let response =  await userAction.get(`/site/quiz/finish/${attemptID}`,axiosUploadConfig)
         return(response.data)
     } catch (error) {
         console.log(error.message);
@@ -85,7 +78,7 @@ const postFormData = async ( formData ) => {
 const storeFileURL = async ( fileData ) => {
     console.log(fileData);
     try {
-        let response =  await userAction.post(`/site/quiz/file/store`, fileData , xxxaxiosUploadConfig)
+        let response =  await userAction.post(`/site/quiz/file/store`, fileData , axiosUploadConfig)
         return(response.data)
     } catch (error) {
         console.log(error.message);
@@ -131,11 +124,13 @@ const postUserTestAnswer = async ( id ,attemptID ,userAnswer ) => {
 
     try {
         let response =  await userAction.post(`/site/quiz/answer`,questionAnswerData,axiosUploadConfig)
-        return(response.data)
+        return(response)
     } catch (error) {
         console.log(error.message);
     }
 }
+
+
 
 export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,postFormData ,// ,postFilePath
             postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer

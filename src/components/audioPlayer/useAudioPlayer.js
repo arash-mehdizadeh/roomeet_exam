@@ -11,7 +11,7 @@ const setPlayingHandler = (status) =>{
     setPlaying(status);
 }
 
-useEffect(() => {
+useEffect(() => {   
     const audio = document.getElementById("audio");
 
     // state setters wrappers

@@ -1,10 +1,18 @@
 
 import classes from '../styles/components/testQuestion.module.scss';
-import Audio from './audioPlayer/Audio';
-import SampleImage from '../assets/images/examPic.png';
+import AudioController from './audioPlayer/AudioController';
+import Bar from './audioPlayer/Bar';
+
+import { ReactComponent as PauseCircleFilled } from '../assets/icons/pause-circle-filled.svg';
+import { ReactComponent as PlayCircleFilled } from '../assets/icons/play-circle-filled.svg';
+
 
 const DescriptiveQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data }) => {
 
+    const musicURL = audioURL;
+    const { playing, toggle, duration, curTime, setClickedTime } = AudioController(musicURL);
+
+    
 
     return (
         <div className={classes.questionBox} key={id}>
@@ -19,8 +27,20 @@ const DescriptiveQuestion = ({ id, quNo, audioURL, imageURL, score, options, bod
                     {/* <p>image</p> */}
                 </div>
                 <div className={classes.muChAudioContainer} style={{ border: "unset" }}>
-                    {/* <ReactAudioPlayer src="http://streaming.tdiradio.com:8000/house.mp3" controls/> */}
-                    <Audio />
+                {audioURL && 
+                        <>
+                            <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
+                            {
+                                playing ?
+
+                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                    <PauseCircleFilled style={{ fill: "#c30a7f" }} />
+                                </div> :
+                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                    <PlayCircleFilled style={{ fill: "#c30a7f" }} />
+                                </div>
+                            }
+                        </>}
                 </div>
             </div>
         </div>

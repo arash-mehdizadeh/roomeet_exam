@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
-import '../../styles/components/audio/audio.scss';
+// import '../../styles/components/audio/audio.scss';
+import classes from '../../styles/components/audio/audio.module.scss';
 import momentDurationFormatSetup from "moment-duration-format";
 
 
@@ -19,17 +20,16 @@ export default function Bar(props) {
 
   function calcClickedTime(e) {
     const clickPositionInPage = e.pageX;
-    console.log("clickPositionInPage",clickPositionInPage);
-    // console.log();
+    // console.log("clickPositionInPage",clickPositionInPage);
     const bar = document.querySelector(".bar__progress");
     const barStart = bar.getBoundingClientRect().left + window.scrollX;
-    console.log("barStart",barStart);
+    // console.log("barStart",barStart);
     const barWidth = bar.offsetWidth;
-    console.log("barWidth",barWidth);
+    // console.log("barWidth",barWidth);
     const clickPositionInBar = clickPositionInPage - barStart;
-    console.log("clickPositionInBar",clickPositionInBar);
+    // console.log("clickPositionInBar",clickPositionInBar);
     const timePerPixel = duration / barWidth;
-    console.log("timePerPixel",timePerPixel);
+    // console.log("timePerPixel",timePerPixel);
     return timePerPixel * clickPositionInBar;
   }
 
@@ -48,21 +48,21 @@ export default function Bar(props) {
   }
 
   return (
-    <div className="bar">
-        <div className="bar__progress"
+    <div className={ classes.bar }>
+        <div className={`${classes.bar__progress} bar__progress`}
             style={{
                 background: `linear-gradient(to right, #c30a7f ${curPercentage}%, #CCCCCC 0)`
             }}
             onMouseDown={e => handleTimeDrag(e)}
             >
             <span
-                className="bar__progress__knob"
+                className={classes.bar__progress__knob}
                 style={{ left: `${curPercentage - 98}%` }}
             />
         </div>
-        <div className="bar__time_container">
-            <span className="bar__time">{formatDuration(curTime)}</span>
-            <span className="bar__time">{formatDuration(duration)}</span>
+        <div className={classes.bar__time_container}>
+            <span className={classes.bar__time}>{formatDuration(curTime)}</span>
+            <span className={classes.bar__time}>{formatDuration(duration)}</span>
         </div>
     </div>
 );

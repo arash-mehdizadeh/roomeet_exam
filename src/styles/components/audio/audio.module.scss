@@ -1,0 +1,67 @@
+@import '../../variables';
+@import url("https://fonts.googleapis.com/css?family=Permanent+Marker|Rock+Salt");
+
+
+.bar {
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    width: 100%;
+    align-items: center;
+    padding: 28px 20px 0;
+    .bar__time {
+        color: #888888;
+        font-size: 13px;
+    }
+
+    .bar__progress {
+        width: 100%;
+        border-radius: 5px;
+        margin: 0 20px;
+        height: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        .bar__progress__knob {
+            position: relative;
+            height: 16px;
+            width: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            background-color: #5A006D;
+        } 
+    }
+    .bar__time_container{
+        width: 100%;
+        padding: 5px 0;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+    }
+}
+
+//   @media screen and (max-width: 800px) {
+//     flex-direction: column;
+
+//     .controls {
+//       width: 100%;
+//       margin-top: 20px;
+//     }
+
+//     .bar {
+//       width: 90%;
+//     }
+
+//   @media screen and (max-width: 500px) {
+//     .song {
+//       .song__title {
+//         font-size: 2.5em;
+//       }
+
+//       .song__artist {
+//         font-size: 0.8em;
+//       }
+//     }
+//   }
+// }
