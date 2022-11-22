@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { attemptToJoinExam, finishExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
-import { Document, Page ,pdfjs } from 'react-pdf/dist/esm/entry.webpack';
-import dummyPDF from "../testPdfExam/dummy.pdf"
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
 
@@ -11,23 +9,38 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
+import { checkMatchQuestion } from "../../assets/utils/utils";
 
 function TestExam() {
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
     const navigate = useNavigate();
     const params = useParams();
 
-        const pdf = "https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1668959499_dummy.pdf"
-
     const [examData, setExamData] = useState();
-    const [pdfUrl, setPdfUrl] = useState({pdf});
-    const [examDataAttempt, setExamDataAttempt] = useState();
-
+    const [examDataAttempt, setExamDataAttempt] = useState([]);
+    const [userAnswered, setUserAnswered] = useState()
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
 
+    // const checkMatchQuestion = (dataQue, dataAtt) => {
+    //     let matches = [];
+    //     // console.log(dataQue ,dataAtt);
+    //     for (var i = 0; i < dataQue.questions.length; i++) {
+    //         for (var j = 0; j < dataAtt.answers.length; j++) {
+    //             if (dataQue.questions[i].id === dataAtt.answers[j].question_id) {
+    //                 matches.push({
+    //                     id: dataQue.questions[i].id,
+    //                     option_number: dataAtt.answers[j].option_id
+    //                 })
+    //                 // console.log(dataQue.questions[i].id);
+    //                 // console.log(dataAtt.answers[j].question_id);
+    //                 // matches.push(dataQue.questions[i].id);
+    //             }
+    //         }
+    //     }
+    //     setUserAnswered(matches);
+    // }
     function isInThePast(date) {
         const today = new Date();
         return date < today;
@@ -38,14 +51,15 @@ function TestExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
     useEffect(() => {
-        let data = JSON.parse(localStorage.getItem('userToken'));
-        if (!data) {
+        if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
-        if (data && isInThePast(data.expireDate)) {
+        if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
+
     }, [])
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
@@ -54,17 +68,15 @@ function TestExam() {
             navigate("/quiz/join/" + params.quiz)
         }
     }
-
+    
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
-        // console.log(data.quiz);
         setExamData(data);
-        // console.log(data);
-        // setExamDataAttemptID(data.attempt.id);
+        data.attempt.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
-
+        
     }
 
     useEffect(() => {
@@ -95,7 +107,7 @@ function TestExam() {
                                         <h1>{examData.quiz.title}</h1>
                                         <p>{`(آموزشگاه فراگویان)`}</p>
                                     </div>
-                                    <div id={classes.returnBtn}>
+                                    <div id={classes.returnBtn} onClick={() => window.location.reload()}>
                                         <p>بازگشت به سایت</p>
                                         <div className={classes.exitIcon}>
                                             <Exit fill='#fff' width="15px" height='15px' />
@@ -104,7 +116,7 @@ function TestExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${"فردوسی"}`}</li>
+                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === "3/1" ? "۳ به ۱" : "ندارد"}`}</li>
@@ -128,6 +140,7 @@ function TestExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
+                                                    userAnswered={userAnswered}
                                                     options={data.options} score={data.score} />
                                             ))
                                         }
@@ -146,8 +159,7 @@ function TestExam() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-                                    <Document file={dummyPDF} onLoadError={console.error}>
-                                    </Document>
+
                                     {
                                         examData.quiz?.questions?.map((data) => (
                                             <TestQuestion data={data} id={data.id} options={data.options} quNo={data.question_number}

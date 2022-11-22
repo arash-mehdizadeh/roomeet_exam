@@ -16,6 +16,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
+import { checkMatchQuestion } from "../../assets/utils/utils";
 
 function TestExam() {
 
@@ -23,11 +24,12 @@ function TestExam() {
         isCompressed: true,
         // The url has to end with "/"
         url: 'https://unpkg.com/pdfjs-dist@2.6.347/cmaps/',
-    };    
+    };
     const navigate = useNavigate();
     const params = useParams();
 
-    const [examDataAttempt, setExamDataAttempt] = useState();
+    const [examDataAttempt, setExamDataAttempt] = useState([]);
+    const [userAnswered, setUserAnswered] = useState()
     const [examData, setExamData] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
@@ -36,24 +38,39 @@ function TestExam() {
     const [pages, setPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
 
-    function onDocumentLoadSuccess({ numPages }) {
-        console.log("object:", numPages, pages);
-        setPages(numPages);
-        setPageNumber(1);
-    }
-
-    const onFinishHandler = async(e) => {
+    const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         console.log(res);
-        if(res.status === "success-finish"){
-            navigate("/quiz/join/"+params.quiz)
+        if (res.status === "success-finish") {
+            navigate("/quiz/join/" + params.quiz)
         }
     }
 
+    // const checkMatchQuestion = (dataQue , dataAtt) => {
+    //     let matches = [];
+    //     // console.log(dataQue ,dataAtt);
+    //         for (var i = 0; i < dataQue.questions.length; i++) {
+    //             for (var j = 0; j < dataAtt.answers.length; j++) {
+    //                 if (dataQue.questions[i].id === dataAtt.answers[j].question_id) {
+    //                     matches.push({
+    //                         id : dataQue.questions[i].id,
+    //                         option_number : dataAtt.answers[j].option_id
+    //                     })
+    //                     // console.log(dataQue.questions[i].id);
+    //                     // console.log(dataAtt.answers[j].question_id);
+    //                     // matches.push(dataQue.questions[i].id);
+    //                 }
+    //             }
+    //         }
+    //         setUserAnswered(matches);
+    // }
+
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
-        // console.log(data.quiz);
-        setExamData(data)
+        
+        setExamData(data);
+        data.attempt.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
+        
         setExamDataAttempt(data.attempt)
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
@@ -70,19 +87,21 @@ function TestExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
     useEffect(() => {
-        let data = JSON.parse(localStorage.getItem('userToken'));
-        if (!data) {
+        if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
-        if (data && isInThePast(data.expireDate)) {
+        if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
         else {
             fetchData();
         }
-            return () => {
-            setIsLoading(false)
+
+        // console.log(checkQuestion())
+        return () => {
+            setIsLoading(false);
         }
     }, [])
 
@@ -97,7 +116,7 @@ function TestExam() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p onClick={()=>onFinishHandler() }>اتمام آزمون</p>
+                                    <p onClick={() => onFinishHandler(examDataAttempt.id)}>اتمام آزمون</p>
                                     <p  >ترک آزمون</p>
                                 </div>
                                 <CountDown totalTime={totalTime} timeRemained={timeLeft} />
@@ -107,7 +126,7 @@ function TestExam() {
                             <div className={classes.informationBar}>
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
-                                        <h1>{`آزمون ادبیات فارسی`}</h1>
+                                        <h1>{examData.quiz.title}</h1>
                                         <p>{`(آموزشگاه فراگویان)`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
@@ -119,7 +138,7 @@ function TestExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${"فردوسی"}`}</li>
+                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${"تستی"}`}</li>
                                         <li>{`ضریب منفی : ${"3 به 1"}`}</li>
@@ -140,10 +159,11 @@ function TestExam() {
                                 </div>
                                 <div className={classes.answerSheet}>
                                     <ol>
-                                    {
+                                        {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id}
-                                                    options={data.options} score={data.score} />
+                                                    userAnswered={ userAnswered }
+                                                    options={data.options} score={data.score} attempt={examDataAttempt} />
                                             ))
                                         }
                                     </ol>
@@ -153,7 +173,7 @@ function TestExam() {
                             <section className={classes.questionSection}>
                                 <div className={classes.questionSection_header}>
                                     <h2>سوالات آزمون</h2>
-                                    <div className={classes.reloadBtn}>
+                                    <div className={classes.reloadBtn} onClick={() => window.location.reload()}>
                                         <p>بارگذاری مجدد</p>
                                         <div id={classes.refreshIcon}>
                                             <Refresh />
@@ -164,18 +184,15 @@ function TestExam() {
                                     {/* <Document   file={{ URL: "https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1667637077_dummy-pdf.pdf" }} onLoadSuccess={onDocumentLoadSuccess}>
                                         <Page pageNumber={pageNumber} />
                                     </Document> */}
-                                    <Worker  workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                                            <div style={{ height: '750px' }}>
-                                                <Viewer
-                                                    fileUrl={"https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1668959499_dummy.pdf"}
-                                                    characterMap={characterMap}  httpHeaders={{
-                                                        // "Access-Control-Allow-Origin" : ""
-                                                        "mode":"no-cors"
-                                                    }}
-                                                    
-                                                />
-                                            </div>
-                                        </Worker>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                                        <div style={{ height: '750px' }}>
+                                            <Viewer
+                                                fileUrl={examData?.quiz?.question_pdf}
+                                                characterMap={characterMap}
+
+                                            />
+                                        </div>
+                                    </Worker>
 
                                 </div>
                             </section>

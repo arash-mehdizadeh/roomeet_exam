@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 
 // import HomeworkQuestion from '../../components/homeworkQuetion';
@@ -13,6 +13,7 @@ import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
+import { checkMatchQuestionURL } from "../../assets/utils/utils";
 
 function DescriptiveExam() {
 
@@ -21,21 +22,32 @@ function DescriptiveExam() {
 
     const [activeBtn, setActiveBtn] = useState(null);
     const [examData, setExamData] = useState();
-    const [examDataAttemptID, setExamDataAttemptID] = useState();
+    const [userAnswered, setUserAnswered] = useState()
+    const [examDataAttempt, setExamDataAttempt] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
     
     const fetchData = async () => {
-        const data = await attemptToJoinExam(params.quiz)
+        const data = await attemptToJoinExam(params.quiz);
+        // console.log(data.attempt);
+        data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL( data.quiz , data.attempt ));
+
         setExamData(data)
-        setExamDataAttemptID(data.attempt.id);
+        setExamDataAttempt(data.attempt);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
 
     }
-
+    
+    const onFinishHandler = async (e) => {
+        let res = await finishExam(e);
+        console.log(res);
+        if (res.status === "success-finish") {
+            navigate("/quiz/join/" + params.quiz)
+        }
+    }
     function isInThePast(date) {
         const today = new Date();
         return date < today;
@@ -46,13 +58,13 @@ function DescriptiveExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
 
     useEffect(() => {
-        let data = JSON.parse(localStorage.getItem('userToken'));
-        if (!data) {
+        if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
-        if (data && isInThePast(data.expireDate)) {
+        if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
         fetchData();
@@ -79,7 +91,7 @@ function DescriptiveExam() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p>اتمام آزمون</p>
+                                    <p onClick={() => onFinishHandler(examDataAttempt.id)}>اتمام آزمون</p>
                                     <p  >ترک آزمون</p>
                                 </div>
                                 <CountDown totalTime={totalTime} timeRemained={timeLeft} />
@@ -100,7 +112,7 @@ function DescriptiveExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${"فردوسی"}`}</li>
+                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === "3/1" ? "۳ به ۱" : "ندارد"}`}</li>
@@ -125,20 +137,14 @@ function DescriptiveExam() {
                                             examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
                                                     index={data.id} options={data.options} score={data.score} 
-                                                    activeBtn={activeBtn} attemptID={examDataAttemptID} activeBtnHandler={activeBtnHandler}
+                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id} 
+                                                    activeBtnHandler={activeBtnHandler}
+                                                    userAnswered={userAnswered}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />
                                             ))
                                         }
-                                        {/* <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons /> */}
+                                        
                                     </ol>
                                 </div>
                             </div>
@@ -146,7 +152,7 @@ function DescriptiveExam() {
                             <section className={classes.questionSection}>
                                 <div className={classes.questionSection_header}>
                                     <h2>سوالات آزمون</h2>
-                                    <div className={classes.reloadBtn}>
+                                    <div className={classes.reloadBtn} onClick={() =>window.location.reload() }>
                                         <p>بارگذاری مجدد</p>
                                         <div id={classes.refreshIcon}>
                                             <Refresh />

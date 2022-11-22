@@ -29,10 +29,10 @@ function ExamInfo() {
     const setExpireDate = tomorrow.setDate(today.getDate() + 1);
     //returns the tomorrow date
     // console.log("tomorrow => ", tomorrow)
-    console.log(isInThePast(tomorrow));
+    // console.log(isInThePast(tomorrow));
     const fetchData = async () => {
         const data = await examDatails(params.quiz_id)
-        console.table(data);
+        // console.table(data);
         setExamData(data)
     }
 
@@ -49,7 +49,7 @@ function ExamInfo() {
             localStorage.removeItem('userToken');
             window.location.reload();
         }
-        console.log(fetchData());
+        fetchData();
     }, [])
 
     const inputHandler = (e) => {
@@ -69,7 +69,7 @@ function ExamInfo() {
     const examPageHandler = () => {
         let data = JSON.parse(localStorage.getItem('userToken'));
         if (data) {
-            if (examData?.type === "test" && examData?.question_type == "custom") {
+            if (examData?.type === "test" && examData?.question_type === "custom") {
                 navigate(`/quiz/test/${params.quiz_id}`);
             }
             if (examData?.type === "test" && examData?.question_type === "pdf") {

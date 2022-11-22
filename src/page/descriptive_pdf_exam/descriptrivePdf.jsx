@@ -1,38 +1,57 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 
 // import HomeworkQuestion from '../../components/homeworkQuetion';
 
 import UploadButtons from '../../components/uploadButtons';
 import DescriptiveQuestion from "../../components/descriptiveQuestion";
+import { Viewer, Worker, ProgressBar } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
+import { checkMatchQuestionURL } from "../../assets/utils/utils";
 
 function DescriptivePdfExam() {
-    
+
+    const characterMap = {
+        isCompressed: true,
+        // The url has to end with "/"
+        url: 'https://unpkg.com/pdfjs-dist@2.6.347/cmaps/',
+    };
     const navigate = useNavigate();
     const params = useParams();
-    
+
     const [activeBtn, setActiveBtn] = useState(null);
     const [examData, setExamData] = useState();
-    const [examDataAttemptID, setExamDataAttemptID] = useState();
+    const [userAnswered, setUserAnswered] = useState()
+    const [examDataAttempt, setExamDataAttempt] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
-        setExamData(data)
-        setExamDataAttemptID(data.attempt.id);
+        setExamData(data);
+        data.attempt.answers && setUserAnswered(checkMatchQuestionURL( data.quiz , data.attempt ));
+        setExamDataAttempt(data.attempt);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)
 
+    }
+    
+    const onFinishHandler = async(e) => {
+        let res = await finishExam(e);
+        console.log(res);
+        if(res.status === "success-finish"){
+            navigate("/quiz/join/"+params.quiz)
+        }
     }
 
     function isInThePast(date) {
@@ -45,12 +64,13 @@ function DescriptivePdfExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
-    useEffect(() => { 
-        let data = JSON.parse(localStorage.getItem('userToken'));
-        if (!data) {
+
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+    useEffect(() => {
+        if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
-        if (data && isInThePast(data.expireDate)) {
+        if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
         fetchData();
@@ -77,7 +97,7 @@ function DescriptivePdfExam() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p>اتمام آزمون</p>
+                                    <p onClick={() => onFinishHandler(examDataAttempt.id)}>اتمام آزمون</p>
                                     <p  >ترک آزمون</p>
                                 </div>
                                 <CountDown totalTime={totalTime} timeRemained={timeLeft} />
@@ -98,7 +118,7 @@ function DescriptivePdfExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${"فردوسی"}`}</li>
+                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === "3/1" ? "۳ به ۱" : "ندارد"}`}</li>
@@ -122,21 +142,14 @@ function DescriptivePdfExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
-                                                    index={data.id} options={data.options} score={data.score} 
-                                                    activeBtn={activeBtn} attemptID={examDataAttemptID} activeBtnHandler={activeBtnHandler}
+                                                    index={data.id} options={data.options} score={data.score}
+                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id} activeBtnHandler={activeBtnHandler}
+                                                    userAnswered={userAnswered}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />
                                             ))
                                         }
-                                        {/* <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons />
-                                <UploadButtons /> */}
+
                                     </ol>
                                 </div>
                             </div>
@@ -144,7 +157,7 @@ function DescriptivePdfExam() {
                             <section className={classes.questionSection}>
                                 <div className={classes.questionSection_header}>
                                     <h2>سوالات آزمون</h2>
-                                    <div className={classes.reloadBtn}>
+                                    <div className={classes.reloadBtn} onClick={() =>window.location.reload() }>
                                         <p>بارگذاری مجدد</p>
                                         <div id={classes.refreshIcon}>
                                             <Refresh />
@@ -152,7 +165,14 @@ function DescriptivePdfExam() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-                                    pdf
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                                        <div style={{ height: '750px' }}>
+                                            <Viewer
+                                                fileUrl={examData?.quiz?.question_pdf}
+                                                characterMap={characterMap}
+                                            />
+                                        </div>
+                                    </Worker>
                                 </div>
                             </section>
                         </main>

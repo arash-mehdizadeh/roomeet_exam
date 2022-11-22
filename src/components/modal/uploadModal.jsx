@@ -7,6 +7,7 @@ import { getFileName } from '../../assets/utils/utils';
 import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 
 import classes from '../../styles/components/modals/uploadModal.module.scss';
+import { useEffect } from 'react';
 
 const BackDrop = (props) => {
     return <div className={classes.modalBackDrop} onClick={props.onConfirm} ></div>
@@ -37,19 +38,19 @@ const OverlayUploadModal = (props) => {
     }
 
     const formDataRes = async (res) => {
-        console.log(res.path);
+        // console.log(res.path);
+        const resp = await postUserDescriptionAnswer(props.id, props.attemptID, userAnswer);
+        console.log("questionAnswerData =>", resp);
         const fileURLData = {
             path: res.path, //"res.path"
-            answer_id: "1",//id
+            answer_id: props.id,//id
             driver: "ftp",
             type: "open",
         };
 
 
         const aaa = await storeFileURL(fileURLData);
-        const resp = await postUserDescriptionAnswer( props.id ,props.attemptID , userAnswer);
-        console.log("questionAnswerData =>", resp);
-        console.log("storeFileURL =>", aaa);
+        // console.log("storeFileURL =>", aaa);
         props.uploadSuccess();
         setTimeout(() => updateButtonName(res), 1000);
         props.onConfirm();
@@ -72,17 +73,22 @@ const OverlayUploadModal = (props) => {
     const userAnswerHandler = (event) => {
         setUserAnswer(event.target.value)
     }
+    
+    const answeredHandler = (data) => {
+        setUserAnswer( data )
+    }
 
     const onFileChangeHandler = (event) => {
         setFile(event.target.files[0]);
         console.log(event.target.files[0]);
     }
 
-
     const onFileDeleteHandler = () => {
         ref.current.value = "";
     }
-
+    useEffect(()=>{
+        props.body && answeredHandler(props.body)
+    },[])
     // document.getElementById("file-upload-button").setAttribute("value","nigga")
 
 
@@ -113,7 +119,9 @@ const UploadModal = (props) => {
         <React.Fragment>
             {ReactDOM.createPortal(<BackDrop onConfirm={props.onConfirm} />, document.getElementById("backdrop-root"))}
             {ReactDOM.createPortal(<OverlayUploadModal id={props.id} uploadSuccess={props.uploadSuccess}
-                uploadFileName={props.uploadFileName} attemptID={props.attemptID} onConfirm={props.onConfirm} />, document.getElementById("overlayUploadModal-root"))}
+                uploadFileName={props.uploadFileName} attemptID={props.attemptID}
+                body={props.body}
+                onConfirm={props.onConfirm} />, document.getElementById("overlayUploadModal-root"))}
         </React.Fragment>
     )
 }
