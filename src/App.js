@@ -5,6 +5,7 @@ import Homework from "./page/homework/homework"
 import DescriptiveExam from "./page/descriptiveExam/descriptiveExam"
 import DescriptivePdfExam from "./page/descriptive_pdf_exam/descriptrivePdf"
 import ExamInfo from "./page/exam_info/examInfo"
+import NotFound from "./page/notFound/notFound"
 
 
 
@@ -14,7 +15,8 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 {/* <Route path="/" element={<></>} /> */}
-                <Route path="/quiz/join/:quiz_id" element={<ExamInfo/>} />
+                <Route path="*" element={<NotFound/>} />
+                <Route path="/quiz/join/:quiz" element={<ExamInfo/>} />
                 <Route path="/quiz/test/:quiz" element={<TestExam/>} />
                 <Route path="/quiz/test-pdf/:quiz" element={<TestPdfExam/>} />
                 <Route path="/homework" element={<Homework/>} />

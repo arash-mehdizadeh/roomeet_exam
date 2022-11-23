@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { examDatails, userLogin } from '../../assets/api/userActions';
+import { attemptToJoinExam, examDatails, userLogin } from '../../assets/api/userActions';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function ExamInfo() {
@@ -12,6 +12,7 @@ function ExamInfo() {
     const navigate = useNavigate();
 
     const [examData, setExamData] = useState();
+    const [examStatus, setExamStatus] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [inputField, setInputField] = useState({
         phone: "",
@@ -31,16 +32,17 @@ function ExamInfo() {
     // console.log("tomorrow => ", tomorrow)
     // console.log(isInThePast(tomorrow));
     const fetchData = async () => {
-        const data = await examDatails(params.quiz_id)
+        const data = await examDatails(params.quiz)
         // console.table(data);
-        setExamData(data)
+        setExamData(data?.quiz)
     }
 
 
     useEffect(() => {
+        fetchData();
         let data = JSON.parse(localStorage.getItem('userToken'));
         if (!data) {
-            navigate(`/quiz/join/${params.quiz_id}`)
+            navigate(`/quiz/join/${params.quiz}`)
         }
         if (data) {
             setIsUserLogged(true);
@@ -49,7 +51,6 @@ function ExamInfo() {
             localStorage.removeItem('userToken');
             window.location.reload();
         }
-        fetchData();
     }, [])
 
     const inputHandler = (e) => {
@@ -66,20 +67,33 @@ function ExamInfo() {
         window.location.reload();
     }
 
-    const examPageHandler = () => {
+    const examPageHandler = async() => {
         let data = JSON.parse(localStorage.getItem('userToken'));
+
         if (data) {
-            if (examData?.type === "test" && examData?.question_type === "custom") {
-                navigate(`/quiz/test/${params.quiz_id}`);
+            let res =  await attemptToJoinExam(params.quiz)
+            // console.log(res);
+            if(res?.status !== "joined" ){
+                let a = res?.message;
+                a = a.split("{").join("")
+                a =  a.split("}").join("")
+                if(a.includes("date")) {a = a.replace("date",res?.date)}
+                if(a.includes("time")) {a = a.replace("time",res?.time)}
+                alert(a)
             }
-            if (examData?.type === "test" && examData?.question_type === "pdf") {
-                navigate(`/quiz/test-pdf/${params.quiz_id}`);
-            }
-            if (examData?.type === "descriptive" && examData?.question_type === "custom") {
-                navigate(`/quiz/descriptive/${params.quiz_id}`);
-            }
-            if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
-                navigate(`/quiz/descriptive-pdf/${params.quiz_id}`);
+            else{
+                if (examData?.type === "test" && examData?.question_type === "custom") {
+                    navigate(`/quiz/test/${params.quiz}`);
+                }
+                if (examData?.type === "test" && examData?.question_type === "pdf") {
+                    navigate(`/quiz/test-pdf/${params.quiz}`);
+                }
+                if (examData?.type === "descriptive" && examData?.question_type === "custom") {
+                    navigate(`/quiz/descriptive/${params.quiz}`);
+                }
+                if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
+                    navigate(`/quiz/descriptive-pdf/${params.quiz}`);
+                }
             }
         }
         else {

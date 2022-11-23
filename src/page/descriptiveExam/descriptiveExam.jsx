@@ -32,8 +32,18 @@ function DescriptiveExam() {
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz);
         // console.log(data.attempt);
+        if(data?.status !== "joined" ){
+            let a = data?.message;
+            a = a.split("{").join("")
+            a =  a.split("}").join("")
+            if(a.includes("date")) {a = a.replace("date",data?.date)}
+            if(a.includes("time")) {a = a.replace("time",data?.time)}
+            alert(a);
+            setTimeout(() => {navigate("/quiz/join/" + params.quiz)}, "2000")
+        }
+        
         data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL( data.quiz , data.attempt ));
-
+        
         setExamData(data)
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.quiz.duration)

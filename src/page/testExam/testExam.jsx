@@ -71,8 +71,17 @@ function TestExam() {
     
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz)
+        if(data?.status !== "joined" ){
+            let a = data?.message;
+            a = a.split("{").join("")
+            a =  a.split("}").join("")
+            if(a.includes("date")) {a = a.replace("date",data?.date)}
+            if(a.includes("time")) {a = a.replace("time",data?.time)}
+            alert(a);
+            setTimeout(() => {navigate("/quiz/join/" + params.quiz)}, "1000")
+        }
+        data?.attempt?.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
         setExamData(data);
-        data.attempt.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.quiz.duration)
         setTotalTime(data.quiz.duration)

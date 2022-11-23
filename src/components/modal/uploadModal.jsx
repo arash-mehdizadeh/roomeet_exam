@@ -43,14 +43,14 @@ const OverlayUploadModal = (props) => {
         console.log("questionAnswerData =>", resp);
         const fileURLData = {
             path: res.path, //"res.path"
-            answer_id: props.id,//id
+            answer_id: resp.created_answer,//id
             driver: "ftp",
             type: "open",
         };
 
 
         const aaa = await storeFileURL(fileURLData);
-        // console.log("storeFileURL =>", aaa);
+        console.log("storeFileURL =>", aaa);
         props.uploadSuccess();
         setTimeout(() => updateButtonName(res), 1000);
         props.onConfirm();

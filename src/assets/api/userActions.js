@@ -43,7 +43,7 @@ const userLogin = async (data) => {
 const examDatails = async (examID) => {
     try {
         let response =  await userAction.get(`/site/quiz/join/${examID}`)
-        return(response.data.quiz)
+        return(response.data)
     } catch (error) {
         console.log(error.message);
     }
