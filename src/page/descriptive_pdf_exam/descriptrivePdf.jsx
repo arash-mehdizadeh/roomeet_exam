@@ -17,6 +17,7 @@ import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
 import { checkMatchQuestionURL } from "../../assets/utils/utils";
+import Loading from "../../components/loading/loading";
 
 function DescriptivePdfExam() {
 
@@ -52,7 +53,7 @@ function DescriptivePdfExam() {
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.timer)
-
+        setIsLoading(false)
     }
     
     const onFinishHandler = async(e) => {
@@ -83,9 +84,6 @@ function DescriptivePdfExam() {
             toLoginPage()
         }
         fetchData();
-        return () => {
-            setIsLoading(false)
-        }
     }, [])
 
 
@@ -142,8 +140,8 @@ function DescriptivePdfExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt?.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt?.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.uploadAnswersSheet}>
@@ -186,7 +184,9 @@ function DescriptivePdfExam() {
                             </section>
                         </main>
 
-                    </div> : <p>not loaded</p>}
+                    </div> : <>
+                        <Loading />
+                    </>}
         </div>
     );
 }

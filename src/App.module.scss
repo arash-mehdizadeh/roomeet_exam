@@ -152,6 +152,8 @@ $large-width: 1024px;
 }
 
     .smSizeAppContainer{
+    padding: 50px  130px !important ;
+
         @include small-down(){
             padding: 10px !important;
             height: 100%;

@@ -14,6 +14,7 @@ import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
 import { checkMatchQuestionURL } from "../../assets/utils/utils";
+import Loading from "../../components/loading/loading";
 
 function DescriptiveExam() {
 
@@ -28,30 +29,30 @@ function DescriptiveExam() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
-    
+
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz);
         // console.log(data.attempt);
-        if(data?.status !== "joined" ){
+        if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")
-            a =  a.split("}").join("")
-            if(a.includes("date")) {a = a.replace("date",data?.date)}
-            if(a.includes("time")) {a = a.replace("time",data?.time)}
+            a = a.split("}").join("")
+            if (a.includes("date")) { a = a.replace("date", data?.date) }
+            if (a.includes("time")) { a = a.replace("time", data?.time) }
             alert(a);
-            setTimeout(() => {navigate("/quiz/join/" + params.quiz)}, "2000")
+            setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "2000")
         }
-        
-        data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL( data.quiz , data.attempt ));
-        
+
+        data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
+
         setExamData(data)
         setExamDataAttempt(data.attempt);
         // console.log(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.timer)
-
+        setIsLoading(false)
     }
-    
+
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         // console.log(res);
@@ -79,9 +80,6 @@ function DescriptiveExam() {
             toLoginPage()
         }
         fetchData();
-        return () => {
-            setIsLoading(false)
-        }
     }, [])
 
 
@@ -126,7 +124,7 @@ function DescriptiveExam() {
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/"," به ") }`}</li>
+                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -147,15 +145,15 @@ function DescriptiveExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
-                                                    index={data.id} options={data.options} score={data.score} 
-                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id} 
+                                                    index={data.id} options={data.options} score={data.score}
+                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id}
                                                     activeBtnHandler={activeBtnHandler}
                                                     userAnswered={userAnswered}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />
                                             ))
                                         }
-                                        
+
                                     </ol>
                                 </div>
                             </div>
@@ -163,7 +161,7 @@ function DescriptiveExam() {
                             <section className={classes.questionSection}>
                                 <div className={classes.questionSection_header}>
                                     <h2>سوالات آزمون</h2>
-                                    <div className={classes.reloadBtn} onClick={() =>window.location.reload() }>
+                                    <div className={classes.reloadBtn} onClick={() => window.location.reload()}>
                                         <p>بارگذاری مجدد</p>
                                         <div id={classes.refreshIcon}>
                                             <Refresh />
@@ -182,7 +180,11 @@ function DescriptiveExam() {
                             </section>
                         </main>
 
-                    </div> : <p>not loaded</p>}
+                    </div> :
+                    <>
+                        <Loading />
+                    </>
+            }
         </div>
     );
 }

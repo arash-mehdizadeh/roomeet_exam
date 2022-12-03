@@ -10,6 +10,7 @@ import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
 import { checkMatchQuestion } from "../../assets/utils/utils";
+import Loading from "../../components/loading/loading";
 
 function TestExam() {
     const navigate = useNavigate();
@@ -68,32 +69,32 @@ function TestExam() {
             navigate("/quiz/join/" + params.quiz)
         }
     }
-    
+
     const fetchData = async () => {
         setIsLoading(true)
         const data = await attemptToJoinExam(params.quiz)
-        if(data?.status !== "joined" ){
+        if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")
-            a =  a.split("}").join("")
-            if(a.includes("date")) {a = a.replace("date",data?.date)}
-            if(a.includes("time")) {a = a.replace("time",data?.time)}
+            a = a.split("}").join("")
+            if (a.includes("date")) { a = a.replace("date", data?.date) }
+            if (a.includes("time")) { a = a.replace("time", data?.time) }
             alert(a);
-            setTimeout(() => {navigate("/quiz/join/" + params.quiz)}, "1000")
+            setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "1000")
         }
 
-        data?.attempt?.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
+        data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
         setExamData(data);
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.timer)
         setIsLoading(false)
-        
+
     }
 
     useEffect(() => {
         fetchData();
-        
+
     }, [])
 
 
@@ -129,7 +130,7 @@ function TestExam() {
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/"," به ") }`}</li>
+                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -141,8 +142,8 @@ function TestExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt?.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt?.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>
@@ -182,7 +183,11 @@ function TestExam() {
                             </section>
                         </main>
 
-                    </div> : <p>not loaded</p>}
+                    </div> :
+                    <>
+                        <Loading />
+                    </>
+            }
         </div>
     );
 }

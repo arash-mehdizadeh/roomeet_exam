@@ -17,6 +17,7 @@ import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
 import classes from '../../App.module.scss';
 import { checkMatchQuestion } from "../../assets/utils/utils";
+import Loading from "../../components/loading/loading";
 
 function TestExam() {
 
@@ -162,8 +163,8 @@ function TestExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt?.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt?.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>
@@ -207,7 +208,10 @@ function TestExam() {
                             </section>
                         </main>
 
-                    </div> : <p>not loaded</p>}
+                    </div> : <>
+                        <Loading />
+                    </>
+                    }
         </div>
     );
 }
