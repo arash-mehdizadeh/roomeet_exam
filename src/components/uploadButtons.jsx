@@ -33,13 +33,24 @@ const UploadButtons = ({ index, userAnswered, attemptID, score, activeBtn, activ
     }
 
     const userAnsweredHandler = (qid) => {
-        console.log(userAnswered)
+        // console.log(userAnswered)
         // console.log(qid)
         for (var i = 0; i < userAnswered?.length; i++) {
             if (qid === userAnswered[i]?.id) {
                 console.log(userAnswered[i])
-                userAnswered[i]?.file_url && uploadFileName(getFileNameFromAttempt(userAnswered[i]?.file_url))
-                userAnswered[i]?.answer && setBody(getFileNameFromAttempt(userAnswered[i]?.answer))    
+                let userDate = userAnswered[i];
+
+                // if(userDate.file_url !== null){
+                //     console.log( typeof userDate.file_url);
+                //     let fileName = getFileNameFromAttempt(userDate.file_url)
+                //     // console.log(fileName);
+                // }
+                userAnswered[i]?.file_url && uploadFileName(getFileNameFromAttempt(userAnswered[i].file_url))
+                userAnswered[i].answer  && setBody(getFileNameFromAttempt(userAnswered[i].answer))
+                // setBody(getFileNameFromAttempt(userAnswered[i].answer))
+                // console.log(userAnswered[i].answer)
+            // if(userAnswered[i].answer !== null ){
+            //     }
                 // setActiveBtn(userAnswered[i]?.option_number);
             }
         }

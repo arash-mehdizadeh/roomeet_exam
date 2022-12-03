@@ -18,7 +18,7 @@ function TestExam() {
     const [examData, setExamData] = useState();
     const [examDataAttempt, setExamDataAttempt] = useState([]);
     const [userAnswered, setUserAnswered] = useState()
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
 
@@ -70,6 +70,7 @@ function TestExam() {
     }
     
     const fetchData = async () => {
+        setIsLoading(true)
         const data = await attemptToJoinExam(params.quiz)
         if(data?.status !== "joined" ){
             let a = data?.message;
@@ -80,36 +81,36 @@ function TestExam() {
             alert(a);
             setTimeout(() => {navigate("/quiz/join/" + params.quiz)}, "1000")
         }
+
         data?.attempt?.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
         setExamData(data);
         setExamDataAttempt(data.attempt);
-        setTimeLeft(data.quiz.duration)
-        setTotalTime(data.quiz.duration)
+        setTimeLeft(data.attempt.timer)
+        setTotalTime(data.attempt.timer)
+        setIsLoading(false)
         
     }
 
     useEffect(() => {
         fetchData();
-        return () => {
-            setIsLoading(false)
-        }
+        
     }, [])
 
 
     return (
-        <div className={classes.appContainer}>
+        <div className={`${classes.appContainer} ${classes.smSizeAppContainer}`}>
             {
                 !isLoading ?
 
                     examData && <div className={classes.container}>
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
-                            <div className={classes.headerBox}>
+                            <ivd className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
                                     <p onClick={() => onFinishHandler(examDataAttempt.id)}>اتمام آزمون</p>
                                     <p  >ترک آزمون</p>
                                 </div>
                                 <CountDown totalTime={totalTime} timeRemained={timeLeft} />
-                            </div>
+                            </ivd>
                             <div className={classes.informationBar}>
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
@@ -126,9 +127,9 @@ function TestExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === "3/1" ? "۳ به ۱" : "ندارد"}`}</li>
+                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/"," به ") }`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -140,8 +141,8 @@ function TestExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examData.attempt.answered_questions}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examData.attempt.unanswered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>

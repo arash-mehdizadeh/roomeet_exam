@@ -81,8 +81,8 @@ function TestExam() {
         data.attempt.answers && setUserAnswered(checkMatchQuestion( data.quiz , data.attempt ));
         
         setExamDataAttempt(data.attempt)
-        setTimeLeft(data.quiz.duration)
-        setTotalTime(data.quiz.duration)
+        setTimeLeft(data.attempt.timer)
+        setTotalTime(data.attempt.timer)
 
     }
 
@@ -147,11 +147,11 @@ function TestExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${60} دقیقه`}</li>
-                                        <li>{`نوع آزمون : ${"تستی"}`}</li>
-                                        <li>{`ضریب منفی : ${"3 به 1"}`}</li>
-                                        <li>{`تعداد سوالات : ${100}`}</li>
+                                    <li>{`نام کاربر : ${LSdata.user_name}`}</li>
+                                        <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
+                                        <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
+                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/"," به ") }`}</li>
+                                        <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -162,8 +162,8 @@ function TestExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${85}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${0}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>

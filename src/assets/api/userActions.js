@@ -50,6 +50,7 @@ const examDatails = async (examID) => {
 }
 
 const attemptToJoinExam = async (examID) => {
+    // console.log(axiosConfig)
     try {
         let response =  await userAction.get(`/site/quiz/attempt/join/${examID}`,axiosConfig)
         return(response.data)
@@ -84,21 +85,6 @@ const storeFileURL = async ( fileData ) => {
         console.log(error.message);
     }
 }
-// const postFilePath = async ( path , answerID ) => {
-//     let postFilePathData = {
-//         path: path,
-//         type:"open",
-//         driver:"ftp",
-//         answer_id : answerID
-//     };
-    
-//     try {
-//         let response =  await userAction.post(`/site/quiz/file/store`,postFilePathData,axiosUploadConfig)
-//         return(response.data)
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 const postUserDescriptionAnswer = async ( id ,attemptID ,userAnswer ) => {
     
     let questionAnswerData = {
@@ -133,5 +119,5 @@ const postUserTestAnswer = async ( id ,attemptID ,userAnswer ) => {
 
 
 export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,postFormData ,// ,postFilePath
-            postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer
+        postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer
 };

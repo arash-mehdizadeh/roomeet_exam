@@ -1,8 +1,53 @@
-
-@import  '../src/styles/variables';
+// @use "./styles/mixins.module";
+@import  './styles/variables';
 @import "~react-component-countdown-timer/lib/styles.css";
 // @import '/src/styles/mixins';
 
+$small-width: 480px;
+$medium-width: 768px;
+$large-width: 1024px;
+
+@mixin extra-small {
+  @media (max-width: #{$small-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin small-down {
+  @media (max-width: #{$medium-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin small-only {
+  @media (min-width: #{$small-width}) and (max-width: #{$medium-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin small-up {
+  @media (min-width: #{$small-width}) {
+    @content;
+  }
+}
+
+@mixin medium-only {
+  @media (min-width: #{$medium-width}) and (max-width: #{$large-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin medium-up {
+  @media (min-width: #{$medium-width}) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media (min-width: #{$large-width}) {
+    @content;
+  }
+}
 
 #circle_container {
     // direction: rtl;
@@ -96,11 +141,29 @@
     cursor: pointer;
 }
 
-
 .appContainer{
     background-image: linear-gradient($thirdColor, $fourthColor);
     height: 100vh;
-    padding: 50px  64px ;
+    padding: 50px  230px !important ;
+    @include small-down(){
+        padding: 30px !important;
+        // height: 100%;
+    }
+}
+
+    .smSizeAppContainer{
+        @include small-down(){
+            padding: 10px !important;
+            height: 100%;
+        }
+    }
+
+.examAppContainer{
+    padding: 50px 130px !important;
+    @include small-down(){
+        padding: 10px !important;
+        height: 100%;
+    }
 }
 .container{
     display: flex;
@@ -110,17 +173,27 @@
         margin: 0 0 10px;
         grid-template-columns: 1fr 3fr;
         display: grid;
+        @include small-down(){
+            display: flex !important;
+            flex-direction: column !important
+        }
         .headerBox{
             @include  box(14px);
             padding-bottom: 0;
             justify-content: space-between;
             // width: 31%;
+            @include small-down(){
+                font-size: 12px;
+                padding: 5px 10px;
+            }
             .buttonContainer{
                 display: flex;
                 justify-content: center;
                 flex-direction: column;
                 :first-child{
                     @include buttons($textColor:$thirdColor );
+                    
+
                 }
                 :last-child{
                     @include buttons($white );
@@ -156,6 +229,9 @@
             justify-content: center;
             color: $white;
             width: $full;
+            @include small-down(){
+                margin: 10px 0;
+            }
             .examDetails{
                 display: flex;
                 justify-content: space-between;
@@ -167,9 +243,15 @@
                         letter-spacing: 1px;
                         padding: 0 10px;
                         text-shadow: 0px 0px 20px $neon ;
+                        @include small-down(){
+                            font-size: 15px;
+                        }
                     }
                     p{
                         text-shadow: 0px 0px 20px #48EEFC;
+                        @include small-down(){
+                            font-size: 10px;
+                        }
                     }
                 }
                 #returnBtn{
@@ -185,6 +267,11 @@
                     justify-content: space-between;
                     user-select: none;
                     cursor: pointer;
+                    @include small-down(){
+                        width: 40%;
+                        font-size: 10px;
+                        padding: 5px 6px;
+                    }
                     .exitIcon{
                         display: flex;
                         align-items: center;
@@ -199,11 +286,18 @@
         }
         .personalDetails{
             padding: 10px 0;
+            @include small-down(){
+                font-size: 10px;
+            }
             ul {
                 display: flex;
                 list-style: none;
                 li{
                     padding: 0 15px;
+                    @include small-down(){
+                        padding: 0 5px ;
+                        text-align: center;
+                    }
                 }
                 li:first-child{
                     padding-right: 10px;
@@ -251,6 +345,9 @@
     // width: 27%;
     flex-direction: column;
     // margin-left: 10px;
+    @include small-down(){
+        margin-top: 15px;
+    }
     .answerSheetHeader{
         padding: 10px ;
         display: flex;
@@ -392,8 +489,15 @@
     // padding-right: $defaultMargin;
     
     display: grid;
-    .personalCetails{
+    @include small-down(){
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .personalDetails{
         padding: 10px 0;
+        @include small-down(){
+            font-size: 10px;
+        }
         ul {
             display: flex;
             list-style: none;
@@ -413,6 +517,10 @@
     flex-direction: column;
     width: $full;
     margin-right: 10px;
+    @include small-down(){
+        margin-right: 0 ;
+        padding: 13px;
+    }
     &_header{
         display: flex;
         justify-content: space-between;
@@ -421,6 +529,9 @@
         @include border-bottom();
         h2{
             color: $primaryColor;
+            @include small-down(){
+                font-size: 21px;
+            }
         }
         .reloadBtn{
             color: $primaryColor;
@@ -507,6 +618,11 @@
     justify-content: space-between;
     user-select: none;
     cursor: pointer;
+    @include small-down(){
+        flex-direction: column-reverse;
+        width: auto;
+        font-size: 12px;
+    }
     .exitIcon{
         display: flex;
         align-items: center;
@@ -515,6 +631,7 @@
         height: 28px;
         border-radius: 100px;
         background-color: $primaryColor;
+        
     }
 }
 
@@ -525,6 +642,11 @@
         flex-direction: row !important;
         padding: 20px 10px !important;
         height: auto !important;
+        @include small-down(){
+            flex-direction: column-reverse !important;
+            width: auto;
+            font-size: 12px;
+        }
     }
     &__info_container{
         display: flex;
@@ -554,6 +676,11 @@
         display: flex;
         width: 100%;
         border-right: 1px solid $primaryBorderColor;
+        @include small-down(){
+            border: none !important;
+            margin-bottom: 15px;
+
+        }
     }
     &__login{
         margin: auto;

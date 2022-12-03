@@ -59,10 +59,10 @@ const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data
                     {imageURL && <img src={imageURL} alt={body} />}
                     {/* <p>image</p> */}
                 </div>
-
+            
                 <div className={classes.muChAudioContainer}>
                     
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    {/* <div style={{ display: "flex", alignItems: "center" }}> */}
                         {audioURL &&
                             <>
                                 <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
@@ -78,7 +78,7 @@ const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data
                                 }
                             </>}
 
-                    </div>
+                    {/* </div> */}
                 </div>
                 <div className={classes.muChQuestionContainer}>
                     <ul>

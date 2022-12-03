@@ -43,7 +43,7 @@ const OverlayUploadModal = (props) => {
         console.log("questionAnswerData =>", resp);
         const fileURLData = {
             path: res.path, //"res.path"
-            answer_id: resp.created_answer,//id
+            answer_id: resp.created_answer?.id,//id
             driver: "ftp",
             type: "open",
         };
@@ -73,9 +73,9 @@ const OverlayUploadModal = (props) => {
     const userAnswerHandler = (event) => {
         setUserAnswer(event.target.value)
     }
-    
+
     const answeredHandler = (data) => {
-        setUserAnswer( data )
+        setUserAnswer(data)
     }
 
     const onFileChangeHandler = (event) => {
@@ -86,9 +86,9 @@ const OverlayUploadModal = (props) => {
     const onFileDeleteHandler = () => {
         ref.current.value = "";
     }
-    useEffect(()=>{
+    useEffect(() => {
         props.body && answeredHandler(props.body)
-    },[])
+    }, [])
     // document.getElementById("file-upload-button").setAttribute("value","nigga")
 
 

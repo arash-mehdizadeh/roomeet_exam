@@ -1,9 +1,17 @@
-@import '../variables';
+@import '../_variables.scss';
 
 @mixin border($border:$primaryBorderColor) {
     border:1px solid $border;
     
 }
+$small-width: 480px;
+$medium-width: 768px;
+$large-width: 1024px;
+@mixin small-down {
+    @media (max-width: #{$medium-width - 1px}) {
+      @content;
+    }
+  }
 @mixin border-bottom {
     border-bottom:1px solid $secondaryBorderColor;
     
@@ -12,13 +20,24 @@
 .questionBox{
     display: flex;
     margin: 25px 0 5px;
+    @include small-down(){
+        flex-direction: column;
+    }
 }
 .questionDetail{
     width: 10%;
     color: #464646;
+    display: flex;
+    flex-direction: column;
     :last-child{
         font-size: 10px;
     }
+    @include small-down(){
+        flex-direction: row;
+        width: auto;
+        align-items: center;
+    }
+    
 }
 .scrollableQuestionsContainer{
     width: 100%;
@@ -30,7 +49,8 @@
     // margin-right: 20px;
     .muChImageContainer{
         padding: 16px 0 0;
-        
+        display: flex;
+        justify-content: center;
         img{
             @include border();
             max-width: 100%;
@@ -40,9 +60,15 @@
     .muChAudioContainer{
         padding: $defaultPadding 40px;
         @include border-bottom();
+        display: flex;
+        align-items: center;
+        @include small-down(){
+            padding: 10px;
+        }
     }
     .homeworkAudioContainer{
         padding: $defaultPadding 40px;
+        
     }
     .homeworkPdfContainer{
         

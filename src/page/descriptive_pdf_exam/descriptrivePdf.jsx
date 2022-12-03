@@ -50,8 +50,8 @@ function DescriptivePdfExam() {
         }
         data.attempt.answers && setUserAnswered(checkMatchQuestionURL( data.quiz , data.attempt ));
         setExamDataAttempt(data.attempt);
-        setTimeLeft(data.quiz.duration)
-        setTotalTime(data.quiz.duration)
+        setTimeLeft(data.attempt.timer)
+        setTotalTime(data.attempt.timer)
 
     }
     
@@ -98,7 +98,7 @@ function DescriptivePdfExam() {
     }
 
     return (
-        <div className={classes.appContainer}>
+        <div className={`${classes.appContainer} ${classes.examAppContainer}`}>
             {
                 !isLoading ?
 
@@ -127,10 +127,10 @@ function DescriptivePdfExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
+                                    <li>{`نام کاربر : ${LSdata.user_name}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration / 60} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === "3/1" ? "۳ به ۱" : "ندارد"}`}</li>
+                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/"," به ") }`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -142,8 +142,8 @@ function DescriptivePdfExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${85}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${0}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt.answered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt.unanswered_questions}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.uploadAnswersSheet}>

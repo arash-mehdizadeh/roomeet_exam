@@ -8,7 +8,7 @@ const getFileName = (path) => {
 }
 const getFileNameFromAttempt = (path) => {
     if (path) {
-        const lastIndex = path.file_url.split("/").pop();
+        const lastIndex = path.split("/").pop();
         const fileName = lastIndex.split("_").pop();
         return fileName;
     }

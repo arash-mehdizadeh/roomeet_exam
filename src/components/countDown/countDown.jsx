@@ -1,11 +1,16 @@
 import { useState ,useEffect } from 'react';
 
 import CountdownTimer from "react-component-countdown-timer";
+import { useNavigate, useParams } from 'react-router-dom';
 
 import classes from '../../App.module.scss';
+import { finishExam } from '../../assets/api/userActions';
 
 
 const CountDown = (props) => {
+
+    const navigate = useNavigate();
+    const params = useParams();
 
     const [timeLeft, setTimeLeft] = useState(props.timeRemained);
     const [totalTime, setTotalTime] = useState(props.totalTime);
@@ -25,6 +30,17 @@ const CountDown = (props) => {
 
         return () => clearInterval(intervalId);
     }, [timeLeft]);
+    
+    const onFinishHandler = async (e) => {
+        let res = await finishExam(e);
+        console.log(res);
+        if (res.status === "success-finish") {
+            navigate("/quiz/join/" + params.quiz)
+        }
+        else{
+            alert(res?.message)
+        }
+    }
 
     return (
         <div className={classes.countdownContainer}>
@@ -39,7 +55,7 @@ const CountDown = (props) => {
             </svg>
             <div className={classes.timeRemained}>
                 <div id={classes.time}>
-                    <CountdownTimer count={totalTime} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => { console.log("TIME UP"); }} />  {/* examData?.duration */}
+                    <CountdownTimer count={totalTime} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => { onFinishHandler() }} />  {/* examData?.duration */}
                 </div>
                 <div>مانده</div>
             </div>

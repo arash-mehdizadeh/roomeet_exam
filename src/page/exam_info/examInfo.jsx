@@ -12,7 +12,6 @@ function ExamInfo() {
     const navigate = useNavigate();
 
     const [examData, setExamData] = useState();
-    const [examStatus, setExamStatus] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [inputField, setInputField] = useState({
         phone: "",
@@ -59,8 +58,11 @@ function ExamInfo() {
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
+        // console.log(inputField);
         const userData = await userLogin(inputField);
 
+        typeof(userData) === "string" && alert(userData)
+        // console.log(userData);  
         localStorage.setItem("userToken", JSON.stringify({
             ...userData, "expireDate": setExpireDate
         }))
@@ -104,7 +106,7 @@ function ExamInfo() {
     }
 
     return (
-        <div className={classes.appContainer} style={{ padding: "50px 230px" }}>
+        <div className={classes.appContainer}>
             <div className={classes.container}>
                 {/* DISPLAY QUESTION / QUESTION SECTION  */}
                 <section className={classes.questionSection}>
@@ -146,7 +148,7 @@ function ExamInfo() {
                                 </div>
                                 <div className={classes.examInfo__info_container}>
                                     <p className={classes.examInfo__title}>پایان آزمون :</p>
-                                    <p className={classes.examInfo__detail}>{`${examData?.duration/60} دقیقه بعد از شروع آزمون`}</p>
+                                    <p className={classes.examInfo__detail}>{`${examData?.duration} دقیقه بعد از شروع آزمون`}</p>
                                 </div>
                                 <div className={classes.examInfo__info_container}>
                                     <p className={classes.examInfo__title}>نمایش کارنامه تستی :</p>
