@@ -2,13 +2,14 @@ import { useState ,useEffect } from 'react';
 
 import CountdownTimer from "react-component-countdown-timer";
 import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import classes from '../../App.module.scss';
 import { finishExam } from '../../assets/api/userActions';
 
 
-const CountDown = (props) => {
-
+const   CountDown = (props) => {
+    
     const navigate = useNavigate();
     const params = useParams();
 
@@ -34,11 +35,15 @@ const CountDown = (props) => {
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         console.log(res);
-        if (res.status === "success-finish") {
-            navigate("/quiz/join/" + params.quiz)
+        if (res.status === "success-finish" || res.status==="not-found") {  
+            navigate("/quiz/finish")
         }
         else{
-            alert(res?.message)
+            Swal.fire({
+                icon:"error",
+                title: `${res?.message}`,
+            })
+            // alert(res?.message)
         }
     }
 
@@ -53,9 +58,9 @@ const CountDown = (props) => {
                 <circle id={classes.circle_container__progress} strokeDasharray={`${percentage} 100`} r="16" cx="16" cy="16" shapeRendering="geometricPrecision">
                 </circle>
             </svg>
-            <div className={classes.timeRemained}>
+            <div className={classes.timeRemained} style={{zIndex:"1"}}>
                 <div id={classes.time}>
-                    <CountdownTimer count={totalTime} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => { onFinishHandler() }} />  {/* examData?.duration */}
+                    <CountdownTimer count={timeLeft} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => { onFinishHandler() }} />  {/* examData?.duration */}
                 </div>
                 <div>مانده</div>
             </div>

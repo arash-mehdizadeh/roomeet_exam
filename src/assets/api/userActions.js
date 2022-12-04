@@ -66,6 +66,14 @@ const finishExam = async (attemptID) => {
         console.log(error.message);
     }
 }
+const leaveExam = async (attemptID) => {
+    try {
+        let response =  await userAction.get(`/site/quiz/leave/${attemptID}`,axiosUploadConfig)
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 const postFormData = async ( formData ) => {
     try {
@@ -85,6 +93,7 @@ const storeFileURL = async ( fileData ) => {
         console.log(error.message);
     }
 }
+
 const postUserDescriptionAnswer = async ( id ,attemptID ,userAnswer ) => {
     
     let questionAnswerData = {
@@ -107,7 +116,6 @@ const postUserTestAnswer = async ( id ,attemptID ,userAnswer ) => {
         attempt_id: attemptID,
         option_id: userAnswer
     };
-
     try {
         let response =  await userAction.post(`/site/quiz/answer`,questionAnswerData,axiosUploadConfig)
         return(response)
@@ -116,8 +124,17 @@ const postUserTestAnswer = async ( id ,attemptID ,userAnswer ) => {
     }
 }
 
+const testAnswerCancel = async( optionID ) =>{
+    
+    try {
+        let response =  await userAction.delete(`/site/quiz/delete/answer/${optionID}`,axiosConfig)
+        return(response)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
-export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,postFormData ,// ,postFilePath
-        postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer
+export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,leaveExam ,postFormData ,// ,postFilePath
+        postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer ,testAnswerCancel
 };

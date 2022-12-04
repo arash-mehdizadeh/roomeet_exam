@@ -22,7 +22,11 @@
     justify-content: center;
 }
 
-
+li{
+    padding-right: 45px;
+    @media (max-width: #{768px - 1px}) {
+        padding-right: 15px !important;
+    }
     .testRow{
         display: flex;
         // padding-right: $defaultPadding;
@@ -30,7 +34,13 @@
         height: 50px;
         .testOptionsContainer{
             display: flex;
-            margin-left: 18px
+            margin-left: 9px
+        }
+        .cancelContainer{
+            display: flex;
+            align-items: center;
+            margin-left: 9px;
+            // cursor: pointer;
         }
         .testOptionButton {
             @include test-button-option();
@@ -44,9 +54,10 @@
             justify-content: center;
         }
     }
-
-
-.active_btn{
-    background-color: $neon !important;
-    color: #000 !important;
 }
+    
+    
+    .active_btn{
+        background-color: $neon !important;
+        color: #000 !important;
+    }

@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, leaveExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
+import Swal from 'sweetalert2';
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
-import classes from '../../App.module.scss';
 import { checkMatchQuestion } from "../../assets/utils/utils";
 import Loading from "../../components/loading/loading";
 
+import classes from '../../App.module.scss';
+import ExitModal from "../../components/modal/exitModal";
 function TestExam() {
     const navigate = useNavigate();
     const params = useParams();
@@ -22,26 +24,17 @@ function TestExam() {
     const [isLoading, setIsLoading] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
+    const [answered, setAnswered] = useState()
+    const [unAnswered, setUnAnswered] = useState()
+
+    const [exitConfirm, setExitConfirm] = useState(false)
+    const [isLeave, setIsLeave] = useState(false)
 
 
-    // const checkMatchQuestion = (dataQue, dataAtt) => {
-    //     let matches = [];
-    //     // console.log(dataQue ,dataAtt);
-    //     for (var i = 0; i < dataQue.questions.length; i++) {
-    //         for (var j = 0; j < dataAtt.answers.length; j++) {
-    //             if (dataQue.questions[i].id === dataAtt.answers[j].question_id) {
-    //                 matches.push({
-    //                     id: dataQue.questions[i].id,
-    //                     option_number: dataAtt.answers[j].option_id
-    //                 })
-    //                 // console.log(dataQue.questions[i].id);
-    //                 // console.log(dataAtt.answers[j].question_id);
-    //                 // matches.push(dataQue.questions[i].id);
-    //             }
-    //         }
-    //     }
-    //     setUserAnswered(matches);
-    // }
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+
+
+
     function isInThePast(date) {
         const today = new Date();
         return date < today;
@@ -52,7 +45,7 @@ function TestExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
-    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+
     useEffect(() => {
         if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
@@ -60,14 +53,53 @@ function TestExam() {
         if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
-
+        fetchData();
     }, [])
+
+
+
+
+
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         console.log(res);
         if (res.status === "success-finish") {
+            navigate("/quiz/finish")
+        }
+        else{
+            Swal.fire({
+                icon:"warning",
+                title:`${res.message}`
+            })
+        }
+    }
+
+    const onLeaveHandler = async (e) => {
+        let res = await leaveExam(e);
+        console.log(res);
+        if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
+        else{
+            Swal.fire({
+                icon:"warning",
+                title:`${res.message}`
+            })
+        }
+    }
+
+    const onConfirm = () => {
+        // console.log(data);
+        if(isLeave){
+            onLeaveHandler(examDataAttempt.id)
+        }
+        else{
+            onFinishHandler(examDataAttempt.id)
+        }
+    }
+
+    const onClose = () => {
+        setExitConfirm(prev => !prev)
     }
 
     const fetchData = async () => {
@@ -79,7 +111,10 @@ function TestExam() {
             a = a.split("}").join("")
             if (a.includes("date")) { a = a.replace("date", data?.date) }
             if (a.includes("time")) { a = a.replace("time", data?.time) }
-            alert(a);
+            Swal.fire({
+                icon: "error",
+                title: `${a}`,
+            })
             setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "1000")
         }
 
@@ -87,15 +122,17 @@ function TestExam() {
         setExamData(data);
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.attempt.timer)
-        setTotalTime(data.attempt.timer)
+        setTotalTime(data.attempt.total_time)
         setIsLoading(false)
-
+        setAnswered(data.attempt.answered_questions)
+        setUnAnswered(data.attempt.unanswered_questions)
     }
 
-    useEffect(() => {
-        fetchData();
-
-    }, [])
+    const answerResHandler = (data) => {
+        // console.log(data);
+        setAnswered(data.answered_questions);
+        setUnAnswered(data.unanswered_questions)
+    }
 
 
     return (
@@ -105,20 +142,24 @@ function TestExam() {
 
                     examData && <div className={classes.container}>
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
-                            <ivd className={classes.headerBox}>
+                            {
+                                exitConfirm &&
+                                <ExitModal onClose={onClose} leave={isLeave}  onConfirm={onConfirm} />
+                            }
+                            <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p onClick={() => onFinishHandler(examDataAttempt.id)}>اتمام آزمون</p>
-                                    <p  >ترک آزمون</p>
+                                    <p onClick={() => {setIsLeave(false);setExitConfirm(true)}}>اتمام آزمون</p>
+                                    <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p>
                                 </div>
-                                <CountDown totalTime={totalTime} timeRemained={timeLeft} />
-                            </ivd>
+                                {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>}
+                            </div>
                             <div className={classes.informationBar}>
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
                                         <p>{`(آموزشگاه فراگویان)`}</p>
                                     </div>
-                                    <div id={classes.returnBtn} onClick={() => window.location.reload()}>
+                                    <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>
                                         <div className={classes.exitIcon}>
                                             <Exit fill='#fff' width="15px" height='15px' />
@@ -142,8 +183,8 @@ function TestExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${examDataAttempt?.answered_questions}`}</p>
-                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${examDataAttempt?.unanswered_questions}`}</p>
+                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${answered === null ? 0 : answered}`}</p>
+                                        <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${unAnswered === null ? 0 : unAnswered}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>
@@ -151,7 +192,7 @@ function TestExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
-                                                    userAnswered={userAnswered}
+                                                    userAnswered={userAnswered} answerResHandler={answerResHandler}
                                                     options={data.options} score={data.score} />
                                             ))
                                         }

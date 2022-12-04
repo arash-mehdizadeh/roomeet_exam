@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState ,useEffect } from 'react'
 import ReactDOM from 'react-dom';
 import { postFilePath, postFormData, postUserDescriptionAnswer, storeFileURL } from '../../assets/api/userActions';
 
@@ -7,7 +7,6 @@ import { getFileName } from '../../assets/utils/utils';
 import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 
 import classes from '../../styles/components/modals/uploadModal.module.scss';
-import { useEffect } from 'react';
 
 const BackDrop = (props) => {
     return <div className={classes.modalBackDrop} onClick={props.onConfirm} ></div>
@@ -62,7 +61,7 @@ const OverlayUploadModal = (props) => {
         const dataFile = new FormData();
         dataFile.append("file", file);
         // var formHeaders = dataFile.getHeaders();
-        await postFormData(dataFile).then(res => { formDataRes(res.data) }) //added uploadSuccess and log in there
+        await postFormData(dataFile).then(res => { formDataRes(res.data);console.log(res.data); }) //added uploadSuccess and log in there
         // const res = await postUserAnswer(questionAnswerData);
         // console.log("questionAnswerData =>",res);
         // 'https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1668707199_dummy.pdf'
@@ -80,7 +79,7 @@ const OverlayUploadModal = (props) => {
 
     const onFileChangeHandler = (event) => {
         setFile(event.target.files[0]);
-        console.log(event.target.files[0]);
+        // console.log(event.target.files[0]);
     }
 
     const onFileDeleteHandler = () => {

@@ -173,7 +173,7 @@ $large-width: 1024px;
     width: 100%;
     .timeRemainedContainer{
         margin: 0 0 10px;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1.5fr 4fr;
         display: grid;
         @include small-down(){
             display: flex !important;
@@ -656,7 +656,10 @@ $large-width: 1024px;
     }
     &__title{
         color: $textPrimaryColor;
-        width: 130px;
+        width: 170px;
+        @include small-down(){
+            width: 130px;
+        }
     }
     &__detail{
         margin-right: 10px;
@@ -737,4 +740,34 @@ $large-width: 1024px;
     display: flex;
     color:#fff;
     align-self: center;
+}
+
+.unlimited_text{
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    .title{
+        margin: 75px 0;
+        text-shadow: 0px 0px 3px $neon;
+        @include small-down(){
+            font-size: 20px;
+        }
+    }
+    .redirect__btn{
+        all: unset;
+        color: $primaryColor;
+        font-weight: 600;
+        border: 3px solid $primaryColor;
+        border-radius: 65px;
+        padding: 5px 12px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
 }
