@@ -173,7 +173,7 @@ $large-width: 1024px;
     width: 100%;
     .timeRemainedContainer{
         margin: 0 0 10px;
-        grid-template-columns: 1.5fr 4fr;
+        grid-template-columns: 1fr 3fr;
         display: grid;
         @include small-down(){
             display: flex !important;
@@ -561,6 +561,9 @@ $large-width: 1024px;
         font-size: $font-size-df ;
         height: 450px;
         padding: 0 10px;
+        @media (min-width:1550px){
+            height: 530px;
+        }
         // height: ;
         .questionBox{
             display: flex;

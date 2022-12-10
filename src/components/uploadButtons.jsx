@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { getFileName, getFileNameFromAttempt } from '../assets/utils/utils';
 
 
-const UploadButtons = ({ index, userAnswered, attemptID, score, activeBtn, activeBtnHandler, nullingActiveBtnHandler }) => {
+const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn, activeBtnHandler, nullingActiveBtnHandler }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [body, setBody] = useState("")
@@ -46,7 +46,7 @@ const UploadButtons = ({ index, userAnswered, attemptID, score, activeBtn, activ
     }
 
     useEffect(() => {
-        userAnswered && userAnsweredHandler(index)
+        userAnswered && userAnsweredHandler(index);
     }, [])
 
     return (
@@ -55,7 +55,7 @@ const UploadButtons = ({ index, userAnswered, attemptID, score, activeBtn, activ
         <li key={index} >
             {
                 isModalOpen &&
-                <UploadModal id={index} body={body} attemptID={attemptID} onConfirm={modalHandler} uploadSuccess={uploadSuccess} uploadFileName={uploadFileName} />
+                <UploadModal id={index} quNo={quNo} body={body} attemptID={attemptID} onConfirm={modalHandler} uploadSuccess={uploadSuccess} uploadFileName={uploadFileName} />
             }
             <div className={classes.uploadContainer} >
                 {/*when upload was successful `successUpload` class will active / and when user click on button active_uploadBtn will active */}

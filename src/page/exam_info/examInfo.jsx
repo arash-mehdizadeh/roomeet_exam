@@ -12,6 +12,7 @@ function ExamInfo() {
     const navigate = useNavigate();
 
     const [examData, setExamData] = useState();
+    const [examTitle, setExamTitle] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [inputField, setInputField] = useState({
         phone: "",
@@ -30,12 +31,13 @@ function ExamInfo() {
     const fetchData = async () => {
         const data = await examDatails(params.quiz)
         // console.table(data);
+        setExamTitle(data?.quiz?.title)
         setExamData(data?.quiz)
+        return data?.quiz?.title;
     }
 
 
     useEffect(() => {
-        fetchData();
         let data = JSON.parse(localStorage.getItem('userToken'));
         if (!data) {
             navigate(`/quiz/join/${params.quiz}`)
@@ -47,6 +49,8 @@ function ExamInfo() {
             localStorage.removeItem('userToken');
             window.location.reload();
         }
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `اطلاعات آزمون ${res}`)
     }, [])
 
     const inputHandler = (e) => {
@@ -144,7 +148,7 @@ function ExamInfo() {
     }
 
     return (
-        <div className={classes.appContainer} style={{height:"100%"}}>
+        <div className={classes.appContainer} style={{minHeight:"100vh",maxHeight:"100%"}}>
             <div className={classes.container}>
                 {/* DISPLAY QUESTION / QUESTION SECTION  */}
                 <section className={classes.questionSection}>

@@ -28,6 +28,7 @@ function DescriptivePdfExam() {
         // The url has to end with "/"
         url: 'https://unpkg.com/pdfjs-dist@2.6.347/cmaps/',
     };
+    
     const navigate = useNavigate();
     const params = useParams();
 
@@ -62,6 +63,7 @@ function DescriptivePdfExam() {
         setIsLoading(false)
         setAnswered(data.attempt.answered_questions)
         setUnAnswered(data.attempt.unanswered_questions)
+        return data.quiz.title;
     }
 
 
@@ -123,13 +125,15 @@ function DescriptivePdfExam() {
 
     const LSdata = JSON.parse(localStorage.getItem('userToken'));
     useEffect(() => {
+        document.title = 'شروع آزمون';
         if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
         if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
-        fetchData();
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `آزمون ${res}`)
     }, [])
 
 
@@ -176,7 +180,7 @@ function DescriptivePdfExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration``} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
@@ -199,8 +203,9 @@ function DescriptivePdfExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
-                                                    index={data.id} options={data.options} score={data.score}
-                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id} activeBtnHandler={activeBtnHandler}
+                                                    index={data.id} quNo={data.question_number} options={data.options} score={data.score}
+                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id}
+                                                    activeBtnHandler={activeBtnHandler}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />
@@ -222,14 +227,8 @@ function DescriptivePdfExam() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                                        <div style={{ height: '750px' }}>
-                                            <Viewer
-                                                fileUrl={examData?.quiz?.question_pdf}
-                                                characterMap={characterMap}
-                                            />
-                                        </div>
-                                    </Worker>
+                                <iframe src={examData?.quiz?.question_pdf} title="pdf"
+                                        style={{width:"100%", height:"500px"}} frameborder="0"></iframe>
                                 </div>
                             </section>
                         </main>

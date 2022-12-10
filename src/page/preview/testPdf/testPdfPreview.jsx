@@ -1,66 +1,40 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { attemptToJoinExam, finishExam, leaveExam } from "../../assets/api/userActions";
-import CountDown from "../../components/countDown/countDown";
-import TestAnswerOptions from '../../components/testAnswerOptions';
-import TestQuestion from '../../components/testQuestion';
 import Swal from 'sweetalert2';
+
+import CountDown from "../../../components/countDown/countDown";
+
+import TestAnswerOptions from '../../components/testAnswerOptions';
+// import TestQuestion from '../../components/testQuestion';
+
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
+import classes from '../../App.module.scss';
 import { checkMatchQuestion } from "../../assets/utils/utils";
 import Loading from "../../components/loading/loading";
-
-import classes from '../../App.module.scss';
 import ExitModal from "../../components/modal/exitModal";
+
 function TestExam() {
+
     const navigate = useNavigate();
     const params = useParams();
 
-    const [examData, setExamData] = useState();
     const [examDataAttempt, setExamDataAttempt] = useState([]);
     const [userAnswered, setUserAnswered] = useState()
-    const [isLoading, setIsLoading] = useState(false);
+    const [examData, setExamData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
-
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
-
-    const LSdata = JSON.parse(localStorage.getItem('userToken'));
-
-
-
-    function isInThePast(date) {
-        const today = new Date();
-        return date < today;
-    }
-
-    function toLoginPage() {
-        localStorage.removeItem('userToken');
-        navigate(`/quiz/join/${params.quiz}`)
-    }
-
-
-    useEffect(() => {
-        document.title = 'پیشنمایش آزمون';
-        if (!LSdata) {
-            navigate(`/quiz/join/${params.quiz}`)
-        }
-        if (LSdata && isInThePast(LSdata.expireDate)) {
-            toLoginPage()
-        }
-        let examTitle = fetchData();
-        examTitle.then(res => document.title = `آزمون ${res}`)
-    }, [])
-
-
-
-
+    // const [pages, setPages] = useState(null);
+    // const [pageNumber, setPageNumber] = useState(1);
 
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
@@ -68,10 +42,10 @@ function TestExam() {
         if (res.status === "success-finish") {
             navigate("/quiz/finish")
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
@@ -82,20 +56,20 @@ function TestExam() {
         if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
 
     const onConfirm = () => {
         // console.log(data);
-        if(isLeave){
+        if (isLeave) {
             onLeaveHandler(examDataAttempt.id)
         }
-        else{
+        else {
             onFinishHandler(examDataAttempt.id)
         }
     }
@@ -104,8 +78,8 @@ function TestExam() {
         setExitConfirm(prev => !prev)
     }
 
+
     const fetchData = async () => {
-        setIsLoading(true)
         const data = await attemptToJoinExam(params.quiz)
         if (data?.status !== "joined") {
             let a = data?.message;
@@ -117,19 +91,20 @@ function TestExam() {
                 icon: "error",
                 title: `${a}`,
             })
-            setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "1000")
+            navigate("/quiz/join/" + params.quiz)
         }
 
-        data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
         setExamData(data);
-        // console.log(data.data);
-        setExamDataAttempt(data.attempt);
+        data.attempt.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
+
+        setExamDataAttempt(data.attempt)
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.total_time)
-        setIsLoading(false)
+        setIsLoading(false);
         setAnswered(data.attempt.answered_questions)
         setUnAnswered(data.attempt.unanswered_questions)
         return data.quiz.title;
+
     }
 
     const answerResHandler = (data) => {
@@ -138,24 +113,52 @@ function TestExam() {
         setUnAnswered(data.unanswered_questions)
     }
 
+    function isInThePast(date) {
+        const today = new Date();
+        return date < today;
+    }
+
+    function toLoginPage() {
+        localStorage.removeItem('userToken');
+        navigate(`/quiz/join/${params.quiz}`)
+    }
+
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+    useEffect(() => {
+        document.title = 'شروع آزمون';
+        if (!LSdata) {
+            navigate(`/quiz/join/${params.quiz}`)
+        }
+        if (LSdata && isInThePast(LSdata.expireDate)) {
+            toLoginPage()
+        }
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `آزمون ${res}`)
+
+    }, [])
+
 
     return (
-        <div className={`${classes.appContainer} ${classes.smSizeAppContainer}`}>
+        <div className={`${classes.appContainer} ${classes.examAppContainer}`} >
             {
                 !isLoading ?
 
-                    examData && <div className={classes.container}>
+                    examData &&
+                    <div className={classes.container}>
+                        {
+                            exitConfirm &&
+                            <ExitModal onClose={onClose} leave={isLeave} onConfirm={onConfirm} />
+                        }
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
-                            {
-                                exitConfirm &&
-                                <ExitModal onClose={onClose} leave={isLeave}  onConfirm={onConfirm} />
-                            }
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p onClick={() => {setIsLeave(false);setExitConfirm(true)}}>اتمام آزمون</p>
-                                    <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p>
+                                    <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>خروج از پیشنمایش</p>
+                                    <p>ترک آزمون</p>
                                 </div>
                                 {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>}
+
+
+                                {/* <div className='time-remained'>4:20:00</div> */}
                             </div>
                             <div className={classes.informationBar}>
                                 <div className={classes.examDetails}>
@@ -173,7 +176,7 @@ function TestExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
@@ -189,6 +192,7 @@ function TestExam() {
                                     <div className={classes.answerDatasheet}>
                                         <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${answered === null ? 0 : answered}`}</p>
                                         <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${unAnswered === null ? 0 : unAnswered}`}</p>
+
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>
@@ -197,7 +201,7 @@ function TestExam() {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}
-                                                    options={data.options} score={data.score} />
+                                                    options={data.options} score={data.score} attempt={examDataAttempt} />
                                             ))
                                         }
                                     </ol>
@@ -215,21 +219,13 @@ function TestExam() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-
-                                    {
-                                        examData.quiz?.questions?.map((data) => (
-                                            <TestQuestion data={data} id={data.id} options={data.options} quNo={data.question_number}
-                                                body={data.body} score={data.score} imageURL={data.image} audioURL={data?.voice}
-                                            />
-                                        ))
-                                    }
-
+                                    <iframe src={examData?.quiz?.question_pdf} title="pdf"
+                                        style={{ width: "100%", height: "500px" }} frameborder="0"></iframe>
                                 </div>
                             </section>
                         </main>
 
-                    </div> :
-                    <>
+                    </div> : <>
                         <Loading />
                     </>
             }

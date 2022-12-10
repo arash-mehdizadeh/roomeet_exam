@@ -53,15 +53,15 @@ function DescriptiveExam() {
         }
 
         data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
-
         setExamData(data)
         setExamDataAttempt(data.attempt);
-        // console.log(data.attempt);
+        console.log(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.total_time)
         setIsLoading(false)
         setAnswered(data.attempt.answered_questions)
         setUnAnswered(data.attempt.unanswered_questions)
+        return data.quiz.title;
     }
 
     const answerResHandler = (data) => {
@@ -130,7 +130,9 @@ function DescriptiveExam() {
         if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
-        fetchData();
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `آزمون ${res}`)
+        
     }, [])
 
 
@@ -200,7 +202,7 @@ function DescriptiveExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <UploadButtons
-                                                    index={data.id} options={data.options} score={data.score}
+                                                    index={data.id} quNo={data.question_number} options={data.options} score={data.score}
                                                     activeBtn={activeBtn} attemptID={examDataAttempt.id}
                                                     activeBtnHandler={activeBtnHandler}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}

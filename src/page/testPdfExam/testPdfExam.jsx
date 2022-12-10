@@ -50,10 +50,10 @@ function TestExam() {
         if (res.status === "success-finish") {
             navigate("/quiz/finish")
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
@@ -64,10 +64,10 @@ function TestExam() {
         if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
@@ -111,6 +111,7 @@ function TestExam() {
         setIsLoading(false);
         setAnswered(data.attempt.answered_questions)
         setUnAnswered(data.attempt.unanswered_questions)
+        return data.quiz.title;
 
     }
 
@@ -132,21 +133,21 @@ function TestExam() {
 
     const LSdata = JSON.parse(localStorage.getItem('userToken'));
     useEffect(() => {
+        document.title = 'شروع آزمون';
         if (!LSdata) {
             navigate(`/quiz/join/${params.quiz}`)
         }
         if (LSdata && isInThePast(LSdata.expireDate)) {
             toLoginPage()
         }
-        else {
-            fetchData();
-        }
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `آزمون ${res}`)
 
     }, [])
 
 
     return (
-        <div className={classes.appContainer}>
+        <div className={`${classes.appContainer} ${classes.examAppContainer}`} >
             {
                 !isLoading ?
 
@@ -183,7 +184,7 @@ function TestExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
@@ -229,7 +230,7 @@ function TestExam() {
                                     {/* <Document   file={{ URL: "https://quiz-api.roomeet.ir/upload/files/pdf/2022/11/ftp_1667637077_dummy-pdf.pdf" }} onLoadSuccess={onDocumentLoadSuccess}>
                                         <Page pageNumber={pageNumber} />
                                     </Document> */}
-                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
+                                    {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
                                         <div style={{ height: '750px' }}>
                                             <Viewer
                                                 fileUrl={examData?.quiz?.question_pdf}
@@ -237,8 +238,9 @@ function TestExam() {
 
                                             />
                                         </div>
-                                    </Worker>
-
+                                    </Worker> */}
+                                    <iframe src={examData?.quiz?.question_pdf} title="pdf"
+                                        style={{width:"100%", height:"500px"}} frameborder="0"></iframe>
                                 </div>
                             </section>
                         </main>

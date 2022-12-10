@@ -99,7 +99,7 @@ const postUserDescriptionAnswer = async ( id ,attemptID ,userAnswer ) => {
     let questionAnswerData = {
         question_id: id,//id
         attempt_id: attemptID,
-        answer: userAnswer
+        answer: userAnswer ? userAnswer : null
     };
 
     try {

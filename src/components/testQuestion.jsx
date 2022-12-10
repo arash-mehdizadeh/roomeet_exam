@@ -64,31 +64,27 @@ const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data
             </div>
             <div className={classes.scrollableQuestionsContainer}>
                 {body && <p>{body}</p>}
-                <div className={classes.muChImageContainer}>
-                    {imageURL && <img onClick={()=>modalHandler()} src={imageURL} alt={body} style={{cursor:"pointer"}} />}
-                    {/* <p>image</p> */}
+                {imageURL &&
+                    <div className={classes.muChImageContainer}>
+                        <img onClick={() => modalHandler()} src={imageURL} alt={body} style={{ cursor: "pointer" }} />
+                    </div>
+                }
+                {
+                audioURL && <div className={classes.muChAudioContainer}>
+                    <>
+                        <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
+                        {
+                            playing ?
+                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                    <PauseCircleFilled style={{ fill: "#c30a7f" }} />
+                                </div> :
+                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                    <PlayCircleFilled style={{ fill: "#c30a7f" }} />
+                                </div>
+                        }
+                    </>
                 </div>
-
-                <div className={classes.muChAudioContainer}>
-
-                    {/* <div style={{ display: "flex", alignItems: "center" }}> */}
-                    {audioURL &&
-                        <>
-                            <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
-                            {
-                                playing ?
-
-                                    <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
-                                        <PauseCircleFilled style={{ fill: "#c30a7f" }} />
-                                    </div> :
-                                    <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
-                                        <PlayCircleFilled style={{ fill: "#c30a7f" }} />
-                                    </div>
-                            }
-                        </>}
-
-                    {/* </div> */}
-                </div>
+                }
                 <div className={classes.muChQuestionContainer}>
                     <ul>
                         {

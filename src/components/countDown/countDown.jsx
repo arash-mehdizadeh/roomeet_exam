@@ -1,4 +1,4 @@
-import { useState ,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import CountdownTimer from "react-component-countdown-timer";
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,8 +8,8 @@ import classes from '../../App.module.scss';
 import { finishExam } from '../../assets/api/userActions';
 
 
-const   CountDown = (props) => {
-    
+const CountDown = (props) => {
+
     const navigate = useNavigate();
     const params = useParams();
 
@@ -31,16 +31,16 @@ const   CountDown = (props) => {
 
         return () => clearInterval(intervalId);
     }, [timeLeft]);
-    
+
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         console.log(res);
-        if (res.status === "success-finish" || res.status==="not-found") {  
+        if (res.status === "success-finish" || res.status === "not-found") {
             navigate("/quiz/finish")
         }
-        else{
+        else {
             Swal.fire({
-                icon:"error",
+                icon: "error",
                 title: `${res?.message}`,
             })
             // alert(res?.message)
@@ -58,9 +58,43 @@ const   CountDown = (props) => {
                 <circle id={classes.circle_container__progress} strokeDasharray={`${percentage} 100`} r="16" cx="16" cy="16" shapeRendering="geometricPrecision">
                 </circle>
             </svg>
-            <div className={classes.timeRemained} style={{zIndex:"1"}}>
+            <div className={classes.timeRemained} style={{ zIndex: "1" }}>
                 <div id={classes.time}>
                     <CountdownTimer count={timeLeft} hideDay={true} backgroundColor={"transparent"} size={12} onEnd={() => { onFinishHandler() }} />  {/* examData?.duration */}
+                </div>
+                <div>مانده</div>
+            </div>
+        </div>
+    )
+}
+
+const PreviewCountdown = (props) => {
+
+    // const [timeLeft, setTimeLeft] = useState(props.timeRemained);
+    const [totalTime, setTotalTime] = useState(props.totalTime);
+    function time_convert(num) {
+        var hours = Math.floor(num / 60);
+        var minutes = num % 60;
+        setTotalTime(hours + ":" + minutes + ":00");
+    }
+    useEffect(()=>{
+        time_convert(props.totalTime)
+    },[])
+
+    return (
+        <div className={classes.countdownContainer}>
+            <svg id={classes.circle_container} viewBox="2 -2 28 36" xmlns="http://www.w3.org/2000/svg">
+                <linearGradient id={"gradient"}>
+                    <stop id={classes.stop1} offset="0%" />
+                    <stop id={classes.stop2} offset="100%" />
+                </linearGradient>
+                <circle id={classes.circle_container__background} r="16" cx="16" cy="16" shapeRendering="geometricPrecision"></circle>
+                <circle id={classes.circle_container__progress} strokeDasharray={`75 100`} r="16" cx="16" cy="16" shapeRendering="geometricPrecision">
+                </circle>
+            </svg>
+            <div className={classes.timeRemained} style={{ zIndex: "1" }}>
+                <div id={classes.time}>
+                    {totalTime}
                 </div>
                 <div>مانده</div>
             </div>
