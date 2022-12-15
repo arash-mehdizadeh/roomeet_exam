@@ -40,6 +40,31 @@ const userLogin = async (data) => {
     }
 }
 
+// const confirmMessageRequest = async(phone_num) => {
+//     try {
+//         let response =  await userAction.post(`/detection-submit-number`,{phone:phone_num})
+//         return(response.data)
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+const confirmMessageRequest = async(phone_num) => {
+    try {
+        let response =  await axios.post(`https://node.roomeet.ir/api/v1/detection-submit-number`,{phone:phone_num})
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+const confirmGuestLoginRequest = async(loginData) => {
+    try {
+        let response =  await axios.post(`https://node.roomeet.ir/api/v1/detection-submit-number`,loginData)
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 const examDatails = async (examID) => {
     try {
         let response =  await userAction.get(`/site/quiz/join/${examID}`)
@@ -134,7 +159,17 @@ const testAnswerCancel = async( optionID ) =>{
     }
 }
 
+const previewExam = async (quiz_code) => {
+    try {
+        let response =  await userAction.get(`/panel/super-admin/preview/quiz/${quiz_code}`,axiosUploadConfig)
+        return(response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
-export { userLogin ,examDatails ,attemptToJoinExam ,finishExam ,leaveExam ,postFormData ,// ,postFilePath
-        postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer ,testAnswerCancel
+
+
+export { userLogin ,examDatails ,confirmMessageRequest,confirmGuestLoginRequest ,attemptToJoinExam ,finishExam ,leaveExam ,postFormData ,// ,postFilePath
+        postUserDescriptionAnswer ,storeFileURL ,postUserTestAnswer ,testAnswerCancel ,previewExam
 };

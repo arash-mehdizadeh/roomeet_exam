@@ -1,0 +1,63 @@
+@import '/src/styles/variables';
+
+
+@mixin border($border:$primaryBorderColor) {
+    border:1px solid $border;
+    
+}
+
+@mixin test-button-option {
+    color: #9c9c9c;
+    align-items: center;
+    text-align: center;
+    padding: 10px 10px;
+    width: 40px;
+    height: 40px;
+    @include border();
+    border-radius: $full;
+    margin: 5px;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+
+li{
+    padding-right: 0 !important;
+    @media (max-width: #{768px - 1px}) {
+        padding-right: 15px !important;
+    }
+    .testRow{
+        display: flex;
+        // padding-right: $defaultPadding;
+        justify-content: space-between;
+        height: 50px;
+        .testOptionsContainer{
+            display: flex;
+            margin-left: 9px
+        }
+        .cancelContainer{
+            display: flex;
+            align-items: center;
+            margin-left: 9px;
+            // cursor: pointer;
+        }
+        .testOptionButton {
+            @include test-button-option();
+        }
+        .grade{
+            font-size: 10px;
+            font-weight: 600;
+            color: #464646;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+    
+    
+    .active_btn{
+        background-color: $neon !important;
+        color: #000 !important;
+    }

@@ -52,7 +52,7 @@ const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn
     return (
 
         // <li className={classes.uploadRow}>
-        <li key={index} >
+        <li key={index} className={classes.uploadButtonRow}>
             {
                 isModalOpen &&
                 <UploadModal id={index} quNo={quNo} body={body} attemptID={attemptID} onConfirm={modalHandler} uploadSuccess={uploadSuccess} uploadFileName={uploadFileName} />

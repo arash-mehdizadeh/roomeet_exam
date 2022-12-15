@@ -16,7 +16,7 @@ import ExitModal from "../../../components/modal/exitModal";
 import TestCheckboxPreviewButtons from "../../../components/previewAnswerButtons/testCheckboxButtons/testCheckboxPreviewButtons";
 
 
-function TestPdfPreview() {
+function TestPreviewExam() {
     const navigate = useNavigate();
     const params = useParams();
 
@@ -70,10 +70,10 @@ function TestPdfPreview() {
         if (res.status === "success-finish") {
             navigate("/quiz/finish")
         }
-        else {
+        else{
             Swal.fire({
-                icon: "warning",
-                title: `${res.message}`
+                icon:"warning",
+                title:`${res.message}`
             })
         }
     }
@@ -84,20 +84,20 @@ function TestPdfPreview() {
         if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
-        else {
+        else{
             Swal.fire({
-                icon: "warning",
-                title: `${res.message}`
+                icon:"warning",
+                title:`${res.message}`
             })
         }
     }
 
     const onConfirm = () => {
         // console.log(data);
-        if (isLeave) {
+        if(isLeave){
             onLeaveHandler(examDataAttempt.id)
         }
-        else {
+        else{
             onFinishHandler(examDataAttempt.id)
         }
     }
@@ -150,14 +150,14 @@ function TestPdfPreview() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             {
                                 exitConfirm &&
-                                <ExitModal onClose={onClose} leave={isLeave} onConfirm={onConfirm} />
+                                <ExitModal onClose={onClose} leave={isLeave}  onConfirm={onConfirm} />
                             }
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام پیشنمایش</p>
-                                    <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p>
+                                    <p onClick={() => {setIsLeave(false);setExitConfirm(true)}}>اتمام پیشنمایش</p>
+                                    <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p>
                                 </div>
-                                <PreviewCountdown totalTime={totalTime} />
+                                <PreviewCountdown totalTime={totalTime}/>
                                 {/* {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>} */}
                             </div>
                             <div className={classes.informationBar}>
@@ -218,12 +218,19 @@ function TestPdfPreview() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-                                    
-                                    <iframe src={examData?.quiz?.question_pdf} title="pdf"
-                                        style={{ width: "100%", height: "500px" }} frameborder="0"></iframe>
+
+                                    {
+                                        examData.quiz?.questions?.map((data) => (
+                                            <TestQuestion data={data} id={data.id} options={data.options} quNo={data.question_number}
+                                                body={data.body} score={data.score} imageURL={data.image} audioURL={data?.voice}
+                                            />
+                                        ))
+                                    }
+
                                 </div>
                             </section>
                         </main>
+
                     </div> :
                     <>
                         <Loading />
@@ -233,6 +240,4 @@ function TestPdfPreview() {
     );
 }
 
-export default TestPdfPreview;
-
-
+export default TestPreviewExam;

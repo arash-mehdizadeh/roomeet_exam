@@ -71,15 +71,11 @@ const CountDown = (props) => {
 const PreviewCountdown = (props) => {
 
     // const [timeLeft, setTimeLeft] = useState(props.timeRemained);
-    const [totalTime, setTotalTime] = useState(props.totalTime);
-    function time_convert(num) {
-        var hours = Math.floor(num / 60);
-        var minutes = num % 60;
-        setTotalTime(hours + ":" + minutes + ":00");
+    function toTimeString(totalSeconds) {
+        const totalMs = totalSeconds * 1000;
+        const result = new Date(totalMs).toISOString().slice(11, 19);
+        return result;
     }
-    useEffect(()=>{
-        time_convert(props.totalTime)
-    },[])
 
     return (
         <div className={classes.countdownContainer}>
@@ -94,7 +90,7 @@ const PreviewCountdown = (props) => {
             </svg>
             <div className={classes.timeRemained} style={{ zIndex: "1" }}>
                 <div id={classes.time}>
-                    {totalTime}
+                    {toTimeString(props.totalTime)}
                 </div>
                 <div>مانده</div>
             </div>
@@ -103,3 +99,4 @@ const PreviewCountdown = (props) => {
 }
 
 export default CountDown
+export { PreviewCountdown }

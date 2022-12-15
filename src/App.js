@@ -7,6 +7,10 @@ import DescriptivePdfExam from "./page/descriptive_pdf_exam/descriptrivePdf"
 import ExamInfo from "./page/exam_info/examInfo"
 import NotFound from "./page/notFound/notFound"
 import FinishPage from "./page/finishPage/finishPage"
+import TestPreviewExam from "./page/preview/test/testPreview"
+import TestPdfPreview from "./page/preview/testPdf/testPdfPreview"
+import DescriptivePreview from "./page/preview/descriptive/descriptivePreview"
+import DescriptivePdfPreview from "./page/preview/descriptivePdf/descriptivePdfPreview"
 
 
 
@@ -20,9 +24,13 @@ const App = () => {
                 <Route path="/quiz/join/:quiz" element={<ExamInfo/>} />
                 <Route path="/quiz/test/:quiz" element={<TestExam/>} />
                 <Route path="/quiz/test-pdf/:quiz" element={<TestPdfExam/>} />
-                <Route path="/homework" element={<Homework/>} />
                 <Route path="/quiz/descriptive/:quiz" element={<DescriptiveExam/>} />
                 <Route path="/quiz/descriptive-pdf/:quiz" element={<DescriptivePdfExam/>} />
+                <Route path="/preview/test/:quiz" element={<TestPreviewExam/>} />
+                <Route path="/preview/test-pdf/:quiz" element={<TestPdfPreview/>} />
+                <Route path="/preview/descriptive/:quiz" element={<DescriptivePreview/>} />
+                <Route path="/preview/descriptive-pdf/:quiz" element={<DescriptivePdfPreview/>} />
+                <Route path="/homework" element={<Homework/>} />
                 <Route path="*" element={<NotFound/>} />
             </Routes>
         </BrowserRouter>

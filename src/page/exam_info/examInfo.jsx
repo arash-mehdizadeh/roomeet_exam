@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { attemptToJoinExam, examDatails, userLogin } from '../../assets/api/userActions';
+import { attemptToJoinExam, confirmGuestLoginRequest, confirmMessageRequest, examDatails, userLogin } from '../../assets/api/userActions';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function ExamInfo() {
@@ -14,10 +14,33 @@ function ExamInfo() {
     const [examData, setExamData] = useState();
     const [examTitle, setExamTitle] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
+    // const [isGuest, setIsGuest] = useState(false)
+    const [counter, setCounter] = useState(null);
+    const [showMessage, setShowMessage] = useState(false);
+    const [showLoginField, setShowLoginField] = useState(true)
+    const [isClickedOnSentPassword, setIsClickedOnSentPassword] = useState(false)
     const [inputField, setInputField] = useState({
         phone: "",
         password: ""
     });
+    const [guestInputField, setGuestInputField] = useState({
+        phone: "",
+        password: ""
+    });
+
+
+    useEffect(() => {
+        if (counter === 0) {
+            setShowMessage(true)
+            setCounter(null)
+        }
+        if (!counter) return;
+        const intervalId = setInterval(() => {
+            setCounter(counter - 1);
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, [counter]);
+
 
     function isInThePast(date) {
         const today = new Date();
@@ -56,6 +79,12 @@ function ExamInfo() {
     const inputHandler = (e) => {
         setInputField({ ...inputField, [e.target.name]: e.target.value });
     }
+    const guestInputHandler = (e) => {
+        setGuestInputField({ ...guestInputField, [e.target.name]: e.target.value });
+    }
+
+
+
 
     const handleResultShow = () => {
         // examData?.show_result
@@ -105,6 +134,44 @@ function ExamInfo() {
         window.location.reload();
     }
 
+    const onGuestSendLogin = async () => {
+        console.log(guestInputField);
+        // await confirmGuestLoginRequest(guestInputField);
+    }
+
+    const onGuestSendPhone = async () => {
+        var regex = new RegExp('^(\\+98|0)?9\\d{9}$');
+
+        if (guestInputField.phone.length !== 11 && guestInputField.phone.length !== 0) {
+            Swal.fire({
+                icon: "error",
+                title: "شماره وارد شده صحیح نمیباشد",
+                confirmButtonText: "باشه"
+
+            })
+        }
+        else if (!guestInputField.phone.length) {
+            Swal.fire({
+                icon: "error",
+                title: "شماره خود را وارد کنید",
+                confirmButtonText: "باشه"
+            })
+        }
+        else if (!regex.test(guestInputField.phone.toString())) {
+            Swal.fire({
+                icon: "error",
+                title: "فرمت شماره وارد شده صحیح نمیباشد",
+                confirmButtonText: "باشه"
+
+            })
+        }
+        else {
+            setCounter(90);
+            await confirmMessageRequest(guestInputField.phone).then(res => console.log(res));
+            setIsClickedOnSentPassword(true);
+        }
+    }
+
     const examPageHandler = async () => {
         let data = JSON.parse(localStorage.getItem('userToken'));
 
@@ -140,7 +207,8 @@ function ExamInfo() {
         else {
             Swal.fire({
                 icon: "error",
-                title: `برای ورود به آزمون وارد حساب کاربری بشوید"`,
+                title: `برای ورود به آزمون وارد حساب کاربری بشوید`,
+                confirmButtonText: "باشه"
             })
             // alert("برای ورود به آزمون وارد حساب کاربری بشوید")
         }
@@ -148,7 +216,7 @@ function ExamInfo() {
     }
 
     return (
-        <div className={classes.appContainer} style={{minHeight:"100vh",maxHeight:"100%"}}>
+        <div className={classes.appContainer} style={{ minHeight: "100vh", maxHeight: "100%" }}>
             <div className={classes.container}>
                 {/* DISPLAY QUESTION / QUESTION SECTION  */}
                 <section className={classes.questionSection}>
@@ -219,20 +287,48 @@ function ExamInfo() {
                             </div>
                             // ))
                         }
-                        <div className={classes.examInfo__login_section} style={{ display: isUserLogged ? "none" : "flex" }}>
-                            <form className={classes.examInfo__login} onSubmit={onSubmitHandler} >
-                                <div className={classes.examInfo__login_title}>
-                                    <h3>ورود</h3>
+                        {
+                            showLoginField ?
+                                <div className={classes.examInfo__login_section} style={{ display: isUserLogged ? "none" : "flex" }}>
+                                    <form className={classes.examInfo__login} onSubmit={onSubmitHandler} >
+                                        <div className={classes.examInfo__login_title}>
+                                            <h3>ورود</h3>
+                                        </div>
+                                        <div className={classes.examInfo__login_title}>
+                                            <p className={classes.examInfo__login_info}>لطفا وارد حساب کاربری خود شوید</p>
+                                        </div>
+                                        <input type="number" placeholder='شماره تلفن' name='phone' value={inputField.phone} onChange={inputHandler} className={classes.examInfo__login_input} />
+                                        <input type="password" placeholder='رمز عبور' name='password' value={inputField.password} onChange={inputHandler} className={classes.examInfo__login_input} style={{ marginBottom: "6px" }} />
+                                        <p id={classes.forgetPassword} style={{margin:"0px 0 16px 0"}}>فراموشی رمز عبور</p>
+                                        <button type="submit" className={classes.examInfo__login_btn}>ورود</button>
+                                        <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => setShowLoginField(false)} >ورود به عنوان مهمان</p>
+                                    </form>
                                 </div>
-                                <div className={classes.examInfo__login_title}>
-                                    <p className={classes.examInfo__login_info}>لطفا وارد حساب کاربری خود شوید</p>
+                                :
+                                <div className={classes.examInfo__login_section} style={{ display: "flex" }}>
+                                    <div className={classes.examInfo__login} >
+                                        <div className={classes.examInfo__login_title}>
+                                            <h3>ورود مهمان</h3>
+                                        </div>
+                                        <div className={classes.examInfo__login_title}>
+                                            <p className={classes.examInfo__login_info}>لطفا وارد حساب کاربری خود شوید</p>
+                                        </div>
+                                        <input type="number" placeholder='شماره تلفن' name='phone' value={guestInputField.phone} onChange={guestInputHandler} className={classes.examInfo__login_input} />
+                                        {isClickedOnSentPassword && <input type="password" autoComplete="new-password" placeholder='رمز ارسال شده' name='password' value={guestInputField.password} onChange={guestInputHandler} className={classes.examInfo__login_input} style={{ marginBottom: "6px" }} />}
+                                        {/* <p id={classes.forgetPassword}>فراموشی رمز عبور</p> */}
+                                        { isClickedOnSentPassword && !showMessage  && <p id={classes.resendMessage}>{`${counter} ثانیه مانده تا دریافت کد مجدد`}</p>}
+                                        { showMessage && <p id={classes.forgetPassword} className={classes.examInfo__changeField}  >پیامی دریافت نکرده اید ؟<br />ارسال مجدد کد</p>}
+                                        {
+                                            isClickedOnSentPassword ?
+                                                <button className={classes.examInfo__login_btn} onClick={() => onGuestSendLogin()} >ورود</button>
+                                                :
+                                                <button className={classes.examInfo__login_btn} onClick={() => onGuestSendPhone()} >ارسال رمز ورود</button>
+                                        }
+                                        <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => setShowLoginField(true)} >ورود به عنوان کاربر</p>
+                                    </div>
                                 </div>
-                                <input type="text" placeholder='شماره تلفن' name='phone' value={inputField.phone} onChange={inputHandler} className={classes.examInfo__login_input} />
-                                <input type="password" placeholder='رمز عبور' name='password' value={inputField.password} onChange={inputHandler} className={classes.examInfo__login_input} style={{ marginBottom: "6px" }} />
-                                <p id={classes.forgetPassword}>فراموشی رمز عبور</p>
-                                <button type="submit" className={classes.examInfo__login_btn}>ورود</button>
-                            </form>
-                        </div>
+                        }
+
                     </div>
                     <div className={classes.examInfo__btn_container}>
                         <button onClick={() => examPageHandler()} className={classes.examInfo__btn}>شروع  آزمون و مشاهده سوالات</button>

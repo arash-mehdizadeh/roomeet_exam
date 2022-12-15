@@ -2,67 +2,73 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { attemptToJoinExam, finishExam, leaveExam } from "../../../assets/api/userActions";
 import CountDown, { PreviewCountdown } from "../../../components/countDown/countDown";
-import TestQuestion from '../../../components/testQuestion';
 import Swal from 'sweetalert2';
+import ExitModal from "../../../components/modal/exitModal";
 
+
+// import HomeworkQuestion from '../../components/homeworkQuetion';
+
+import UploadButtons from '../../../components/uploadButtons';
+import DescriptiveQuestion from "../../../components/descriptiveQuestion";
 import { ReactComponent as Exit } from '../../../assets/icons/exit.svg';
 import { ReactComponent as Refresh } from '../../../assets/icons/RightSquare.svg';
 
-import { checkMatchQuestion } from "../../../assets/utils/utils";
-import Loading from "../../../components/loading/loading";
-
 import classes from '../../../App.module.scss';
-import ExitModal from "../../../components/modal/exitModal";
-import TestCheckboxPreviewButtons from "../../../components/previewAnswerButtons/testCheckboxButtons/testCheckboxPreviewButtons";
+import { checkMatchQuestionURL } from "../../../assets/utils/utils";
+import Loading from "../../../components/loading/loading";
+import PreviewUploadButtons from "../../../components/previewAnswerButtons/descriptiveUploadButtons/previewUplaodButton";
 
+function DescriptivePreview() {
 
-function TestPdfPreview() {
     const navigate = useNavigate();
     const params = useParams();
 
+    const [activeBtn, setActiveBtn] = useState(null);
     const [examData, setExamData] = useState();
-    const [examDataAttempt, setExamDataAttempt] = useState([]);
     const [userAnswered, setUserAnswered] = useState()
-    const [isLoading, setIsLoading] = useState(false);
+    const [examDataAttempt, setExamDataAttempt] = useState();
+    const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
-
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
 
-    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+    const fetchData = async () => {
+        const data = await attemptToJoinExam(params.quiz);
+        // console.log(data.attempt);
+        if (data?.status !== "joined") {
+            let a = data?.message;
+            a = a.split("{").join("")
+            a = a.split("}").join("")
+            if (a.includes("date")) { a = a.replace("date", data?.date) }
+            if (a.includes("time")) { a = a.replace("time", data?.time) }
+            Swal.fire({
+                icon: "error",
+                title: `${a}`,
+            })
+            setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "2000")
+        }
 
-
-
-    function isInThePast(date) {
-        const today = new Date();
-        return date < today;
+        data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
+        setExamData(data)
+        setExamDataAttempt(data.attempt);
+        console.log(data.attempt);
+        setTimeLeft(data.attempt.timer)
+        setTotalTime(data.attempt.total_time)
+        setIsLoading(false)
+        setAnswered(data.attempt.answered_questions)
+        setUnAnswered(data.attempt.unanswered_questions)
+        return data.quiz.title;
     }
 
-    function toLoginPage() {
-        localStorage.removeItem('userToken');
-        navigate(`/quiz/join/${params.quiz}`)
+    const answerResHandler = (data) => {
+        // console.log(data);
+        setAnswered(data.answered_questions);
+        setUnAnswered(data.unanswered_questions)
     }
-
-
-    useEffect(() => {
-        document.title = 'پیشنمایش آزمون';
-        if (!LSdata) {
-            navigate(`/quiz/join/${params.quiz}`)
-        }
-        if (LSdata && isInThePast(LSdata.expireDate)) {
-            toLoginPage()
-        }
-        let examTitle = fetchData();
-        examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
-    }, [])
-
-
-
-
 
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
@@ -101,64 +107,60 @@ function TestPdfPreview() {
             onFinishHandler(examDataAttempt.id)
         }
     }
-
     const onClose = () => {
         setExitConfirm(prev => !prev)
     }
 
-    const fetchData = async () => {
-        setIsLoading(true)
-        const data = await attemptToJoinExam(params.quiz)
-        if (data?.status !== "joined") {
-            let a = data?.message;
-            a = a.split("{").join("")
-            a = a.split("}").join("")
-            if (a.includes("date")) { a = a.replace("date", data?.date) }
-            if (a.includes("time")) { a = a.replace("time", data?.time) }
-            Swal.fire({
-                icon: "error",
-                title: `${a}`,
-            })
-            setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "1000")
+    function isInThePast(date) {
+        const today = new Date();
+        return date < today;
+    }
+
+    function toLoginPage() {
+        localStorage.removeItem('userToken');
+        navigate(`/quiz/join/${params.quiz}`)
+    }
+
+    const LSdata = JSON.parse(localStorage.getItem('userToken'));
+
+    useEffect(() => {
+        if (!LSdata) {
+            navigate(`/quiz/join/${params.quiz}`)
         }
+        if (LSdata && isInThePast(LSdata.expireDate)) {
+            toLoginPage()
+        }
+        let examTitle = fetchData();
+        examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
 
-        data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
-        setExamData(data);
-        // console.log(data.data);
-        setExamDataAttempt(data.attempt);
-        setTimeLeft(data.attempt.timer)
-        setTotalTime(data.attempt.total_time)
-        setIsLoading(false)
-        setAnswered(data.attempt.answered_questions)
-        setUnAnswered(data.attempt.unanswered_questions)
-        return data.quiz.title;
+    }, [])
+
+
+
+    const activeBtnHandler = (index) => {
+        setActiveBtn(index);
     }
-
-    const answerResHandler = (data) => {
-        // console.log(data);
-        setAnswered(data.answered_questions);
-        setUnAnswered(data.unanswered_questions)
+    const nullingActiveBtnHandler = () => {
+        setActiveBtn(null);
     }
-
 
     return (
-        <div className={`${classes.appContainer} ${classes.smSizeAppContainer}`}>
+        <div className={`${classes.appContainer} ${classes.examAppContainer}`}>
             {
                 !isLoading ?
 
                     examData && <div className={classes.container}>
+                        {
+                            exitConfirm &&
+                            <ExitModal onClose={onClose} leave={isLeave} onConfirm={onConfirm} />
+                        }
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
-                            {
-                                exitConfirm &&
-                                <ExitModal onClose={onClose} leave={isLeave} onConfirm={onConfirm} />
-                            }
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
                                     <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام پیشنمایش</p>
                                     <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p>
                                 </div>
                                 <PreviewCountdown totalTime={totalTime} />
-                                {/* {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>} */}
                             </div>
                             <div className={classes.informationBar}>
                                 <div className={classes.examDetails}>
@@ -194,15 +196,20 @@ function TestPdfPreview() {
                                         <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${unAnswered === null ? 0 : unAnswered}`}</p>
                                     </div>
                                 </div>
-                                <div className={classes.answerSheet}>
+                                <div className={classes.uploadAnswersSheet}>
                                     <ol>
                                         {
                                             examData.quiz?.questions?.map((data) => (
-                                                <TestCheckboxPreviewButtons id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
+                                                <PreviewUploadButtons
+                                                    index={data.id} quNo={data.question_number} options={data.options} score={data.score}
+                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id}
+                                                    activeBtnHandler={activeBtnHandler}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}
-                                                    options={data.options} score={data.score} />
+                                                    nullingActiveBtnHandler={nullingActiveBtnHandler}
+                                                />
                                             ))
                                         }
+
                                     </ol>
                                 </div>
                             </div>
@@ -218,12 +225,17 @@ function TestPdfPreview() {
                                     </div>
                                 </div>
                                 <div className={classes.questionContainer}>
-                                    
-                                    <iframe src={examData?.quiz?.question_pdf} title="pdf"
-                                        style={{ width: "100%", height: "500px" }} frameborder="0"></iframe>
+                                    {
+                                        examData.quiz?.questions?.map((data) => (
+                                            <DescriptiveQuestion data={data} id={data.id} options={data.options} quNo={data.question_number}
+                                                body={data.body} score={data.score} imageURL={data.image} audioURL={data?.voice}
+                                            />
+                                        ))
+                                    }
                                 </div>
                             </section>
                         </main>
+
                     </div> :
                     <>
                         <Loading />
@@ -233,6 +245,4 @@ function TestPdfPreview() {
     );
 }
 
-export default TestPdfPreview;
-
-
+export default DescriptivePreview;
