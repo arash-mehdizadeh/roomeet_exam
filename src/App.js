@@ -11,6 +11,7 @@ import TestPreviewExam from "./page/preview/test/testPreview"
 import TestPdfPreview from "./page/preview/testPdf/testPdfPreview"
 import DescriptivePreview from "./page/preview/descriptive/descriptivePreview"
 import DescriptivePdfPreview from "./page/preview/descriptivePdf/descriptivePdfPreview"
+import GuestLogin from "./page/guestLogin/guestLogin"
 
 
 
@@ -22,6 +23,7 @@ const App = () => {
                 {/* <Route path="/" element={<></>} /> */}
                 <Route path="/quiz/finish" element={<FinishPage/>} />
                 <Route path="/quiz/join/:quiz" element={<ExamInfo/>} />
+                <Route path="/guest/join/:quiz" element={<GuestLogin/>} />
                 <Route path="/quiz/test/:quiz" element={<TestExam/>} />
                 <Route path="/quiz/test-pdf/:quiz" element={<TestPdfExam/>} />
                 <Route path="/quiz/descriptive/:quiz" element={<DescriptiveExam/>} />

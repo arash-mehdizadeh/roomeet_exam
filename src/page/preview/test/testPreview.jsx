@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam } from "../../../assets/api/userActions";
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { attemptToJoinExam, finishExam, leaveExam, previewExam } from "../../../assets/api/userActions";
 import CountDown, { PreviewCountdown } from "../../../components/countDown/countDown";
 import TestQuestion from '../../../components/testQuestion';
 import Swal from 'sweetalert2';
@@ -17,6 +17,7 @@ import TestCheckboxPreviewButtons from "../../../components/previewAnswerButtons
 
 
 function TestPreviewExam() {
+    const [searchParams] = useSearchParams()
     const navigate = useNavigate();
     const params = useParams();
 
@@ -24,7 +25,7 @@ function TestPreviewExam() {
     const [examDataAttempt, setExamDataAttempt] = useState([]);
     const [userAnswered, setUserAnswered] = useState()
     const [isLoading, setIsLoading] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(0);
+
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
@@ -32,30 +33,7 @@ function TestPreviewExam() {
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
-
-    const LSdata = JSON.parse(localStorage.getItem('userToken'));
-
-
-
-    function isInThePast(date) {
-        const today = new Date();
-        return date < today;
-    }
-
-    function toLoginPage() {
-        localStorage.removeItem('userToken');
-        navigate(`/quiz/join/${params.quiz}`)
-    }
-
-
     useEffect(() => {
-        document.title = 'پیشنمایش آزمون';
-        if (!LSdata) {
-            navigate(`/quiz/join/${params.quiz}`)
-        }
-        if (LSdata && isInThePast(LSdata.expireDate)) {
-            toLoginPage()
-        }
         let examTitle = fetchData();
         examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
     }, [])
@@ -108,7 +86,8 @@ function TestPreviewExam() {
 
     const fetchData = async () => {
         setIsLoading(true)
-        const data = await attemptToJoinExam(params.quiz)
+        const paramsToken =  searchParams.get("_token")
+        const data = await previewExam(params.quiz ,paramsToken);
         if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")
@@ -124,13 +103,11 @@ function TestPreviewExam() {
 
         data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
         setExamData(data);
-        // console.log(data.data);
         setExamDataAttempt(data.attempt);
-        setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.total_time)
-        setIsLoading(false)
         setAnswered(data.attempt.answered_questions)
         setUnAnswered(data.attempt.unanswered_questions)
+        setIsLoading(false)
         return data.quiz.title;
     }
 
@@ -175,7 +152,7 @@ function TestPreviewExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
+                                        <li>{`نام کاربر : ${"کاربر"}`}</li>
                                         <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
