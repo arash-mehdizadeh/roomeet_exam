@@ -64,7 +64,6 @@ function TestExam() {
 
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
-        console.log(res);
         if (res.status === "success-finish") {
             navigate("/quiz/finish")
         }
@@ -78,7 +77,6 @@ function TestExam() {
 
     const onLeaveHandler = async (e) => {
         let res = await leaveExam(e);
-        console.log(res);
         if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
@@ -172,8 +170,8 @@ function TestExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`نام کاربر : ${LSdata.name}`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>

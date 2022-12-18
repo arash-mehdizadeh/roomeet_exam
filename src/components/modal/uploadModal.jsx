@@ -31,14 +31,14 @@ const OverlayUploadModal = (props) => {
     const formDataRes = async (res) => {
         const data = await postUserDescriptionAnswer(props.id, props.attemptID, userAnswer);
         // response_answer.then(res => console.log(res))
-
+        console.log(data);
         const fileURLData = {
             path: res.path, //"res.path"
             answer_id: data.created_answer.id,//id
             driver: "ftp",
             type: "open",
         };
-        console.log(fileURLData);
+        // console.log(fileURLData);
         const fileUrlResp = await storeFileURL(fileURLData);
         console.log("storeFileURL =>", fileUrlResp);
         props.uploadSuccess();
@@ -74,7 +74,7 @@ const OverlayUploadModal = (props) => {
         else if (!file || !userAnswer) {
             Swal.fire({
                 icon: "warning",
-                title: "برای ثبت پاسخ ,جواب را تایپ کنید یا فایل ارسال کنید",
+                title: "برای ثبت پاسخ, جواب را تایپ  یا فایل ارسال کنید",
                 confirmButtonText: "باشه"
             })
         }

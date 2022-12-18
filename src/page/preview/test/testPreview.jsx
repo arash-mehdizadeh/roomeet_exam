@@ -87,6 +87,7 @@ function TestPreviewExam() {
     const fetchData = async () => {
         setIsLoading(true)
         const paramsToken =  searchParams.get("_token")
+        if(paramsToken) navigate(-1)
         const data = await previewExam(params.quiz ,paramsToken);
         if (data?.status !== "joined") {
             let a = data?.message;

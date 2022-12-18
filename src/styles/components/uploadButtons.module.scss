@@ -21,7 +21,7 @@ $large-width: 1024px;
 
 .uploadButtonRow{
     display: list-item;
-    padding-right:20px ;
+    padding-right:20px  !important;
     @include small-down(){
         padding-right: 45px;
     }

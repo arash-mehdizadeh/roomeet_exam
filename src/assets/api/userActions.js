@@ -30,7 +30,7 @@ var previewConfig = (tkn) => {
 
 var axiosUploadConfig = {
     headers: {
-        'Authorization': "Bearer " + LS_Token?.token,
+        'Authorization': "Bearer " + LS_Token?.quizToken,
         'Contetnt-Type': "multipart/form-data",
         'Accept': 'application/json',
         'type': "formData",
@@ -43,7 +43,7 @@ var axiosUploadConfig = {
 var axiosConfig = {
     headers: {
         // 'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': "Bearer " + LS_Token?.token,
+        'Authorization': "Bearer " + LS_Token?.quizToken,
         'Accept': '*/*',
         //     'Access-Control-Allow-Credentials': 'true',
         //     'mode': 'cors',
@@ -52,7 +52,7 @@ var axiosConfig = {
 
 const userLogin = async (data) => {
     try {
-        let response = await userAction.post(`/login`, data)
+        let response = await nodeApi.post(`/auth/login`, data)
         return (response.data)
     } catch (error) {
         console.log(error.message);
@@ -76,19 +76,26 @@ const getSchoolName = async(quizCode) => {
     }
 }
 
-const confirmMessageRequest = async (phone_num,quizID) => {
-
+const confirmMessageRequest = async (name ,phone_num,quizID) => {
+    // console.log(name,phone_num,quizID);
     try {
-        let response = await nodeApi.post(`/detection-submit-number`, { phone: phone_num,quizCode :quizID })
+        let response = await nodeApi.post(`/detection-submit-number`, { name : name ,phone: phone_num,quizCode :quizID })
         return (response.data)
     } catch (error) {
         return(error.response.data);
     }
 }
 const confirmGuestLoginRequest = async (loginData) => {
-    console.log(loginData);
     try {
-        let response = await axios.post(`https://node.roomeet.ir/api/v1/detection-submit-code`, loginData)
+        let response = await nodeApi.post(`/detection-submit-code`, loginData)
+        return (response.data)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+const guestLoginPhone = async (loginData) => {
+    try {
+        let response = await userAction.post(`/guest/join/quiz`, loginData)
         return (response.data)
     } catch (error) {
         console.log(error.message);
@@ -202,5 +209,6 @@ const previewExam = async (quiz_code,token) => {
 
 export {
     userLogin, examDatails, confirmMessageRequest, confirmGuestLoginRequest, attemptToJoinExam, finishExam, leaveExam, postFormData,// ,postFilePath
-    postUserDescriptionAnswer, storeFileURL, postUserTestAnswer, testAnswerCancel, previewExam ,getSchoolName ,guestVerification
+    postUserDescriptionAnswer, storeFileURL, postUserTestAnswer, testAnswerCancel, previewExam ,getSchoolName ,guestVerification,
+    guestLoginPhone
 };

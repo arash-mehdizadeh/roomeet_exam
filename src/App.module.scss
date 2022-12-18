@@ -701,6 +701,7 @@ $large-width: 1024px;
             margin: 16px 0;
             font-size: 13px;
             text-decoration: underline;
+            display: flex;
             &:hover{
                 color: $neon;
             }

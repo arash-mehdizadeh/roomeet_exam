@@ -55,7 +55,7 @@ function DescriptiveExam() {
         data?.attempt?.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
         setExamData(data)
         setExamDataAttempt(data.attempt);
-        console.log(data.attempt);
+        // console.log(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.total_time)
         setIsLoading(false)
@@ -178,8 +178,8 @@ function DescriptiveExam() {
                                 </div>
                                 <div className={classes.personalDetails}>
                                     <ul>
-                                        <li>{`نام کاربر : ${LSdata.user_name}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`نام کاربر : ${LSdata.name}`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>

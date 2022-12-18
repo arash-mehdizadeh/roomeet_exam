@@ -38,8 +38,8 @@ function DescriptivePreview() {
 
     const fetchData = async () => {
         const paramsToken =  searchParams.get("_token")
+        console.log(paramsToken);
         const data = await previewExam(params.quiz ,paramsToken);
-        // console.log(data.attempt);
         if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")

@@ -38,7 +38,7 @@ const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn
         for (var i = 0; i < userAnswered?.length; i++) {
             if (qid === userAnswered[i]?.id) {
                 console.log(userAnswered[i])
-                let userDate = userAnswered[i];
+                // let userDate = userAnswered[i];
                 userAnswered[i]?.file_url && uploadFileName(getFileNameFromAttempt(userAnswered[i].file_url))
                 userAnswered[i].answer  && setBody(getFileNameFromAttempt(userAnswered[i].answer))
             }
