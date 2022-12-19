@@ -7,7 +7,7 @@ const TestCheckboxPreviewButtons = ({ id, options, score }) => {
 
     const [activeBtn, setActiveBtn] = useState(0)
 
-
+    console.log(id);
     return (
         <li key={id} >
             <div className={classes.testRow}>
@@ -15,7 +15,6 @@ const TestCheckboxPreviewButtons = ({ id, options, score }) => {
 
                     {
                         options?.map((el) => {
-                            // console.log(el);
                             return <div key={el.id}
                                 className={`${classes.testOptionButton}  ${activeBtn === el.option_number ? classes.active_btn : ""}`}>
                                 {el.option_number}

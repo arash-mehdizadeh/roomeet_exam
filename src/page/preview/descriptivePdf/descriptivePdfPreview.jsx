@@ -49,11 +49,9 @@ function DescriptivePdfPreview() {
             // alert(a);
             setTimeout(() => { navigate("/quiz/join/" + params.quiz) }, "2000")
         }
-        data.attempt.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
-        setExamDataAttempt(data.attempt);
-        setTotalTime(data.attempt.total_time)
-        setAnswered(data.attempt.answered_questions)
-        setUnAnswered(data.attempt.unanswered_questions)
+        // data.attempt.answers && setUserAnswered(checkMatchQuestionURL(data.quiz, data.attempt));
+        setExamData(data)
+        setUnAnswered(data?.quiz.number_of_question)
         setIsLoading(false)
         return data.quiz.title;
     }
@@ -154,7 +152,7 @@ function DescriptivePdfPreview() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${"کاربر"}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
@@ -168,7 +166,7 @@ function DescriptivePdfPreview() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${answered === null ? 0 : answered}`}</p>
+                                    <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : 0`}</p>
                                         <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${unAnswered === null ? 0 : unAnswered}`}</p>
                                     </div>
                                 </div>
@@ -178,7 +176,7 @@ function DescriptivePdfPreview() {
                                             examData.quiz?.questions?.map((data) => (
                                                 <PreviewUploadButtons
                                                     index={data.id} quNo={data.question_number} options={data.options} score={data.score}
-                                                    activeBtn={activeBtn} attemptID={examDataAttempt.id}
+                                                    activeBtn={activeBtn} 
                                                     activeBtnHandler={activeBtnHandler}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}

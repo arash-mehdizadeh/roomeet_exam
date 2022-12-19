@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { attemptToJoinExam, examDatails, userLogin } from '../../assets/api/userActions';
+import { attemptToJoinExam, examDatails, guestVerification, userLogin } from '../../assets/api/userActions';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 
@@ -12,7 +12,7 @@ function ExamInfo() {
     const [searchParams] = useSearchParams();
     const params = useParams();
     const navigate = useNavigate();
-
+    const [verify, setVerify] = useState();
     const [examData, setExamData] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -24,8 +24,11 @@ function ExamInfo() {
     });
 
 
-
-
+    
+    const fetchGuestValidation = async () => {
+        // console.log("aaa");
+        await guestVerification(params.quiz).then(res => {setVerify(res);console.log(res)});
+    }
 
     function isInThePast(date) {
         const today = new Date();
@@ -83,6 +86,7 @@ function ExamInfo() {
                 window.location.reload();
             }
         }
+        fetchGuestValidation();
         let examTitle = fetchData();
         examTitle.then(res => document.title = `اطلاعات آزمون ${res}`)
     }, [])
@@ -151,7 +155,14 @@ function ExamInfo() {
 
     const examPageHandler = async () => {
         let data = JSON.parse(localStorage.getItem('userToken'));
-        if (data) {
+        if ( !verify.validation  ){
+            Swal.fire({
+                icon:"error",
+                title:"سرویس آزمون آموزشگاه شما معتبر نیست. لطفا با مدیر آموزشگاه تماس بگیرید",
+                confirmButtonText:"باشه"
+        })
+        }
+        else if (data) {
             let res = await attemptToJoinExam(params.quiz)
             console.log(res);
             if (res?.status !== "joined" || res === undefined) {

@@ -87,7 +87,7 @@ function TestPreviewExam() {
     const fetchData = async () => {
         setIsLoading(true)
         const paramsToken =  searchParams.get("_token")
-        if(paramsToken) navigate(-1)
+        if( !paramsToken) navigate(-1)
         const data = await previewExam(params.quiz ,paramsToken);
         if (data?.status !== "joined") {
             let a = data?.message;
@@ -103,11 +103,9 @@ function TestPreviewExam() {
         }
 
         data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
-        setExamData(data);
-        setExamDataAttempt(data.attempt);
-        setTotalTime(data.attempt.total_time)
-        setAnswered(data.attempt.answered_questions)
-        setUnAnswered(data.attempt.unanswered_questions)
+        setExamData(data)
+        console.log(data);
+        setUnAnswered(data?.quiz.number_of_question)
         setIsLoading(false)
         return data.quiz.title;
     }
@@ -154,7 +152,7 @@ function TestPreviewExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${"کاربر"}`}</li>
-                                        <li>{`مدت آزمون : ${examData.quiz.duration} دقیقه`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
                                         <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
@@ -168,17 +166,18 @@ function TestPreviewExam() {
                                 <div className={classes.answerSheetHeader}>
                                     <h3>پاسخنامه</h3>
                                     <div className={classes.answerDatasheet}>
-                                        <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : ${answered === null ? 0 : answered}`}</p>
+                                    <p className={classes.answerDatasheet_answer}>{`پاسخ داده شده : 0`}</p>
                                         <p className={classes.answerDatasheet_notAnswer}>{`پاسخ داده نشده : ${unAnswered === null ? 0 : unAnswered}`}</p>
                                     </div>
                                 </div>
                                 <div className={classes.answerSheet}>
                                     <ol>
+                                        {console.log(examData?.quiz.questions)}
                                         {
                                             examData.quiz?.questions?.map((data) => (
-                                                <TestCheckboxPreviewButtons id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
-                                                    userAnswered={userAnswered} answerResHandler={answerResHandler}
-                                                    options={data.options} score={data.score} />
+                                                <TestCheckboxPreviewButtons id={data.id}  examDataAttempt={examDataAttempt}
+                                                userAnswered={userAnswered} answerResHandler={answerResHandler}
+                                                options={data.options} score={data.score} />
                                             ))
                                         }
                                     </ol>

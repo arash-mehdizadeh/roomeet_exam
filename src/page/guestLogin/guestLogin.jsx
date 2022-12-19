@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { attemptToJoinExam, confirmGuestLoginRequest, confirmMessageRequest, examDatails, guestLoginPhone, guestVerification, userLogin } from '../../assets/api/userActions';
+import { attemptToJoinExam, confirmGuestLoginRequest, confirmMessageRequest, examDatails, guestLoginPhone, guestVerification } from '../../assets/api/userActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 
@@ -55,6 +55,7 @@ function GuestLogin() {
     }
 
     const onSubmitLogin = async (res) => {
+
         console.log(res);
         if (!res) {
             Swal.fire({
@@ -64,6 +65,10 @@ function GuestLogin() {
             })
         }
         else {
+            const today = new Date()
+            let tomorrow = new Date()
+            const setExpireDate = tomorrow.setDate(today.getDate() + 1);
+            localStorage.setItem("userToken", JSON.stringify({ quizToken: res.quizToken, expireDate: setExpireDate, name: guestInputField.name }))
             examPageHandler()
         }
     }
@@ -158,8 +163,8 @@ function GuestLogin() {
 
 
     const handleSendNumber = async (res) => {
-        console.log(res);
-        if (res.returncode === "success") {
+        // console.log(res);
+        if (res.returnCode === "SUCCESS") {
             setCounter(90);
             setIsClickedOnSentPassword(true);
         }
@@ -173,13 +178,26 @@ function GuestLogin() {
 
     const onGuestSendPhone = async () => {
         var regex = new RegExp('^(\\+98|0)?9\\d{9}$');
-
-        if (guestInputField.name.length <= 0) {
+        console.log(verify);
+        if (!verify.validation) {
+            Swal.fire({
+                icon: "error",
+                title: "سرویس آزمون آموزشگاه شما معتبر نیست. لطفا با مدیر آموزشگاه تماس بگیرید",
+                confirmButtonText: "باشه"
+            })
+        }
+        if (!verify.guest) {
+            Swal.fire({
+                icon: "error",
+                title: "این آزمون امکان ورود مهمان را ندارد.",
+                confirmButtonText: "باشه"
+            })
+        }
+        else if (guestInputField.name.length <= 0) {
             Swal.fire({
                 icon: "error",
                 title: "اسم خود را وارد کنید",
                 confirmButtonText: "باشه"
-
             })
         }
         else if (guestInputField.phone.length !== 11 && guestInputField.phone.length !== 0) {
@@ -212,49 +230,20 @@ function GuestLogin() {
     }
 
     const examPageHandler = async () => {
-
-        // window.sessionStorage.setItem()
-
-        let data = JSON.parse(localStorage.getItem('userToken'));
-
-        if (data) {
-            let res = await attemptToJoinExam(params.quiz)
-            // console.log(res);
-            if (res?.status !== "joined") {
-                let a = res?.message;
-                a = a.split("{").join("")
-                a = a.split("}").join("")
-                if (a.includes("date")) { a = a.replace("date", res?.date) }
-                if (a.includes("time")) { a = a.replace("time", res?.time) }
-                Swal.fire({
-                    icon: "error",
-                    title: `${a}`,
-                })
-            }
-            else {
-                if (examData?.type === "test" && examData?.question_type === "custom") {
-                    navigate(`/quiz/test/${params.quiz}`);
-                }
-                if (examData?.type === "test" && examData?.question_type === "pdf") {
-                    navigate(`/quiz/test-pdf/${params.quiz}`);
-                }
-                if (examData?.type === "descriptive" && examData?.question_type === "custom") {
-                    navigate(`/quiz/descriptive/${params.quiz}`);
-                }
-                if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
-                    navigate(`/quiz/descriptive-pdf/${params.quiz}`);
-                }
-            }
+        if (examData?.type === "test" && examData?.question_type === "custom") {
+            navigate(`/quiz/test/${params.quiz}`);
         }
-        else {
-            Swal.fire({
-                icon: "error",
-                title: `برای ورود به آزمون وارد حساب کاربری بشوید`,
-                confirmButtonText: "باشه"
-            })
+        else if (examData?.type === "test" && examData?.question_type === "pdf") {
+            navigate(`/quiz/test-pdf/${params.quiz}`);
         }
-
+        else if (examData?.type === "descriptive" && examData?.question_type === "custom") {
+            navigate(`/quiz/descriptive/${params.quiz}`);
+        }
+        else if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
+            navigate(`/quiz/descriptive-pdf/${params.quiz}`);
+        }
     }
+
 
     return (
         <div className={classes.appContainer} style={{ minHeight: "100vh", maxHeight: "100%" }}>
@@ -335,7 +324,7 @@ function GuestLogin() {
                                     <input type="number" placeholder='شماره تلفن' name='phone' value={guestInputField.phone} onChange={guestInputHandler} className={classes.examInfo__login_input} />
                                     {isClickedOnSentPassword && <input type="number" autoComplete="new-password" placeholder='رمز ارسال شده' name='code' value={guestInputField.code} onChange={guestInputHandler} className={classes.examInfo__login_input} style={{ marginBottom: "6px" }} />}
                                     {isClickedOnSentPassword && !showMessage && <p id={classes.resendMessage}>{`${counter} ثانیه مانده تا دریافت کد مجدد`}</p>}
-                                    {showMessage && <p id={classes.forgetPassword} className={classes.examInfo__changeField}  >پیامی دریافت نکرده اید ؟<br />ارسال مجدد کد</p>}
+                                    {showMessage && <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => onGuestSendPhone()} >پیامی دریافت نکرده اید ؟<br />ارسال مجدد کد</p>}
                                     {
                                         verify.guestDetection ?
                                             isClickedOnSentPassword ?
