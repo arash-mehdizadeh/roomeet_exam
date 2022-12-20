@@ -39,9 +39,10 @@ const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answer
         }
     }
 
-    const onOptionClickHandler = (num) => {
+    const onOptionClickHandler = (num,id) => {
         setActiveBtn(num);
-        postAnswerDataHandler(num)
+        postAnswerDataHandler(id)
+        console.log(id);
     }
 
     return (
@@ -52,7 +53,7 @@ const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answer
                     {
                         options?.map((el) => {
                             // console.log(el);
-                            return <div key={el.id} onClick={() => onOptionClickHandler(el.option_number)}
+                            return <div key={el.id} onClick={() => onOptionClickHandler(el.option_number,el.id)}
                                 className={`${classes.testOptionButton}  ${activeBtn === el.option_number ? classes.active_btn : ""}`}>
                                 {el.option_number}
                             </div>

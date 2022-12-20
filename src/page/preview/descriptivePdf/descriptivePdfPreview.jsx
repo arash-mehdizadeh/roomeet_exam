@@ -39,7 +39,7 @@ function DescriptivePdfPreview() {
         
         const paramsToken =  searchParams.get("_token");
         const data = await previewExam(params.quiz ,paramsToken);
-        setExamData(data);
+       
         if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")

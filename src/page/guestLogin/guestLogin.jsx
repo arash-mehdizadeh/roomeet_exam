@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { attemptToJoinExam, confirmGuestLoginRequest, confirmMessageRequest, examDatails, guestLoginPhone, guestVerification } from '../../assets/api/userActions';
+import { confirmGuestLoginRequest, confirmMessageRequest, examDatails, guestLoginPhone, guestVerification } from '../../assets/api/userActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 
@@ -40,23 +40,12 @@ function GuestLogin() {
 
     const successGuestLoginHandler = (data) => {
         localStorage.setItem("userToken", JSON.stringify(data));
-        if (examData?.type === "test" && examData?.question_type === "custom") {
-            navigate(`/quiz/test/${params.quiz}`);
-        }
-        else if (examData?.type === "test" && examData?.question_type === "pdf") {
-            navigate(`/quiz/test-pdf/${params.quiz}`);
-        }
-        else if (examData?.type === "descriptive" && examData?.question_type === "custom") {
-            navigate(`/quiz/descriptive/${params.quiz}`);
-        }
-        else if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
-            navigate(`/quiz/descriptive-pdf/${params.quiz}`);
-        }
+        examPageHandler()
     }
 
     const onSubmitLogin = async (res) => {
 
-        console.log(res);
+        // console.log(res);
         if (!res) {
             Swal.fire({
                 icon: "error",
@@ -73,6 +62,7 @@ function GuestLogin() {
         }
     }
     const onGuestSendLogin = async () => {
+        
         if (!guestInputField.name) {
             Swal.fire({ icon: "error", title: "لطفا اسم خود را بنویسید" })
         }
@@ -88,11 +78,12 @@ function GuestLogin() {
     }
 
     const onAuthGuestHandler = async (res) => {
+        
         if (!guestInputField.name) {
-            Swal.fire({ icon: "error", title: "لطفا اسم خود را بنویسید" })
+            Swal.fire({ icon: "error", title: "لطفا اسم خود را بنویسید",confirmButtonText: "باشه" })
         }
         else if (!guestInputField.phone) {
-            Swal.fire({ icon: "error", title: "لطفا شماره را بنویسید" })
+            Swal.fire({ icon: "error", title: "لطفا شماره را بنویسید",confirmButtonText: "باشه" })
         }
         else {
             let { code, ...newData } = guestInputField;
@@ -101,16 +92,36 @@ function GuestLogin() {
         }
     }
 
+    const validExamHandler = (data) => {
+        if (!data.validation){
+            navigate("/service/not-active");
+        }
+        else if (!data.guest) {
+            
+            navigate("/guest/not-active");
+        }
+    }
 
     const fetchGuestValidation = async () => {
-        guestVerification(params.quiz).then(res => setVerify(res));
+        guestVerification(params.quiz).then(res => {setVerify(res);validExamHandler(res) });
     }
 
     const fetchData = async () => {
         const data = await examDatails(params.quiz)
-        // console.table(data);
-        setExamData(data?.quiz)
-        setIsLoading(false)
+        if (data.status === "not-found"){
+            Swal.fire({
+                icon: "error",
+                title: `${data.message}`
+            })
+            
+        }
+        else{
+            setExamData(data);
+            // console.table(data);
+            setExamData(data?.quiz)
+            setIsLoading(false)
+            return data?.quiz?.title;
+        }
         return data?.quiz?.title;
     }
 
@@ -118,7 +129,7 @@ function GuestLogin() {
     useEffect(() => {
         let examTitle = fetchData();
         fetchGuestValidation()
-        examTitle.then(res => document.title = `اطلاعات آزمون ${res}`)
+        examTitle.then(res =>  document.title = res === undefined ? `اطلاعات آزمون وجود ندارد` : `اطلاعات آزمون ${res}`)
     }, [])
 
     const guestInputHandler = (e) => {
@@ -178,22 +189,7 @@ function GuestLogin() {
 
     const onGuestSendPhone = async () => {
         var regex = new RegExp('^(\\+98|0)?9\\d{9}$');
-        console.log(verify);
-        if (!verify.validation) {
-            Swal.fire({
-                icon: "error",
-                title: "سرویس آزمون آموزشگاه شما معتبر نیست. لطفا با مدیر آموزشگاه تماس بگیرید",
-                confirmButtonText: "باشه"
-            })
-        }
-        if (!verify.guest) {
-            Swal.fire({
-                icon: "error",
-                title: "این آزمون امکان ورود مهمان را ندارد.",
-                confirmButtonText: "باشه"
-            })
-        }
-        else if (guestInputField.name.length <= 0) {
+        if (guestInputField.name.length <= 0) {
             Swal.fire({
                 icon: "error",
                 title: "اسم خود را وارد کنید",
@@ -232,15 +228,20 @@ function GuestLogin() {
     const examPageHandler = async () => {
         if (examData?.type === "test" && examData?.question_type === "custom") {
             navigate(`/quiz/test/${params.quiz}`);
+            window.location.reload();
         }
         else if (examData?.type === "test" && examData?.question_type === "pdf") {
             navigate(`/quiz/test-pdf/${params.quiz}`);
+            window.location.reload();
         }
         else if (examData?.type === "descriptive" && examData?.question_type === "custom") {
             navigate(`/quiz/descriptive/${params.quiz}`);
+            window.location.reload();
         }
         else if (examData?.type === "descriptive" && examData?.question_type === "pdf") {
             navigate(`/quiz/descriptive-pdf/${params.quiz}`);
+            window.location.reload();
+        
         }
     }
 

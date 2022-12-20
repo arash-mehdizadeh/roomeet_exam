@@ -12,6 +12,7 @@ import TestPdfPreview from "./page/preview/testPdf/testPdfPreview"
 import DescriptivePreview from "./page/preview/descriptive/descriptivePreview"
 import DescriptivePdfPreview from "./page/preview/descriptivePdf/descriptivePdfPreview"
 import GuestLogin from "./page/guestLogin/guestLogin"
+import { GuestErrorPage, ServiceNotValid } from "./page/guestErrorPage/guestErrorPage"
 
 
 
@@ -21,7 +22,6 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 {/* <Route path="/" element={<></>} /> */}
-                <Route path="/quiz/finish" element={<FinishPage/>} />
                 <Route path="/quiz/join/:quiz" element={<ExamInfo/>} />
                 <Route path="/guest/join/:quiz" element={<GuestLogin/>} />
                 <Route path="/quiz/test/:quiz" element={<TestExam/>} />
@@ -33,6 +33,9 @@ const App = () => {
                 <Route path="/preview/descriptive/:quiz" element={<DescriptivePreview/>} />
                 <Route path="/preview/descriptive-pdf/:quiz" element={<DescriptivePdfPreview/>} />
                 <Route path="/homework" element={<Homework/>} />
+                <Route path="/quiz/finish" element={<FinishPage/>} />
+                <Route path="/service/not-active" element={<ServiceNotValid/>} />
+                <Route path="/guest/not-active" element={<GuestErrorPage/>} />
                 <Route path="*" element={<NotFound/>} />
             </Routes>
         </BrowserRouter>

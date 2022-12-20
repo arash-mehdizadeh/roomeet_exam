@@ -111,10 +111,10 @@ const examDatails = async (examID) => {
     }
 }
 
-const attemptToJoinExam = async (examID) => {
+const attemptToJoinExam = async (examID,token) => {
     // console.log(axiosConfig)
     try {
-        let response = await userAction.get(`/site/quiz/attempt/join/${examID}`, axiosConfig)
+        let response = await userAction.get(`/site/quiz/attempt/join/${examID}`, token ? previewConfig(token) : axiosConfig)
         return (response.data)
     } catch (error) {
         console.log(error.response.data);

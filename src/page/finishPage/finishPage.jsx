@@ -20,7 +20,7 @@ const FinishPage = () => {
                         <h1 className={classes.title}>آزمون شما با موفقیت به اتمام رسید .</h1>
                     </div>
                     <div className={classes.center}>
-                        <button className={classes.redirect__btn}>بازگشت به پنل</button>
+                        <a href='https://panel.roomeet.ir/' target="_self" rel="noreferrer"  className={classes.redirect__btn} >بازگشت به پنل</a>
                     </div>
                 </section>
             </div>
