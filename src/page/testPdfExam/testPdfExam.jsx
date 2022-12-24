@@ -213,7 +213,7 @@ function TestExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
-                                                    userAnswered={userAnswered} answerResHandler={answerResHandler}
+                                                    userAnswered={userAnswered} isRank={examData.quiz.test_type} answerResHandler={answerResHandler}
                                                     options={data.options} score={data.score} attempt={examDataAttempt} />
                                             ))
                                         }

@@ -109,8 +109,7 @@ function TestExam() {
 
     const fetchData = async () => {
         setIsLoading(true)
-        const data = await attemptToJoinExam(params.quiz)
-        console.log(data);
+        const data = await attemptToJoinExam(params.quiz);
         if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")
@@ -199,7 +198,7 @@ function TestExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
-                                                    userAnswered={userAnswered} answerResHandler={answerResHandler}
+                                                    userAnswered={userAnswered}  isRank={examData.quiz.test_type} answerResHandler={answerResHandler}
                                                     options={data.options} score={data.score} />
                                             ))
                                         }

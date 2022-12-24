@@ -4,7 +4,7 @@ import { ReactComponent as Cancel } from '../assets/icons/cancel.svg';
 
 import classes from '../styles/components/TestAnswerOptions.module.scss'
 
-const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answerResHandler, examDataAttempt }) => {
+const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, isRank , answerResHandler, examDataAttempt }) => {
 
     const [activeBtn, setActiveBtn] = useState(0)
     const [createdAnswerID, setCreatedAnswerID] = useState(0)
@@ -20,6 +20,7 @@ const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answer
 
     useEffect(() => {
         userAnsweredHandler(id)
+        console.log(isRank);
     }, [])
     const postAnswerDataHandler = (optionNum) => {
         // e.preventDefault();
@@ -42,7 +43,7 @@ const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answer
     const onOptionClickHandler = (num,id) => {
         setActiveBtn(num);
         postAnswerDataHandler(id)
-        console.log(id);
+        // console.log(id);
     }
 
     return (
@@ -63,10 +64,11 @@ const TestAnswerOptions = ({ id, attemptID, options, score, userAnswered, answer
                 <div className={classes.cancelContainer}>
                     <Cancel style={{ cursor: "pointer" }} onClick={() => onDeleteOptionHandler()} />
                 </div>
-                <div className={classes.grade}>
+
+                {isRank !== "rank" && <div className={classes.grade}>
                     <div>{score}</div>
                     <div >بارم</div>
-                </div>
+                </div>}
             </div>
         </li>
     )
