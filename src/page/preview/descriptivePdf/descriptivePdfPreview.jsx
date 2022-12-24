@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam, previewExam } from "../../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam, previewExam } from "../../../assets/api/userActions";
 import CountDown, { PreviewCountdown } from "../../../components/countDown/countDown";
 import ExitModal from "../../../components/modal/exitModal";
 
@@ -30,8 +30,9 @@ function DescriptivePdfPreview() {
     const [examDataAttempt, setExamDataAttempt] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [totalTime, setTotalTime] = useState(0);
-    const [answered, setAnswered] = useState()
-    const [unAnswered, setUnAnswered] = useState()
+    const [answered, setAnswered] = useState();
+    const [schoolName, setSchoolName] = useState("");
+    const [unAnswered, setUnAnswered] = useState();
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
@@ -56,6 +57,9 @@ function DescriptivePdfPreview() {
         return data.quiz.title;
     }
 
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
 
     const answerResHandler = (data) => {
         // console.log(data);
@@ -106,6 +110,7 @@ function DescriptivePdfPreview() {
 
     useEffect(() => {
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
     }, [])
 
@@ -140,7 +145,7 @@ function DescriptivePdfPreview() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { attemptToJoinExam, examDatails, guestVerification, userLogin } from '../../assets/api/userActions';
+import { attemptToJoinExam, examDatails, getSchoolName, guestVerification, userLogin } from '../../assets/api/userActions';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 
@@ -13,6 +13,7 @@ function ExamInfo() {
     const params = useParams();
     const navigate = useNavigate();
     const [verify, setVerify] = useState();
+    const [schoolName, setSchoolName] = useState("");
     const [examData, setExamData] = useState();
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -44,6 +45,10 @@ function ExamInfo() {
     let tomorrow = new Date()
     const setExpireDate = tomorrow.setDate(today.getDate() + 1);
 
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
+
     const fetchData = async () => {
         const data = await examDatails(params.quiz)
         if (data.status === "not-found"){
@@ -55,7 +60,6 @@ function ExamInfo() {
         }
         else{
             setExamData(data);
-            // console.table(data);
             setExamData(data?.quiz)
             setIsLoading(false)
             return data?.quiz?.title;
@@ -101,6 +105,7 @@ function ExamInfo() {
             }
         }
         fetchGuestValidation();
+        fetchSchoolName();
         let examTitle = fetchData();
         examTitle.then(res => document.title = res === undefined ? `اطلاعات آزمون وجود ندارد` : `اطلاعات آزمون ${res}`)
     }, [])
@@ -258,7 +263,7 @@ function ExamInfo() {
                                     </div>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>نام آموزشگاه :</p>
-                                        <p className={classes.examInfo__detail}>{"آموزشگاه فراگویان"}</p>
+                                        <p className={classes.examInfo__detail}>{schoolName}</p>
                                     </div>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>عنوان آزمون :</p>

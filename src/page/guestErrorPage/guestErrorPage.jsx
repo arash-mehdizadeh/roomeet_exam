@@ -30,7 +30,7 @@ const GuestErrorPage = () => {
 const ServiceNotValid = () => {
 
     useEffect(() => {
-        document.title = "سررویس غیرفعال است";
+        document.title = "سرویس غیرفعال است";
     }, [])
 
     return (

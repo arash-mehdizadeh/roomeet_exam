@@ -5,13 +5,13 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import { ReactComponent as Delete } from '../../assets/icons/Delete.svg';
 import { ReactComponent as Refresh } from '../../assets/icons/RightSquare.svg';
 
-import classes from'../../App.module.scss';
+import classes from '../../App.module.scss';
 
 function TestExam() {
     return (
         <div className={classes.appContainer}>
             <div className={classes.container}>
-                <header className={classes.timeRemainedContainer} style={{display:'grid'}}>
+                <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                     <div className={classes.headerBox}>
                         <div className={classes.buttonContainer}>
                             <p>اتمام آزمون</p>
@@ -37,8 +37,8 @@ function TestExam() {
                     <div className={classes.informationBar}>
                         <div className={classes.examDetails}>
                             <div className={classes.examDetailsTitle}>
-                                <h1>{`آزمون ادبیات فارسی`}</h1>
-                                <p>{`(آموزشگاه فراگویان)`}</p>
+                                {/* <h1>{examData.quiz.title}</h1> */}
+                                {/* <p>{`(${schoolName})`}</p> */}
                             </div>
                             <div id={classes.returnBtn}>
                                 <p>بازگشت به سایت</p>
@@ -50,7 +50,7 @@ function TestExam() {
                         <div className={classes.personalDetails}>
                             <ul>
                                 <li>{`نام کاربر : ${"فردوسی"}`}</li>
-                                <li style={{display:"flex"}}> 
+                                <li style={{ display: "flex" }}>
                                     <p>پایان زمان تحویل تکلیف :</p>
                                     <p>{"1401/02/05"}</p>
                                 </li>

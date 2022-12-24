@@ -29,7 +29,7 @@ function TestPdfPreview() {
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
-
+    const [schoolName, setSchoolName] = useState("");
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
@@ -139,7 +139,7 @@ function TestPdfPreview() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

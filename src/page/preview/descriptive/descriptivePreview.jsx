@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam, previewExam } from "../../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam, previewExam } from "../../../assets/api/userActions";
 import CountDown, { PreviewCountdown } from "../../../components/countDown/countDown";
 import Swal from 'sweetalert2';
 import ExitModal from "../../../components/modal/exitModal";
@@ -30,7 +30,8 @@ function DescriptivePreview() {
     const [examDataAttempt, setExamDataAttempt] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [totalTime, setTotalTime] = useState(0);
-    const [answered, setAnswered] = useState()
+    const [answered, setAnswered] = useState();
+    const [schoolName, setSchoolName] = useState("");
     const [unAnswered, setUnAnswered] = useState()
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
@@ -69,6 +70,10 @@ function DescriptivePreview() {
         setUnAnswered(data.unanswered_questions)
     }
 
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
+    
     const onFinishHandler = async (e) => {
         let res = await finishExam(e);
         console.log(res);
@@ -113,6 +118,7 @@ function DescriptivePreview() {
 
     useEffect(() => {
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
 
     }, [])
@@ -148,7 +154,7 @@ function DescriptivePreview() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

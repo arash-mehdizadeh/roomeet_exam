@@ -3,7 +3,7 @@ import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
 import Swal from 'sweetalert2';
 import classes from '../../App.module.scss';
 import { useState, useEffect } from 'react';
-import { confirmGuestLoginRequest, confirmMessageRequest, examDatails, guestLoginPhone, guestVerification } from '../../assets/api/userActions';
+import { confirmGuestLoginRequest, confirmMessageRequest, examDatails, getSchoolName, guestLoginPhone, guestVerification } from '../../assets/api/userActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../components/loading/loading';
 
@@ -15,6 +15,7 @@ function GuestLogin() {
     const [examData, setExamData] = useState();
     const [counter, setCounter] = useState(null);
     const [verify, setVerify] = useState();
+    const [schoolName, setSchoolName] = useState("");
     const [isLoading, setIsLoading] = useState(true)
     const [showMessage, setShowMessage] = useState(false);
     const [isClickedOnSentPassword, setIsClickedOnSentPassword] = useState(false)
@@ -106,6 +107,11 @@ function GuestLogin() {
         guestVerification(params.quiz).then(res => {setVerify(res);validExamHandler(res) });
     }
 
+
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
+
     const fetchData = async () => {
         const data = await examDatails(params.quiz)
         if (data.status === "not-found"){
@@ -117,7 +123,6 @@ function GuestLogin() {
         }
         else{
             setExamData(data);
-            // console.table(data);
             setExamData(data?.quiz)
             setIsLoading(false)
             return data?.quiz?.title;
@@ -128,7 +133,8 @@ function GuestLogin() {
 
     useEffect(() => {
         let examTitle = fetchData();
-        fetchGuestValidation()
+        fetchGuestValidation();
+        fetchSchoolName();
         examTitle.then(res =>  document.title = res === undefined ? `اطلاعات آزمون وجود ندارد` : `اطلاعات آزمون ${res}`)
     }, [])
 
@@ -265,7 +271,7 @@ function GuestLogin() {
                                 <div style={{ width: "100%" }} key={examData?.id}>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>نام آموزشگاه :</p>
-                                        <p className={classes.examInfo__detail}>{"آموزشگاه فراگویان"}</p>
+                                        <p className={classes.examInfo__detail}>{schoolName}</p>
                                     </div>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>عنوان آزمون :</p>

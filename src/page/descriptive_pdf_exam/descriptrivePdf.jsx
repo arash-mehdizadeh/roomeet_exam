@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 import ExitModal from "../../components/modal/exitModal";
 
@@ -10,8 +10,6 @@ import Swal from 'sweetalert2';
 // import HomeworkQuestion from '../../components/homeworkQuetion';
 
 import UploadButtons from '../../components/uploadButtons';
-import { Viewer, Worker, ProgressBar } from '@react-pdf-viewer/core';
-import '@react-pdf-viewer/core/lib/styles/index.css';
 
 
 import { ReactComponent as Exit } from '../../assets/icons/exit.svg';
@@ -23,11 +21,6 @@ import Loading from "../../components/loading/loading";
 
 function DescriptivePdfExam() {
 
-    const characterMap = {
-        isCompressed: true,
-        // The url has to end with "/"
-        url: 'https://unpkg.com/pdfjs-dist@2.6.347/cmaps/',
-    };
     
     const navigate = useNavigate();
     const params = useParams();
@@ -39,6 +32,7 @@ function DescriptivePdfExam() {
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
+    const [schoolName, setSchoolName] = useState("")
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
     const [exitConfirm, setExitConfirm] = useState(false)
@@ -66,7 +60,9 @@ function DescriptivePdfExam() {
         return data.quiz.title;
     }
 
-
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
     const answerResHandler = (data) => {
         // console.log(data);
         setAnswered(data.answered_questions);
@@ -133,6 +129,7 @@ function DescriptivePdfExam() {
             toLoginPage()
         }
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `آزمون ${res}`)
     }, [])
 
@@ -168,7 +165,7 @@ function DescriptivePdfExam() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

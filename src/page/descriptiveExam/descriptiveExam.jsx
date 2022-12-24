@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 import Swal from 'sweetalert2';
 import ExitModal from "../../components/modal/exitModal";
@@ -30,11 +30,15 @@ function DescriptiveExam() {
     const [isLoading, setIsLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
-    const [answered, setAnswered] = useState()
+    const [answered, setAnswered] = useState();
+    const [schoolName, setSchoolName] = useState("");
     const [unAnswered, setUnAnswered] = useState()
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
 
     const fetchData = async () => {
         const data = await attemptToJoinExam(params.quiz);
@@ -131,6 +135,7 @@ function DescriptiveExam() {
             toLoginPage()
         }
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `آزمون ${res}`)
         
     }, [])
@@ -167,7 +172,7 @@ function DescriptiveExam() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

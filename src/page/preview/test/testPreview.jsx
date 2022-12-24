@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam, previewExam } from "../../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam, previewExam } from "../../../assets/api/userActions";
 import CountDown, { PreviewCountdown } from "../../../components/countDown/countDown";
 import TestQuestion from '../../../components/testQuestion';
 import Swal from 'sweetalert2';
@@ -25,7 +25,7 @@ function TestPreviewExam() {
     const [examDataAttempt, setExamDataAttempt] = useState([]);
     const [userAnswered, setUserAnswered] = useState()
     const [isLoading, setIsLoading] = useState(false);
-
+    const [schoolName, setSchoolName] = useState("");
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
     const [unAnswered, setUnAnswered] = useState()
@@ -33,13 +33,16 @@ function TestPreviewExam() {
     const [exitConfirm, setExitConfirm] = useState(false)
     const [isLeave, setIsLeave] = useState(false)
 
+    
+    
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
     useEffect(() => {
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `پیشنمایش آزمون ${res}`)
     }, [])
-
-
-
 
 
     const onFinishHandler = async (e) => {
@@ -140,7 +143,7 @@ function TestPreviewExam() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>

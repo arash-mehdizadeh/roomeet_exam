@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { attemptToJoinExam, finishExam, leaveExam } from "../../assets/api/userActions";
+import { attemptToJoinExam, finishExam, getSchoolName, leaveExam } from "../../assets/api/userActions";
 import CountDown from "../../components/countDown/countDown";
 import TestAnswerOptions from '../../components/testAnswerOptions';
 import TestQuestion from '../../components/testQuestion';
@@ -25,6 +25,7 @@ function TestExam() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
     const [answered, setAnswered] = useState()
+    const [schoolName, setSchoolName] = useState("");
     const [unAnswered, setUnAnswered] = useState()
 
     const [exitConfirm, setExitConfirm] = useState(false)
@@ -45,6 +46,9 @@ function TestExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
+    const fetchSchoolName = async() => {
+        await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
+    }
 
     useEffect(() => {
         document.title = 'پیشنمایش آزمون';
@@ -55,6 +59,7 @@ function TestExam() {
             toLoginPage()
         }
         let examTitle = fetchData();
+        fetchSchoolName();
         examTitle.then(res => document.title = `آزمون ${res}`)
     }, [])
 
@@ -105,6 +110,7 @@ function TestExam() {
     const fetchData = async () => {
         setIsLoading(true)
         const data = await attemptToJoinExam(params.quiz)
+        console.log(data);
         if (data?.status !== "joined") {
             let a = data?.message;
             a = a.split("{").join("")
@@ -120,7 +126,6 @@ function TestExam() {
 
         data?.attempt?.answers && setUserAnswered(checkMatchQuestion(data.quiz, data.attempt));
         setExamData(data);
-        // console.log(data.data);
         setExamDataAttempt(data.attempt);
         setTimeLeft(data.attempt.timer)
         setTotalTime(data.attempt.total_time)
@@ -159,7 +164,7 @@ function TestExam() {
                                 <div className={classes.examDetails}>
                                     <div className={classes.examDetailsTitle}>
                                         <h1>{examData.quiz.title}</h1>
-                                        <p>{`(آموزشگاه فراگویان)`}</p>
+                                        <p>{`(${schoolName})`}</p>
                                     </div>
                                     <div id={classes.returnBtn}>
                                         <p>بازگشت به سایت</p>
