@@ -46,7 +46,7 @@ function TestExam() {
         navigate(`/quiz/join/${params.quiz}`)
     }
 
-    const fetchSchoolName = async() => {
+    const fetchSchoolName = async () => {
         await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
     }
 
@@ -72,10 +72,10 @@ function TestExam() {
         if (res.status === "success-finish") {
             navigate("/quiz/finish")
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
@@ -85,20 +85,20 @@ function TestExam() {
         if (res.status === "success-leave") {
             navigate("/quiz/join/" + params.quiz)
         }
-        else{
+        else {
             Swal.fire({
-                icon:"warning",
-                title:`${res.message}`
+                icon: "warning",
+                title: `${res.message}`
             })
         }
     }
 
     const onConfirm = () => {
         // console.log(data);
-        if(isLeave){
+        if (isLeave) {
             onLeaveHandler(examDataAttempt.id)
         }
-        else{
+        else {
             onFinishHandler(examDataAttempt.id)
         }
     }
@@ -130,6 +130,7 @@ function TestExam() {
         setTotalTime(data.attempt.total_time)
         setIsLoading(false)
         setAnswered(data.attempt.answered_questions)
+        console.log(data.quiz.leave);
         setUnAnswered(data.attempt.unanswered_questions)
         return data.quiz.title;
     }
@@ -150,12 +151,12 @@ function TestExam() {
                         <header className={classes.timeRemainedContainer} style={{ display: 'grid' }}>
                             {
                                 exitConfirm &&
-                                <ExitModal onClose={onClose} leave={isLeave}  onConfirm={onConfirm} />
+                                <ExitModal onClose={onClose} leave={isLeave} onConfirm={onConfirm} />
                             }
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
-                                    <p onClick={() => {setIsLeave(false);setExitConfirm(true)}}>اتمام آزمون</p>
-                                    <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p>
+                                    <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام آزمون</p>
+                                    {examData.quiz.leave ? <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p> : ""}
                                 </div>
                                 {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>}
                             </div>
@@ -175,9 +176,13 @@ function TestExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.name}`}</li>
-                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration + " دقیقه " : "نامحدود"}`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
+                                        {
+                                            examData.quiz.test_type === "score" ?
+                                                <li>{`نمره کل : ${examData.quiz.total_score}`}</li>
+                                                : <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
+                                        }
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -198,7 +203,7 @@ function TestExam() {
                                         {
                                             examData.quiz?.questions?.map((data) => (
                                                 <TestAnswerOptions id={data.id} attemptID={examDataAttempt.id} examDataAttempt={examDataAttempt}
-                                                    userAnswered={userAnswered}  isRank={examData.quiz.test_type} answerResHandler={answerResHandler}
+                                                    userAnswered={userAnswered} isRank={examData.quiz.test_type} answerResHandler={answerResHandler}
                                                     options={data.options} score={data.score} />
                                             ))
                                         }
@@ -222,6 +227,7 @@ function TestExam() {
                                         examData.quiz?.questions?.map((data) => (
                                             <TestQuestion data={data} id={data.id} options={data.options} quNo={data.question_number}
                                                 body={data.body} score={data.score} imageURL={data.image} audioURL={data?.voice}
+                                                isRank={examData.quiz.test_type}
                                             />
                                         ))
                                     }

@@ -146,7 +146,7 @@ function DescriptivePreview() {
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
                                     <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام پیشنمایش</p>
-                                    <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p>
+                                    { examData.quiz.leave ? <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p> : ""}
                                 </div>
                                 <PreviewCountdown totalTime={totalTime} />
                             </div>

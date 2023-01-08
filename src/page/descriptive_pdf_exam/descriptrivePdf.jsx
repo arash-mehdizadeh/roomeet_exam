@@ -60,6 +60,13 @@ function DescriptivePdfExam() {
         return data.quiz.title;
     }
 
+    function answerAttemptResHandler(data){
+        // console.log(data);
+        setAnswered(data.answered_questions)
+        setUnAnswered(data.unanswered_questions)
+    }
+
+
     const fetchSchoolName = async() => {
         await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
     }
@@ -156,7 +163,7 @@ function DescriptivePdfExam() {
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
                                     <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام آزمون</p>
-                                    <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p>
+                                    { examData.quiz.leave ? <p onClick={() => {setIsLeave(true);setExitConfirm(true)}}>ترک آزمون</p> : ""}
                                 </div>
                                 {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>}
                                 {/* <div className='time-remained'>4:20:00</div> */}
@@ -179,7 +186,7 @@ function DescriptivePdfExam() {
                                         <li>{`نام کاربر : ${LSdata.name}`}</li>
                                         <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
+                                        <li>{`نمره کل : ${examData.quiz.total_score}`}</li>
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -202,7 +209,7 @@ function DescriptivePdfExam() {
                                                 <UploadButtons
                                                     index={data.id} quNo={data.question_number} options={data.options} score={data.score}
                                                     activeBtn={activeBtn} attemptID={examDataAttempt.id}
-                                                    activeBtnHandler={activeBtnHandler}
+                                                    activeBtnHandler={activeBtnHandler} answerAttemptRes={answerAttemptResHandler}
                                                     userAnswered={userAnswered} answerResHandler={answerResHandler}
                                                     nullingActiveBtnHandler={nullingActiveBtnHandler}
                                                 />

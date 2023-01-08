@@ -40,8 +40,20 @@ function GuestLogin() {
 
 
     const successGuestLoginHandler = (data) => {
-        localStorage.setItem("userToken", JSON.stringify(data));
-        examPageHandler()
+        if(data.status){
+            Swal.fire({
+                icon:"error",
+                title:`${data.message}`
+            })
+        }
+        else{
+            console.log(data);
+            const today = new Date()
+            let tomorrow = new Date()
+            const setExpireDate = tomorrow.setDate(today.getDate() + 1);
+            localStorage.setItem("userToken", JSON.stringify({ quizToken: data.token, expireDate: setExpireDate, name: data.name ,user_id:data.user_id }))
+            examPageHandler()
+        }
     }
 
     const onSubmitLogin = async (res) => {
@@ -55,6 +67,7 @@ function GuestLogin() {
             })
         }
         else {
+            
             const today = new Date()
             let tomorrow = new Date()
             const setExpireDate = tomorrow.setDate(today.getDate() + 1);
@@ -253,7 +266,7 @@ function GuestLogin() {
 
 
     return (
-        <div className={classes.appContainer} style={{ minHeight: "100vh", maxHeight: "100%" }}>
+        <div className={classes.appContainer} style={{ minHeight: "100vh", height: "100%" }}>
             <div className={classes.container}>
                 {!isLoading ?
                     <section className={classes.questionSection}>
@@ -343,7 +356,7 @@ function GuestLogin() {
                                             <button className={classes.examInfo__login_btn} onClick={() => onAuthGuestHandler()} >ورود</button>
 
                                     }
-                                    <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => navigate(`/quiz/join/${params.quiz}`)} >ورود کاربر</p>
+                                    {/* <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => navigate(`/quiz/join/${params.quiz}`)} >ورود کاربر</p> */}
                                 </div>
                             </div>
                         </div>

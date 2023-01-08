@@ -24,10 +24,12 @@ const App = () => {
                 {/* <Route path="/" element={<></>} /> */}
                 <Route path="/quiz/join/:quiz" element={<ExamInfo/>} />
                 <Route path="/guest/join/:quiz" element={<GuestLogin/>} />
+
                 <Route path="/quiz/test/:quiz" element={<TestExam/>} />
                 <Route path="/quiz/test-pdf/:quiz" element={<TestPdfExam/>} />
                 <Route path="/quiz/descriptive/:quiz" element={<DescriptiveExam/>} />
                 <Route path="/quiz/descriptive-pdf/:quiz" element={<DescriptivePdfExam/>} />
+                
                 <Route path="/preview/test/:quiz" element={<TestPreviewExam/>} />
                 <Route path="/preview/test-pdf/:quiz" element={<TestPdfPreview/>} />
                 <Route path="/preview/descriptive/:quiz" element={<DescriptivePreview/>} />

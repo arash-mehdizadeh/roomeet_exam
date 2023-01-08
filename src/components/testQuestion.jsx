@@ -38,7 +38,7 @@ import ImageModal from "./modal/imageModal";
 //   };
 
 
-const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data }) => {
+const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, isRank }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -59,31 +59,36 @@ const TestQuestion = ({ id, quNo, audioURL, imageURL, score, options, body, data
                 <ImageModal onConfirm={modalHandler} imageURL={imageURL} />
             }
             <div className={classes.questionDetail}>
-                <p>{`سوال ${quNo} :`}</p>
-                <p>{`( ${score} نمره )`}</p>
+                { isRank ?
+                    ""
+                    :<>
+                        <p>{`سوال ${quNo} :`}</p>
+                        <p>{`( ${score} نمره )`}</p>
+                    </>
+                }
             </div>
             <div className={classes.scrollableQuestionsContainer}>
-                {body && <p>{body}</p>}
+                {body && <p style={{ wordBreak: "break-word" }}>{body}</p>}
                 {imageURL &&
                     <div className={classes.muChImageContainer}>
                         <img onClick={() => modalHandler()} src={imageURL} alt={body} style={{ cursor: "pointer" }} />
                     </div>
                 }
                 {
-                audioURL && <div className={classes.muChAudioContainer}>
-                    <>
-                        <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
-                        {
-                            playing ?
-                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
-                                    <PauseCircleFilled style={{ fill: "#c30a7f" }} />
-                                </div> :
-                                <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
-                                    <PlayCircleFilled style={{ fill: "#c30a7f" }} />
-                                </div>
-                        }
-                    </>
-                </div>
+                    audioURL && <div className={classes.muChAudioContainer}>
+                        <>
+                            <Bar curTime={curTime} duration={duration} onTimeUpdate={(time) => { setClickedTime(time); console.log(time) }} />
+                            {
+                                playing ?
+                                    <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                        <PauseCircleFilled style={{ fill: "#c30a7f" }} />
+                                    </div> :
+                                    <div className="player__button" style={{ cursor: "pointer" }} onClick={() => toggle()} key={id}>
+                                        <PlayCircleFilled style={{ fill: "#c30a7f" }} />
+                                    </div>
+                            }
+                        </>
+                    </div>
                 }
                 <div className={classes.muChQuestionContainer}>
                     <ul>

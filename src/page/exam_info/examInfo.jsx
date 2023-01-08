@@ -26,14 +26,14 @@ function ExamInfo() {
 
 
     const validExamHandler = (data) => {
-        if (!data.validation){
+        if (!data.validation) {
             navigate("/service/not-active");
         }
     }
 
     const fetchGuestValidation = async () => {
         // console.log("aaa");
-        await guestVerification(params.quiz).then(res => {setVerify(res);validExamHandler(res) });
+        await guestVerification(params.quiz).then(res => { setVerify(res); validExamHandler(res) });
     }
 
     function isInThePast(date) {
@@ -45,20 +45,20 @@ function ExamInfo() {
     let tomorrow = new Date()
     const setExpireDate = tomorrow.setDate(today.getDate() + 1);
 
-    const fetchSchoolName = async() => {
+    const fetchSchoolName = async () => {
         await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
     }
 
     const fetchData = async () => {
         const data = await examDatails(params.quiz)
-        if (data.status === "not-found"){
+        if (data.status === "not-found") {
             Swal.fire({
                 icon: "error",
                 title: `${data.message}`
             })
-            
+
         }
-        else{
+        else {
             setExamData(data);
             setExamData(data?.quiz)
             setIsLoading(false)
@@ -151,6 +151,7 @@ function ExamInfo() {
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         const userData = await userLogin(inputField);
+        console.log(userData);
         var regex = new RegExp('^(\\+98|0)?9\\d{9}$');
         if (inputField.phone.length !== 11 && inputField.phone.length !== 0) {
             Swal.fire({
@@ -175,30 +176,27 @@ function ExamInfo() {
 
             })
         }
-
-        else if (userData === undefined) {
+        else if (userData.customCode) {
             Swal.fire({
                 icon: "error",
-                title: `کاربری با این مشخصات پیدا نشده`
+                title: `${userData.error}`,
             })
         }
-        else {
-            typeof (userData) === "string" && Swal.fire({
-                icon: "error",
-                title: `${userData}`,
-            })
+        else{
+            const { token, ...newUserData } = userData;
             localStorage.setItem("userToken", JSON.stringify({
-                ...userData, "expireDate": setExpireDate
+                ...newUserData, userToken: token, "expireDate": setExpireDate
             }))
             window.location.reload();
         }
+
     }
 
 
     const examPageHandler = async () => {
         let data = JSON.parse(localStorage.getItem('userToken'));
         if (data) {
-            let res = await attemptToJoinExam(params.quiz,data.quizToken)
+            let res = await attemptToJoinExam(params.quiz, data.quizToken)
             // console.log(res);
             if (res?.status !== "joined" || res === undefined) {
                 let a = res?.message;
@@ -241,10 +239,10 @@ function ExamInfo() {
     }
 
     return (
-        <div className={classes.appContainer} style={{ minHeight: "100vh", maxHeight: "100%" }}>
+        <div className={classes.appContainer} style={{ minHeight: "100vh", height: "100%" }}>
             <div className={classes.container}>
                 {!isLoading ?
-                    <section section className={classes.questionSection}>
+                    <section section className={classes.questionSection} style={{maxWidth:"unset"}}>
                         <div className={classes.questionSection_header} style={{ alignItems: "center" }}>
                             <h2>اطلاعات آزمون</h2>
                             <div id={classes.returnBtn}>
@@ -259,7 +257,7 @@ function ExamInfo() {
                                 <div style={{ width: "100%" }} key={examData?.id}>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>نام شرکت کننده :</p>
-                                        <p className={classes.examInfo__detail}>{isUserLogged ? LS_data.name : "وارد حساب کاربری خود نشده اید." }</p>
+                                        <p className={classes.examInfo__detail}>{isUserLogged ? LS_data.name : "وارد حساب کاربری خود نشده اید."}</p>
                                     </div>
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>نام آموزشگاه :</p>
@@ -300,7 +298,7 @@ function ExamInfo() {
                                     {
                                         handleResultShow()
                                     }
-                                    
+
                                     <div className={classes.examInfo__info_container}>
                                         <p className={classes.examInfo__title}>امکان ترک آزمون :</p>
                                         <p className={classes.examInfo__detail}>{examData?.leave == 0 ? "ندارد" : "دارد"}</p>
@@ -324,7 +322,7 @@ function ExamInfo() {
                                     <input type="password" placeholder='رمز عبور' name='password' value={inputField.password} onChange={inputHandler} className={classes.examInfo__login_input} style={{ marginBottom: "6px" }} />
                                     <p id={classes.forgetPassword} style={{ margin: "0px 0 16px 0" }}>فراموشی رمز عبور</p>
                                     <button type="submit" className={classes.examInfo__login_btn}>ورود</button>
-                                    { verify.guest ? <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => navigate(`/guest/join/${params.quiz}`)} >ورود به صورت مهمان</p> : <></>}
+                                    {verify.guest ? <p id={classes.forgetPassword} className={classes.examInfo__changeField} onClick={() => navigate(`/guest/join/${params.quiz}`)} >ورود به صورت مهمان</p> : <></>}
                                 </form>
                             </div>
                         </div>

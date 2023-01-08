@@ -11,8 +11,8 @@ const FinishPage = () => {
 
     return (
         <div className={classes.appContainer}>
-            <div className={classes.container}>
-                <section className={classes.questionSection}>
+            <div className={classes.container} style={{alignItems:"center"}}>
+                <section className={classes.questionSection} style={{width:"100%"}}>
                     <div className={classes.center}>
                         <Done/>
                     </div>

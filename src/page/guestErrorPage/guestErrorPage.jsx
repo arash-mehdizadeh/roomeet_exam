@@ -11,8 +11,8 @@ const GuestErrorPage = () => {
 
     return (
         <div className={classes.appContainer}>
-            <div className={classes.container}>
-                <section className={classes.questionSection}>
+            <div className={classes.container} style={{alignItems:"center"}}>
+                <section className={classes.questionSection} style={{width:"100%"}}>
                     <div className={classes.center}>
                         <Close />
                     </div>
@@ -35,8 +35,8 @@ const ServiceNotValid = () => {
 
     return (
         <div className={classes.appContainer}>
-            <div className={classes.container}>
-                <section className={classes.questionSection}>
+            <div className={classes.container} style={{alignItems:"center"}}>
+                <section className={classes.questionSection} style={{width:"100% !important"}}>
                     <div className={classes.center}>
                         <Close />
                     </div>

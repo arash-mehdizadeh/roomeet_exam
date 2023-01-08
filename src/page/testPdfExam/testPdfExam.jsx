@@ -45,7 +45,7 @@ function TestExam() {
     // const [pages, setPages] = useState(null);
     // const [pageNumber, setPageNumber] = useState(1);
 
-    const fetchSchoolName = async() => {
+    const fetchSchoolName = async () => {
         await getSchoolName(params.quiz).then(res => setSchoolName(res.schoolName))
     }
     const onFinishHandler = async (e) => {
@@ -166,7 +166,7 @@ function TestExam() {
                             <div className={classes.headerBox}>
                                 <div className={classes.buttonContainer}>
                                     <p onClick={() => { setIsLeave(false); setExitConfirm(true) }}>اتمام آزمون</p>
-                                    <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p>
+                                    {examData.quiz.leave ? <p onClick={() => { setIsLeave(true); setExitConfirm(true) }}>ترک آزمون</p> : ""}
                                 </div>
                                 {timeLeft !== "unlimited" ? <CountDown totalTime={totalTime} timeRemained={timeLeft} /> : <p className={classes.unlimited_text}>زمان باقیمانده : نامحدود</p>}
 
@@ -189,9 +189,13 @@ function TestExam() {
                                 <div className={classes.personalDetails}>
                                     <ul>
                                         <li>{`نام کاربر : ${LSdata.name}`}</li>
-                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration +" دقیقه " : "نامحدود" }`}</li>
+                                        <li>{`مدت آزمون : ${examData?.quiz?.duration ? examData?.quiz?.duration + " دقیقه " : "نامحدود"}`}</li>
                                         <li>{`نوع آزمون : ${examData.quiz.type === "test" ? "تستی" : "تشریحی"}`}</li>
-                                        <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
+                                        {
+                                            examData.quiz.test_type === "score" ?
+                                                <li>{`نمره کل : ${examData.quiz.total_score}`}</li>
+                                                : <li>{`ضریب منفی : ${examData.quiz.negative_point === null ? "ندارد" : examData.quiz.negative_point?.replace("/", " به ")}`}</li>
+                                        }
                                         <li>{`تعداد سوالات : ${examData.quiz.number_of_question}`}</li>
                                     </ul>
                                 </div>
@@ -245,7 +249,7 @@ function TestExam() {
                                         </div>
                                     </Worker> */}
                                     <iframe src={examData?.quiz?.question_pdf} title="pdf"
-                                        style={{width:"100%", height:"500px"}} frameborder="0"></iframe>
+                                        style={{ width: "100%", height: "500px" }} frameborder="0"></iframe>
                                 </div>
                             </section>
                         </main>

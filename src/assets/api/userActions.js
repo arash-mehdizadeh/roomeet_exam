@@ -55,7 +55,7 @@ const userLogin = async (data) => {
         let response = await nodeApi.post(`/auth/login`, data)
         return (response.data)
     } catch (error) {
-        console.log(error.message);
+        return(error.response.data);
     }
 }
 
@@ -94,11 +94,12 @@ const confirmGuestLoginRequest = async (loginData) => {
     }
 }
 const guestLoginPhone = async (loginData) => {
+    // console.log(loginData);
     try {
         let response = await userAction.post(`/guest/join/quiz`, loginData)
         return (response.data)
     } catch (error) {
-        console.log(error.message);
+        return(error.response.data);
     }
 }
 

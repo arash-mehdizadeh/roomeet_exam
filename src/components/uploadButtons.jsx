@@ -9,17 +9,28 @@ import { useEffect } from 'react';
 import { getFileName, getFileNameFromAttempt } from '../assets/utils/utils';
 
 
-const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn, activeBtnHandler, nullingActiveBtnHandler }) => {
+const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn, activeBtnHandler, nullingActiveBtnHandler ,answerAttemptRes }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [body, setBody] = useState("")
+    const [resAnswer, setResAnswer] = useState([])
     const [buttonValue, setButtonValue] = useState("(کلیک کنید)")
+
+
+    function answerAttemptResHandler(data){
+        answerAttemptRes(data);
+    }
 
     const modalHandler = () => {
         nullingActiveBtnHandler()
-        setIsModalOpen(prev => !prev)
+        if (isModalOpen) setIsModalOpen(false);
+        else if (!isModalOpen) setIsModalOpen(true)
+        // setIsModalOpen(prev => !prev)
     }
 
+    const setBodyData = (data) => {
+        setBody(data)
+    }
 
     const uploadSuccess = () => {
         setButtonValue("فایل آپلود شد");
@@ -33,12 +44,9 @@ const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn
     }
 
     const userAnsweredHandler = (qid) => {
-        // console.log(userAnswered)
-        // console.log(qid)
         for (var i = 0; i < userAnswered?.length; i++) {
             if (qid === userAnswered[i]?.id) {
-                console.log(userAnswered[i])
-                // let userDate = userAnswered[i];
+                // console.log(userAnswered[i])
                 userAnswered[i]?.file_url && uploadFileName(getFileNameFromAttempt(userAnswered[i].file_url))
                 userAnswered[i].answer  && setBody(getFileNameFromAttempt(userAnswered[i].answer))
             }
@@ -55,7 +63,9 @@ const UploadButtons = ({ index ,quNo , userAnswered, attemptID, score, activeBtn
         <li key={index} className={classes.uploadButtonRow}>
             {
                 isModalOpen &&
-                <UploadModal id={index} quNo={quNo} body={body} attemptID={attemptID} onConfirm={modalHandler} uploadSuccess={uploadSuccess} uploadFileName={uploadFileName} />
+                <UploadModal id={index} quNo={quNo} body={body}  answerAttemptRes={answerAttemptResHandler}
+                attemptID={attemptID} onConfirm={modalHandler} setBodyData={setBodyData} uploadSuccess={uploadSuccess} 
+                uploadFileName={uploadFileName} answers={resAnswer} />
             }
             <div className={classes.uploadContainer} >
                 {/*when upload was successful `successUpload` class will active / and when user click on button active_uploadBtn will active */}
